@@ -82,6 +82,13 @@
 </script>
 <svelte:head>
 	<title>Paleoclimate Visualizer</title>
+	<meta name="description" content="Paleoclimate Visualizer">
+	<meta name="keywords" content="Paleoclimate, Climate, Data Visualization">
+	<meta property="og:title" content="Paleoclimate Visualizer">
+	<meta property="og:description" content="Interact, ">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Paleoclimate Visualizer">
+	<meta property="og:locale" content="en_US">
 </svelte:head>
 <h1>Paleoclimate Visualizer</h1>
 <select bind:value={title} onchange={updateDataSet}>

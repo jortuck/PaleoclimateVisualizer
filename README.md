@@ -1,38 +1,19 @@
-# create-svelte
+# About
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+This website contains interactive visuals and charts for the study "Strengthening Southern 
+Hemisphere Westerlies and Amundsen Sea Low Deepening Over the 20th Century Revealed by Proxy-Data 
+Assimilation" which can be read [here](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2021GL095999).
 
-## Creating a project
+The app makes uses of the following technologies:
+- [SvelteKit (Svelte 5)](https://kit.svelte.dev/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [Highcharts](https://www.highcharts.com/)
 
-If you're seeing this, you've probably already done this step. Congrats!
+> [!IMPORTANT]
+> Highcharts is a product that requires a license to use. If you intend to host this website yourself,
+> or fork it to make your own variation, you must obtain a license from
+> [highcharts.com](https://shop.highcharts.com/). If you are affiliated with an educational institution
+> (student, staff, faculty), you can obtain a free license
+> [here](https://shop.highcharts.com/contact/educational). Be advised that you must renew your education
+> license **every year**.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
