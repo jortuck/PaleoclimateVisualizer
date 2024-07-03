@@ -23,6 +23,7 @@
 			// @ts-ignore
 			chart:{
 				map:topology,
+				backgroundColor:"transparent"
 			},
 			title:{text:title},
 			series:[{
@@ -53,7 +54,7 @@
 			mapView:{
 				projection:{
 					rotation: [180, 0, 0]
-				}
+				},
 			},
 			mapNavigation:{
 				enabled:true,
