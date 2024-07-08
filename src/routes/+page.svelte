@@ -3,7 +3,6 @@
 	import Highcharts from 'highcharts/highmaps';
 	import GeoHeatmap from "highcharts/modules/geoheatmap"
 	import {csv, json } from "d3"
-
 	let title:string = $state("cesm");
 	let map: any;
 	let chart: Highcharts.MapChart;
