@@ -90,14 +90,25 @@
 	<meta property="og:site_name" content="Paleoclimate Visualizer">
 	<meta property="og:locale" content="en_US">
 </svelte:head>
-<h1>Paleoclimate Visualizer</h1>
-<select bind:value={title} onchange={updateDataSet}>
-	<option value="cesm">CESM</option>
-	<option value="hadcm3">HADCM3</option>
-	<option value="lens">LENS</option>
-	<option value="pace">PACE</option>
-</select>
-<div bind:this={map}>
 
+<div class="flex flex-row space-x-4">
+	<div class="bg-base-200 shadow-md p-4 rounded-md w-full">
+		<div bind:this={map}>
+		</div>
+		<div class="space-y-2">
+			<h1>Settings</h1>
+			<label class="form-control w-full max-w-xs">
+				<div class="label">
+				  <span class="label-text">Select a Climate Model</span>
+				</div>
+				<select class="select select-bordered" bind:value={title} onchange={updateDataSet}>
+					<option value="cesm">CESM</option>
+					<option value="hadcm3">HADCM3</option>
+					<option value="lens">LENS</option>
+					<option value="pace">PACE</option>
+				</select>
+			  </label>
+		</div>
+	</div>
 </div>
 
