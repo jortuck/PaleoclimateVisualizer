@@ -5,79 +5,151 @@
 	import { csv, json } from 'd3';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	let map: any;
+	let timeseries: any;
 	let chart: Highcharts.MapChart;
+	let timeSeriesChart: Highcharts.Chart;
 
 	let mode: string = $state('trends');
 	let year: number = $state(1900);
 	let variable: string = $state('psl');
 	let model: string = $state('cesm');
-	let trendUrl: string = $derived(PUBLIC_API_HOST+"/trends/"+model+"/"+variable);
-	let annualUrl: string = $derived(PUBLIC_API_HOST+"/values/"+model+"/"+variable+"/"+year);
+	let trendUrl: string = $derived(PUBLIC_API_HOST + '/trends/' + model + '/' + variable);
+	let annualUrl: string = $derived(
+		PUBLIC_API_HOST + '/values/' + model + '/' + variable + '/' + year
+	);
+	let timeSeriesUrl: string = $derived(
+		PUBLIC_API_HOST + '/timeseries/' + model + '/' + variable + '/90/90'
+	);
 
-	onMount(async ()=>{
+	onMount(async () => {
 		const topology = await fetch(
 			'https://code.highcharts.com/mapdata/custom/world-continents.topo.json'
-		).then(response => response.json())
+		).then((response) => response.json());
 		const antarctica = await fetch(
 			'https://code.highcharts.com/mapdata/custom/antarctica.topo.json'
-		).then(response => response.json());
-		GeoHeatmap(Highcharts)
-			
+		).then((response) => response.json());
+		GeoHeatmap(Highcharts);
 		let dataSet = await json(trendUrl);
-		// @ts-ignore
-		chart =  Highcharts.mapChart(map,{
+		let timeseriesData: any = await json(timeSeriesUrl);
+
+		// line charts
+		timeSeriesChart = Highcharts.chart(timeseries, {
 			// @ts-ignore
-			chart:{
-				map:topology,
-				backgroundColor:"transparent",
-				zooming:{
-					type:"xy"
+			chart: {
+				title: {
+					text: 'Time Series',
+					useHTML: true
 				},
-				events:{
-					selection:(e: any)=>{
-						console.log("selection")
-						console.log(e)
+				backgroundColor: 'transparent'
+			},
+			yAxis: {
+				title: {
+					text: 'anomaly',
+					style:{color:"white"}
+				}
+			},
+
+			xAxis: {
+				accessibility: {
+					rangeDescription: 'Range: 1900 to 2005'
+				},
+			},
+
+			plotOptions: {
+				series: {
+					label: {
+						connectorAllowed: false,
+						style:{
+							color:"white"
+						}
+					},
+					pointStart: 1900,
+				}
+			},
+
+			series: [
+				{
+					name: 'anomaly',
+					data: timeseriesData.values
+				}
+			],
+
+			responsive: {
+				rules: [
+					{
+						condition: {
+							maxWidth: 500
+						},
+						chartOptions: {
+							legend: {
+								layout: 'horizontal',
+								align: 'center',
+								verticalAlign: 'bottom'
+							}
+						}
+					}
+				]
+			}
+		});
+
+		// @ts-ignore
+		chart = Highcharts.mapChart(map, {
+			// @ts-ignore
+			chart: {
+				map: topology,
+				backgroundColor: 'transparent',
+				zooming:{
+					mode:"xy",
+				},
+				events: {
+					selection: (e: any) => {
+						console.log('selection');
+						console.log(e);
 					}
 				}
 			},
-			title:{text:model+" "+variable},
-			series:[{
-				type:"geoheatmap",
-				data:dataSet,
-				cursor:"crosshair",
-				states:{
-					hover:{
-						enabled: false
+			title: { text: model + ' ' + variable, useHTML: true },
+			series: [
+				{
+					type: 'geoheatmap',
+					data: dataSet,
+					cursor: 'crosshair',
+					states: {
+						hover: {
+							enabled: false
+						},
+						inactive: { opacity: 1 }
 					},
-					inactive: { opacity: 1 },
+					events: {
+						click: (e: any) => {
+							console.log('200');
+						}
+					},
+					interpolation: { enabled: true },
+					zIndex: 0
 				},
-				events:{
-					click:(e: any)=>{
-						console.log("200")
+				{
+					mapData: antarctica,
+					zIndex: 2,
+					color: '#000',
+					states: {
+						inactive: { opacity: 1 }
 					}
 				},
-				interpolation: {enabled: true},
-				zIndex:0,
-			},{
-				mapData:antarctica,
-				zIndex:2,
-				color:"#000",
-				states:{
-					inactive: { opacity: 1 },
-				},
-			},{
-				zIndex:2,
-				states:{
-					inactive: { opacity: 1 },
-				},
-			}],
-			mapView:{
-				projection:{
+				{
+					zIndex: 2,
+					states: {
+						inactive: { opacity: 1 }
+					}
+				}
+			],
+			mapView: {
+				projection: {
 					rotation: [180, 0, 0]
-				},
+				}
 			},
-			mapNavigation:{
-				enabled:true,
+			mapNavigation: {
+				enabled: true
 			},
 			colorAxis: {
 				min: -2.5,
@@ -91,21 +163,22 @@
 						color: '#ddd'
 					}
 				}
-			},
+			}
 		});
-	})
+	});
 
-
-	async function  updateMap(){
-		chart.title.update({text:model+" "+variable})
+	async function updateMap() {
+		chart.title.update({ text: model + ' ' + variable });
 		let newData: any;
-		if(mode == "annual"){
-			newData = await fetch(annualUrl).then(response => response.json())
-		}else{
-			newData = await fetch(trendUrl).then(response => response.json())
+		if (mode == 'annual') {
+			newData = await fetch(annualUrl).then((response) => response.json());
+		} else {
+			newData = await fetch(trendUrl).then((response) => response.json());
 		}
+		let newTimeSeriesData =  await fetch(timeSeriesUrl).then((response) => response.json())
 		// @ts-ignore
-		chart.series[0].update({data:newData})
+		chart.series[0].update({ data: newData });
+		timeseries.series[0].update({data:newTimeSeriesData.values,name:variable+" anomaly"})
 	}
 </script>
 
@@ -125,20 +198,24 @@
 	<meta property="og:site_name" content="Paleoclimate Visualizer" />
 	<meta property="og:locale" content="en_US" />
 </svelte:head>
-<a class="link" target="_blank" href="{trendUrl}">{trendUrl}</a>
-<a class="link" target="_blank" href="{annualUrl}">{annualUrl}</a>
+
 <div class="flex flex-row space-x-4">
-	<div class="bg-base-200 shadow-md p-4 rounded-md w-full">
-		<div bind:this={map}>
+	<div class="bg-base-200 shadow-md p-4 rounded-md w-full mx-2">
+		<a class="link" target="_blank" href={trendUrl}>{trendUrl}</a>
+		<a class="link" target="_blank" href={timeSeriesUrl}>{timeSeriesUrl}</a>
+		<a class="link" target="_blank" href={annualUrl}>{annualUrl}</a>
+		<div class="flex flex-row justify-between">
+			<div bind:this={map}></div>
+			<div bind:this={timeseries}></div>
 		</div>
 		<div class="space-y-2">
 			<h1>Settings</h1>
-			<div class="flex space-x-5">
+			<div class="flex md:space-x-5 md:flex-row flex-col">
 				<label class="form-control w-full">
 					<div class="label">
 						<span class="label-text">Select a Climate Model</span>
 					</div>
-					<select class="select select-bordered" bind:value={model} onchange="{updateMap}">
+					<select class="select select-bordered" bind:value={model} onchange={updateMap}>
 						<option value="cesm">CESM</option>
 						<option value="hadcm3">HADCM3</option>
 						<option value="lens">LENS</option>
@@ -149,7 +226,7 @@
 					<div class="label">
 						<span class="label-text">Select a Variable</span>
 					</div>
-					<select class="select select-bordered" bind:value={variable} onchange="{updateMap}">
+					<select class="select select-bordered" bind:value={variable} onchange={updateMap}>
 						<option value="us">Wind Speed</option>
 						<option value="tas">Surface Temperature</option>
 						<option value="psl">Surface Pressure</option>
@@ -159,7 +236,7 @@
 					<div class="label">
 						<span class="label-text">Viewing Mode</span>
 					</div>
-					<select class="select select-bordered" bind:value={mode} onchange="{updateMap}">
+					<select class="select select-bordered" bind:value={mode} onchange={updateMap}>
 						<option value="trends">Trends</option>
 						<option value="annual">Annual Data</option>
 					</select>
@@ -168,9 +245,22 @@
 			{#if mode == 'annual'}
 				<div class="form-control">
 					{year}
-					<input type="range" min="1900" max="2005" class="range" bind:value={year} onchange="{updateMap}" />
+					<input
+						type="range"
+						min="1900"
+						max="2005"
+						class="range"
+						bind:value={year}
+						onchange={updateMap}
+					/>
 				</div>
 			{/if}
 		</div>
 	</div>
 </div>
+
+<style lang="postcss">
+	:global(.highcharts-title) {
+		@apply !text-white;
+	}
+</style>
