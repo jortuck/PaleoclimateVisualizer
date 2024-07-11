@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import Highcharts from 'highcharts/highmaps';
 	import GeoHeatmap from 'highcharts/modules/geoheatmap';
-	import { csv, json } from 'd3';
+	import { csv, json, min } from 'd3';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	let map: any;
 	let timeseries: any;
@@ -29,12 +29,11 @@
 			'https://code.highcharts.com/mapdata/custom/antarctica.topo.json'
 		).then((response) => response.json());
 		GeoHeatmap(Highcharts);
-		let dataSet = await json(trendUrl);
+		let dataSet: any = await json(trendUrl);
 		let timeseriesData: any = await json(timeSeriesUrl);
 		let timeSeriesSeries: any[] = [];
 		
 		timeseriesData.values.forEach((e: any)=>{
-			console.log(e)
 			timeSeriesSeries.push(e)
 		})
 		
@@ -107,7 +106,6 @@
 		chart = Highcharts.mapChart(map, {
 			// @ts-ignore
 			chart: {
-				map: topology,
 				backgroundColor: 'transparent',
 				zooming:{
 					mode:"xy",
@@ -120,10 +118,11 @@
 				}
 			},
 			title: { text: reconstruction + ' ' + variable, useHTML: true },
+			colors:["#058DC7"],
 			series: [
 				{
 					type: 'geoheatmap',
-					data: dataSet,
+					data: dataSet.values,
 					cursor: 'crosshair',
 					states: {
 						hover: {
@@ -142,16 +141,21 @@
 				{
 					mapData: antarctica,
 					zIndex: 2,
-					color: '#000',
+					borderColor:"#000",
+					borderWidth:1,
 					states: {
 						inactive: { opacity: 1 }
 					}
 				},
 				{
+					mapData:topology,
+					type:"map",
 					zIndex: 2,
 					states: {
 						inactive: { opacity: 1 }
-					}
+					},
+					borderColor:"#000",
+					borderWidth:1,
 				}
 			],
 			mapView: {
@@ -160,15 +164,12 @@
 				}
 			},
 			mapNavigation: {
-				enabled: true
+				enabled: false
 			},
 			colorAxis: {
-				min: -2.5,
-				max: 2.5,
-				stops: [
-					[0, 'rgba(21, 0, 255,0.9)'],
-					[1, 'rgba(255, 0, 0,0.9)']
-				],
+				min: dataSet.min,
+				max: dataSet.max,
+				stops: dataSet.colorMap,
 				labels: {
 					useHTML: true,
 				}
@@ -184,8 +185,16 @@
 		} else {
 			newData = await fetch(trendUrl).then((response) => response.json());
 		}
+		console.log(newData)
 		// @ts-ignore
-		chart.series[0].update({ data: newData });
+		chart.series[0].update({ data: newData.values});
+		chart.update({
+			colorAxis:{
+			min:newData.min,
+			max:newData.max,
+			stops:newData.colorMap
+		}
+		})
 
 	}
 	async function updateMapAndTimeSeries(){
@@ -214,9 +223,9 @@
 
 <div class="flex flex-row space-x-4">
 	<div class="bg-base-200 shadow-md p-4 rounded-md w-full mx-2">
-		<a class="link" target="_blank" href={trendUrl}>{trendUrl}</a>
+		<!-- <a class="link" target="_blank" href={trendUrl}>{trendUrl}</a>
 		<a class="link" target="_blank" href={timeSeriesUrl}>{timeSeriesUrl}</a>
-		<a class="link" target="_blank" href={annualUrl}>{annualUrl}</a>
+		<a class="link" target="_blank" href={annualUrl}>{annualUrl}</a> -->
 		<div class="flex lg:flex-row flex-col justify-between">
 			<div bind:this={map}></div>
 			<div bind:this={timeseries}></div>
