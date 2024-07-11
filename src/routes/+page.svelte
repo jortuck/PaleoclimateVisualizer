@@ -10,6 +10,7 @@
 	let timeSeriesChart: Highcharts.Chart;
 
 	let mode: string = $state('trends');
+	let postText: string = $derived(mode == "trends" ? "Anomaly Trend":"Anomaly")
 	let year: number = $state(1900);
 	let variable: string = $state('psl');
 	let reconstruction: string = $state('cesm');
@@ -249,9 +250,9 @@
 						<span class="label-text">Select a Variable</span>
 					</div>
 					<select class="select select-bordered" bind:value={variable} onchange={updateMapAndTimeSeries}>
-						<option value="us">Wind Speed</option>
-						<option value="tas">Surface Temperature</option>
-						<option value="psl">Surface Pressure</option>
+						<option value="us">Wind Speed {postText}</option>
+						<option value="tas">Surface Temperature {postText}</option>
+						<option value="psl">Surface Pressure {postText}</option>
 					</select>
 				</label>
 				<label class="form-control w-full">
