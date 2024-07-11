@@ -217,7 +217,7 @@
 		<a class="link" target="_blank" href={trendUrl}>{trendUrl}</a>
 		<a class="link" target="_blank" href={timeSeriesUrl}>{timeSeriesUrl}</a>
 		<a class="link" target="_blank" href={annualUrl}>{annualUrl}</a>
-		<div class="flex flex-row justify-between">
+		<div class="flex lg:flex-row flex-col justify-between">
 			<div bind:this={map}></div>
 			<div bind:this={timeseries}></div>
 		</div>
