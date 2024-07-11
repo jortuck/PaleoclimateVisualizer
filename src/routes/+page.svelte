@@ -12,13 +12,13 @@
 	let mode: string = $state('trends');
 	let year: number = $state(1900);
 	let variable: string = $state('psl');
-	let model: string = $state('cesm');
-	let trendUrl: string = $derived(PUBLIC_API_HOST + '/trends/' + model + '/' + variable);
+	let reconstruction: string = $state('cesm');
+	let trendUrl: string = $derived(PUBLIC_API_HOST + '/trends/' + reconstruction + '/' + variable);
 	let annualUrl: string = $derived(
-		PUBLIC_API_HOST + '/values/' + model + '/' + variable + '/' + year
+		PUBLIC_API_HOST + '/values/' + reconstruction + '/' + variable + '/' + year
 	);
 	let timeSeriesUrl: string = $derived(
-		PUBLIC_API_HOST + '/timeseries/' + model + '/' + variable + '/90/90'
+		PUBLIC_API_HOST + '/timeseries/' + variable + '/90/90'
 	);
 
 	onMount(async () => {
@@ -31,21 +31,32 @@
 		GeoHeatmap(Highcharts);
 		let dataSet = await json(trendUrl);
 		let timeseriesData: any = await json(timeSeriesUrl);
+		let timeSeriesSeries: any[] = [];
+		
+		timeseriesData.values.forEach((e: any)=>{
+			console.log(e)
+			timeSeriesSeries.push(e)
+		})
+		
 
 		// line charts
+		// @ts-ignore
 		timeSeriesChart = Highcharts.chart(timeseries, {
 			// @ts-ignore
 			chart: {
-				title: {
+				backgroundColor: 'transparent'
+			},
+			title: {
 					text: 'Time Series',
 					useHTML: true
-				},
-				backgroundColor: 'transparent'
 			},
 			yAxis: {
 				title: {
 					text: 'anomaly',
-					style:{color:"white"}
+					useHTML: true
+				},
+				labels:{
+					useHTML: true
 				}
 			},
 
@@ -53,12 +64,15 @@
 				accessibility: {
 					rangeDescription: 'Range: 1900 to 2005'
 				},
+				labels:{
+					useHTML:true,
+				},
 			},
 
 			plotOptions: {
 				series: {
 					label: {
-						connectorAllowed: false,
+						connectorAllowed: true,
 						style:{
 							color:"white"
 						}
@@ -67,13 +81,10 @@
 				}
 			},
 
-			series: [
-				{
-					name: 'anomaly',
-					data: timeseriesData.values
-				}
-			],
-
+			series: timeSeriesSeries,
+			legend:{
+				useHTML: true
+			},
 			responsive: {
 				rules: [
 					{
@@ -91,7 +102,7 @@
 				]
 			}
 		});
-
+				
 		// @ts-ignore
 		chart = Highcharts.mapChart(map, {
 			// @ts-ignore
@@ -108,7 +119,7 @@
 					}
 				}
 			},
-			title: { text: model + ' ' + variable, useHTML: true },
+			title: { text: reconstruction + ' ' + variable, useHTML: true },
 			series: [
 				{
 					type: 'geoheatmap',
@@ -159,26 +170,28 @@
 					[1, 'rgba(255, 0, 0,0.9)']
 				],
 				labels: {
-					style: {
-						color: '#ddd'
-					}
+					useHTML: true,
 				}
 			}
 		});
 	});
 
 	async function updateMap() {
-		chart.title.update({ text: model + ' ' + variable });
+		chart.title.update({ text: reconstruction + ' ' + variable });
 		let newData: any;
 		if (mode == 'annual') {
 			newData = await fetch(annualUrl).then((response) => response.json());
 		} else {
 			newData = await fetch(trendUrl).then((response) => response.json());
 		}
-		let newTimeSeriesData =  await fetch(timeSeriesUrl).then((response) => response.json())
 		// @ts-ignore
 		chart.series[0].update({ data: newData });
-		timeseries.series[0].update({data:newTimeSeriesData.values,name:variable+" anomaly"})
+
+	}
+	async function updateMapAndTimeSeries(){
+		await updateMap()
+		let newTimeSeriesData =  await fetch(timeSeriesUrl).then((response) => response.json())
+		timeSeriesChart.update({series:newTimeSeriesData.values})
 	}
 </script>
 
@@ -215,7 +228,7 @@
 					<div class="label">
 						<span class="label-text">Select a Climate Model</span>
 					</div>
-					<select class="select select-bordered" bind:value={model} onchange={updateMap}>
+					<select class="select select-bordered" bind:value={reconstruction} onchange={updateMap}>
 						<option value="cesm">CESM</option>
 						<option value="hadcm3">HADCM3</option>
 						<option value="lens">LENS</option>
@@ -226,7 +239,7 @@
 					<div class="label">
 						<span class="label-text">Select a Variable</span>
 					</div>
-					<select class="select select-bordered" bind:value={variable} onchange={updateMap}>
+					<select class="select select-bordered" bind:value={variable} onchange={updateMapAndTimeSeries}>
 						<option value="us">Wind Speed</option>
 						<option value="tas">Surface Temperature</option>
 						<option value="psl">Surface Pressure</option>
@@ -260,7 +273,7 @@
 </div>
 
 <style lang="postcss">
-	:global(.highcharts-title) {
-		@apply !text-white;
+	:global(.highcharts-title, .highcharts-axis-labels>span, .highcharts-axis-title, .highcharts-legend-item>span) {
+		@apply !text-base-content;
 	}
 </style>

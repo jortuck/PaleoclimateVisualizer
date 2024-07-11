@@ -6,6 +6,5 @@
 	<Navbar />
 	<main class="container max-w-8xl mx-auto mt-8">
 		<slot />
-		<slot />
 	</main>
 </div>
