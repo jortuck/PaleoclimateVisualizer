@@ -4,6 +4,7 @@
 	import GeoHeatmap from 'highcharts/modules/geoheatmap';
 	import { csv, json, min } from 'd3';
 	import { PUBLIC_API_HOST } from '$env/static/public';
+	import { Data } from '$lib/Data';
 	let map: any;
 	let timeseries: any;
 	let chart: Highcharts.MapChart;
@@ -123,7 +124,7 @@
 			series: [
 				{
 					type: 'geoheatmap',
-					data: dataSet.values,
+					data: Data.createGeoPoints(dataSet.lats,dataSet.lons,dataSet.values),
 					cursor: 'crosshair',
 					states: {
 						hover: {
@@ -186,9 +187,8 @@
 		} else {
 			newData = await fetch(trendUrl).then((response) => response.json());
 		}
-		console.log(newData)
 		// @ts-ignore
-		chart.series[0].update({ data: newData.values});
+		chart.series[0].update({ data: Data.createGeoPoints(newData.lats,newData.lons,newData.values)});
 		chart.update({
 			colorAxis:{
 			min:newData.min,
