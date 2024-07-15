@@ -22,6 +22,7 @@
 	let timeSeriesUrl: string = $derived(
 		PUBLIC_API_HOST + '/timeseries/' + variable + '/90/90'
 	);
+	let loading:boolean = $state(true);
 
 	onMount(async () => {
 		const topology = await fetch(
@@ -177,9 +178,11 @@
 				}
 			}
 		});
+		loading = false;
 	});
 
 	async function updateMap() {
+		loading = true;
 		chart.title.update({ text: reconstruction + ' ' + variable });
 		let newData: any;
 		if (mode == 'annual') {
@@ -196,6 +199,7 @@
 			stops:newData.colorMap
 		}
 		})
+		loading = false;
 
 	}
 	async function updateMapAndTimeSeries(){
@@ -223,7 +227,13 @@
 </svelte:head>
 
 <div class="flex flex-row space-x-4">
-	<div class="bg-base-200 shadow-md p-4 rounded-md w-full mx-2">
+	<div class="bg-base-200 shadow-md p-4 rounded-md w-full mx-2 relative">
+		{#if loading}
+			<div class="h-full w-full z-50  bg-base-300 absolute top-0 left-0 rounded-md opacity-80 flex items-center justify-center flex-col space-y-5">
+				<h2 class="text-2xl font-bold text-base-content">Loading</h2>
+				<span class="loading loading-spinner loading-lg"></span>
+			</div>
+		{/if}
 		<!-- <a class="link" target="_blank" href={trendUrl}>{trendUrl}</a>
 		<a class="link" target="_blank" href={timeSeriesUrl}>{timeSeriesUrl}</a>
 		<a class="link" target="_blank" href={annualUrl}>{annualUrl}</a> -->
@@ -238,7 +248,7 @@
 					<div class="label">
 						<span class="label-text">Select a Climate Model</span>
 					</div>
-					<select class="select select-bordered" bind:value={reconstruction} onchange={updateMap}>
+					<select class="select select-bordered" bind:value={reconstruction} onchange={updateMap} disabled={loading}>
 						<option value="cesm">CESM</option>
 						<option value="hadcm3">HADCM3</option>
 						<option value="lens">LENS</option>
@@ -249,7 +259,7 @@
 					<div class="label">
 						<span class="label-text">Select a Variable</span>
 					</div>
-					<select class="select select-bordered" bind:value={variable} onchange={updateMapAndTimeSeries}>
+					<select class="select select-bordered" bind:value={variable} onchange={updateMapAndTimeSeries} disabled={loading}>
 						<option value="us">Wind Speed {postText}</option>
 						<option value="tas">Surface Temperature {postText}</option>
 						<option value="psl">Surface Pressure {postText}</option>
@@ -259,7 +269,7 @@
 					<div class="label">
 						<span class="label-text">Viewing Mode</span>
 					</div>
-					<select class="select select-bordered" bind:value={mode} onchange={updateMap}>
+					<select class="select select-bordered" bind:value={mode} onchange={updateMap} disabled={loading}>
 						<option value="trends">Trends</option>
 						<option value="annual">Annual Data</option>
 					</select>
@@ -275,6 +285,7 @@
 						class="range"
 						bind:value={year}
 						onchange={updateMap}
+						disabled={loading}
 					/>
 				</div>
 			{/if}
