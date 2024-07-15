@@ -2,19 +2,22 @@
 	import { onMount } from 'svelte';
 	import Highcharts from 'highcharts/highmaps';
 	import GeoHeatmap from 'highcharts/modules/geoheatmap';
-	import { csv, json, min } from 'd3';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import { Data } from '$lib/Data';
+	import type {AvaliableDataResponse, Variable, Reconstruction} from "$lib/Data"
 	let map: any;
 	let timeseries: any;
 	let chart: Highcharts.MapChart;
 	let timeSeriesChart: Highcharts.Chart;
 
+	let reconstructions: Reconstruction[] = [];
+	let varaibles: Variable[] = [];
+
 	let mode: string = $state('trends');
 	let postText: string = $derived(mode == "trends" ? "Anomaly Trend":"Anomaly")
 	let year: number = $state(1900);
 	let variable: string = $state('psl');
-	let reconstruction: string = $state('cesm');
+	let reconstruction: string = $state('');
 	let trendUrl: string = $derived(PUBLIC_API_HOST + '/trends/' + reconstruction + '/' + variable);
 	let annualUrl: string = $derived(
 		PUBLIC_API_HOST + '/values/' + reconstruction + '/' + variable + '/' + year
@@ -25,15 +28,32 @@
 	let loading:boolean = $state(true);
 
 	onMount(async () => {
+
+		let avaliableData = await fetch(PUBLIC_API_HOST).then((r)=>r.json()) as AvaliableDataResponse 
+
+		reconstructions = avaliableData.reconstructions;
+		varaibles = avaliableData.variables;
+
+		reconstruction = reconstructions[0].reconstruction
+		variable = varaibles[0].variable;
+		
 		const topology = await fetch(
 			'https://code.highcharts.com/mapdata/custom/world-continents.topo.json'
-		).then((response) => response.json());
+		).then((r) => r.json());
 		const antarctica = await fetch(
 			'https://code.highcharts.com/mapdata/custom/antarctica.topo.json'
-		).then((response) => response.json());
+		).then((r) => r.json());
+
 		GeoHeatmap(Highcharts);
-		let dataSet: any = await json(trendUrl);
-		let timeseriesData: any = await json(timeSeriesUrl);
+
+		let dataSet: any = await fetch(
+			trendUrl
+		).then((r) => r.json());
+
+		let timeseriesData: any = await fetch(
+			timeSeriesUrl
+		).then((r) => r.json());
+
 		let timeSeriesSeries: any[] = [];
 		
 		timeseriesData.values.forEach((e: any)=>{
