@@ -12,13 +12,6 @@ export class Data{
         return result;
     }
 }
-
-export type Reconstruction = {
-    reconstruction: string;
-    name: string;
-    nameShort: string;
-    varaibles: string[];
-}
 export type Variable = {
     variable: string;
     colorMap: string;
@@ -27,6 +20,13 @@ export type Variable = {
     trendUnit: string;
     annualUnit: string;
 }
+export type Reconstruction = {
+    reconstruction: string;
+    name: string;
+    nameShort: string;
+    varaibles: Variable[];
+}
+
 export type AvaliableDataResponse = {
     reconstructions: Reconstruction[],
     variables: Variable[]
