@@ -19,4 +19,3 @@
 	<meta property="og:locale" content="en_US" />
 </svelte:head>
 <Visualizer />
-

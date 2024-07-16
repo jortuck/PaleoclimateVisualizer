@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Highcharts, { each } from 'highcharts/highmaps';
+	import Highcharts from 'highcharts/highmaps';
 	import GeoHeatmap from 'highcharts/modules/geoheatmap';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import { Data } from '$lib/Data';
@@ -157,7 +157,7 @@
 					}
 				}
 			},
-			title: { text: reconstruction + ' ' + variable, useHTML: true },
+			title: { text: dataSet.name, useHTML: true },
 			colors:["#058DC7"],
 			series: [
 				{
@@ -212,21 +212,25 @@
 				stops: dataSet.colorMap,
 				labels: {
 					useHTML: true,
-				}
-			}
+                    format: '{value}',
+				},
+			},
+           
 		});
 		loading = false;
 	});
 
 	async function updateMap() {
 		loading = true;
-		chart.title.update({ text: reconstruction.name + ' ' + variable });
 		let newData: any;
 		if (mode == 'annual') {
 			newData = await fetch(annualUrl).then((response) => response.json());
 		} else {
 			newData = await fetch(trendUrl).then((response) => response.json());
 		}
+        
+        chart.title.update({ text: newData.name });
+
 		// @ts-ignore
 		chart.series[0].update({ data: Data.createGeoPoints(newData.lats,newData.lons,newData.values)});
 		chart.update({
