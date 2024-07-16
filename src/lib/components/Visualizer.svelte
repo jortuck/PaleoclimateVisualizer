@@ -18,12 +18,18 @@
 	let postText: string = $derived(mode == "trends" ? "Anomaly Trend":"Anomaly")
 	let year: number = $state(1900);
 	let variable: string = $state('psl');
-	let reconstruction: string = $state('');
+
+	let reconstruction: Reconstruction = $state({
+        reconstruction:"",
+        name:"",
+        nameShort: "",
+        varaibles: null,
+    });
 
 
-	let trendUrl: string = $derived(PUBLIC_API_HOST + '/trends/' + reconstruction + '/' + variable);
+	let trendUrl: string = $derived(PUBLIC_API_HOST + '/trends/' + reconstruction.reconstruction + '/' + variable);
 	let annualUrl: string = $derived(
-		PUBLIC_API_HOST + '/values/' + reconstruction + '/' + variable + '/' + year
+		PUBLIC_API_HOST + '/values/' + reconstruction.reconstruction + '/' + variable + '/' + year
 	);
 	let timeSeriesUrl: string = $derived(
 		PUBLIC_API_HOST + '/timeseries/' + variable + '/90/90'
@@ -37,7 +43,7 @@
 		reconstructions = avaliableData.reconstructions;
 		varaibles = avaliableData.variables;
 
-		reconstruction = reconstructions[0].reconstruction
+		reconstruction = reconstructions[0]
 		variable = varaibles[0].variable;
 		
 		const topology = await fetch(
@@ -206,7 +212,7 @@
 
 	async function updateMap() {
 		loading = true;
-		chart.title.update({ text: reconstruction + ' ' + variable });
+		chart.title.update({ text: reconstruction.name + ' ' + variable });
 		let newData: any;
 		if (mode == 'annual') {
 			newData = await fetch(annualUrl).then((response) => response.json());
@@ -253,7 +259,7 @@
 					<div class="label">
 						<span class="label-text">Select a Climate Model</span>
 					</div>
-					<select class="select select-bordered" value={reconstructions[0]} onchange={updateMap} disabled={loading}>
+					<select class="select select-bordered" bind:value={reconstruction} onchange={updateMap} disabled={loading}>
                         {#each reconstructions as rec}
                             <option value={rec}>{rec.name}</option>
                         {/each}

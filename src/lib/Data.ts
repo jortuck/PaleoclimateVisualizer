@@ -24,7 +24,7 @@ export type Reconstruction = {
     reconstruction: string;
     name: string;
     nameShort: string;
-    varaibles: Variable[];
+    varaibles: Variable[] | null;
 }
 
 export type AvaliableDataResponse = {
