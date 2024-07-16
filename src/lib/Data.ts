@@ -16,7 +16,7 @@ export type Variable = {
     variable: string;
     colorMap: string;
     name: string;
-    nameShort: string[];
+    nameShort: string;
     trendUnit: string;
     annualUnit: string;
 }

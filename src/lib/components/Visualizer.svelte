@@ -15,9 +15,17 @@
 	let varaibles: Variable[] = $state([]);
 
 	let mode: string = $state('trends');
-	let postText: string = $derived(mode == "trends" ? "Anomaly Trend":"Anomaly")
+	let postText: string = $derived(mode == "trends" ? " Trend":"")
 	let year: number = $state(1900);
-	let variable: string = $state('psl');
+
+	let variable: Variable = $state({
+        variable: "",
+        colorMap: "",
+        name:"",
+        nameShort:"",
+        trendUnit:"",
+        annualUnit:""
+    });
 
 	let reconstruction: Reconstruction = $state({
         reconstruction:"",
@@ -27,12 +35,12 @@
     });
 
 
-	let trendUrl: string = $derived(PUBLIC_API_HOST + '/trends/' + reconstruction.reconstruction + '/' + variable);
+	let trendUrl: string = $derived(PUBLIC_API_HOST + '/trends/' + reconstruction.reconstruction + '/' + variable.variable);
 	let annualUrl: string = $derived(
-		PUBLIC_API_HOST + '/values/' + reconstruction.reconstruction + '/' + variable + '/' + year
+		PUBLIC_API_HOST + '/values/' + reconstruction.reconstruction + '/' + variable.variable + '/' + year
 	);
 	let timeSeriesUrl: string = $derived(
-		PUBLIC_API_HOST + '/timeseries/' + variable + '/90/90'
+		PUBLIC_API_HOST + '/timeseries/' + variable.variable + '/90/90'
 	);
 	let loading:boolean = $state(true);
 
@@ -44,7 +52,7 @@
 		varaibles = avaliableData.variables;
 
 		reconstruction = reconstructions[0]
-		variable = varaibles[0].variable;
+		variable = varaibles[0];
 		
 		const topology = await fetch(
 			'https://code.highcharts.com/mapdata/custom/world-continents.topo.json'
@@ -245,9 +253,6 @@
 				<span class="loading loading-spinner loading-lg"></span>
 			</div>
 		{/if}
-		<!-- <a class="link" target="_blank" href={trendUrl}>{trendUrl}</a>
-		<a class="link" target="_blank" href={timeSeriesUrl}>{timeSeriesUrl}</a>
-		<a class="link" target="_blank" href={annualUrl}>{annualUrl}</a> -->
 		<div class="flex lg:flex-row flex-col justify-between">
 			<div bind:this={map}></div>
 			<div bind:this={timeseries}></div>
@@ -270,8 +275,8 @@
 						<span class="label-text">Select a Variable</span>
 					</div>
 					<select class="select select-bordered" bind:value={variable} onchange={updateMapAndTimeSeries} disabled={loading}>
-                        {#each varaibles as thing}
-						    <option value={thing.variable}>{thing.name} {postText}</option>
+                        {#each varaibles as varb}
+						    <option value={varb}>{varb.name}{postText}</option>
                         {/each}
 					</select>
 				</label>
