@@ -17,6 +17,10 @@
 	let mode: string = $state('trends');
 	let postText: string = $derived(mode == "trends" ? " Trend":"")
 	let year: number = $state(1900);
+	let startYear: number = $state(1900);
+	let endYear: number = $state(2005);
+	let lat: number = $state(90);
+	let lon: number = $state(90);
 
 	let variable: Variable = $state({
         variable: "",
@@ -35,12 +39,12 @@
     });
 
 
-	let trendUrl: string = $derived(PUBLIC_API_HOST + '/trends/' + reconstruction.reconstruction + '/' + variable.variable);
+	let trendUrl: string = $derived(PUBLIC_API_HOST + '/trends/' + reconstruction.reconstruction + '/' + variable.variable+"?startYear="+startYear+"&endYear="+endYear);
 	let annualUrl: string = $derived(
 		PUBLIC_API_HOST + '/values/' + reconstruction.reconstruction + '/' + variable.variable + '/' + year
 	);
 	let timeSeriesUrl: string = $derived(
-		PUBLIC_API_HOST + '/timeseries/' + variable.variable + '/90/90'
+		PUBLIC_API_HOST + '/timeseries/' + variable.variable + '/'+lat+'/'+lon
 	);
 	let loading:boolean = $state(true);
 
@@ -67,15 +71,10 @@
 			trendUrl
 		).then((r) => r.json());
 
-		let timeseriesData: any = await fetch(
+		let timeSeriesData: any = await fetch(
 			timeSeriesUrl
 		).then((r) => r.json());
 
-		let timeSeriesSeries: any[] = [];
-		
-		timeseriesData.values.forEach((e: any)=>{
-			timeSeriesSeries.push(e)
-		})
 		
 
 		// line charts
@@ -86,7 +85,7 @@
 				backgroundColor: 'transparent'
 			},
 			title: {
-					text: 'Time Series',
+					text: timeSeriesData.name,
 					useHTML: true
 			},
 			yAxis: {
@@ -116,30 +115,12 @@
 							color:"white"
 						}
 					},
-					pointStart: 1900,
 				}
 			},
-
-			series: timeSeriesSeries,
+			series: timeSeriesData.values,
 			legend:{
 				useHTML: true
 			},
-			responsive: {
-				rules: [
-					{
-						condition: {
-							maxWidth: 500
-						},
-						chartOptions: {
-							legend: {
-								layout: 'horizontal',
-								align: 'center',
-								verticalAlign: 'bottom'
-							}
-						}
-					}
-				]
-			}
 		});
 				
 		// @ts-ignore
@@ -172,7 +153,9 @@
 					},
 					events: {
 						click: (e: any) => {
-							console.log('200');
+							console.log(e);
+							console.log("Lat: "+ Math.round(e.lat));
+							console.log("Lon: "+Math.round(e.lon));
 						}
 					},
 					interpolation: { enabled: true },
@@ -246,7 +229,7 @@
 	async function updateMapAndTimeSeries(){
 		await updateMap()
 		let newTimeSeriesData =  await fetch(timeSeriesUrl).then((response) => response.json())
-		timeSeriesChart.update({series:newTimeSeriesData.values})
+		timeSeriesChart.update({series:newTimeSeriesData.values,title:{text:newTimeSeriesData.name}})
 	}
 </script>
 <div class="flex flex-row space-x-4">
@@ -257,7 +240,7 @@
 				<span class="loading loading-spinner loading-lg"></span>
 			</div>
 		{/if}
-		<div class="flex lg:flex-row flex-col justify-between">
+		<div class="flex lg:flex-row flex-col lg:justify-center">
 			<div bind:this={map}></div>
 			<div bind:this={timeseries}></div>
 		</div>
@@ -304,6 +287,35 @@
 						class="range"
 						bind:value={year}
 						onchange={updateMap}
+						disabled={loading}
+					/>
+				</div>
+				{:else}
+				<div class="form-control">
+					<div class="label"><span class="label-text">Start Year {startYear}</span></div>
+					
+					<input
+						bind:value={startYear}
+						type="number"
+						min="1900"
+						max="2005"
+						class="input"
+						disabled={loading}
+						onchange={updateMap}
+  
+					/>
+				</div>
+				<div class="form-control">
+					<div class="label">
+						<span class="label-text">End Year {endYear}</span>
+					</div>
+					<input
+						onchange={updateMap}
+						bind:value={endYear}
+						type="number"
+						min={startYear+1}
+						max="2005"
+						class="input"
 						disabled={loading}
 					/>
 				</div>
