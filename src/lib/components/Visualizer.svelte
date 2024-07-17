@@ -212,6 +212,7 @@
 					text:variable.trendUnit,
 				},
 				useHTML: true,
+				symbolWidth: 350
 			},
 			mapNavigation: {
 				enabled: false
