@@ -4,6 +4,8 @@
 	import GeoHeatmap from 'highcharts/modules/geoheatmap';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import { Data } from '$lib/Data';
+	import continents from "@highcharts/map-collection/custom/world-continents.topo.json"
+	import antarctica from "@highcharts/map-collection/custom/antarctica.topo.json"
 	import type { AvaliableDataResponse, Variable, Reconstruction } from '$lib/Data';
 	let map: any;
 	let timeseries: any;
@@ -77,13 +79,6 @@
 		variable = varaibles[0];
 		startYear = reconstruction.timeStart;
 		endYear = reconstruction.timeEnd;
-
-		const topology = await fetch(
-			'https://code.highcharts.com/mapdata/custom/world-continents.topo.json'
-		).then((r) => r.json());
-		const antarctica = await fetch(
-			'https://code.highcharts.com/mapdata/custom/antarctica.topo.json'
-		).then((r) => r.json());
 
 		GeoHeatmap(Highcharts);
 
@@ -185,7 +180,7 @@
 					}
 				},
 				{
-					mapData: topology,
+					mapData: continents,
 					type: 'map',
 					zIndex: 2,
 					states: {
