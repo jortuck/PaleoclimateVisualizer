@@ -287,7 +287,6 @@
 		}
 	})
 </script>
-{lat}-{lon}
 <div class="flex flex-row space-x-4">
 	<div class="bg-base-200 shadow-md p-4 rounded-md w-full mx-2 relative">
 		{#if loading}
