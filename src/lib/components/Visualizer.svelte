@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import Highcharts from 'highcharts/highmaps';
+
 	import GeoHeatmap from 'highcharts/modules/geoheatmap';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import { Data } from '$lib/Data';
@@ -80,7 +81,6 @@
 		variable = varaibles[0];
 		startYear = reconstruction.timeStart;
 		endYear = reconstruction.timeEnd;
-
 		GeoHeatmap(Highcharts);
 
 		let dataSet: any = await fetch(trendUrl).then((r) => r.json());
@@ -146,7 +146,8 @@
 						console.log('selection');
 						console.log(e);
 					}
-				}
+				},
+				animation: false,
 			},
 			title: { text: dataSet.name, useHTML: true },
 			colors: ['#058DC7'],
