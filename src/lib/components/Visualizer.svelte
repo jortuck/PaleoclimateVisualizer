@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import Highcharts from 'highcharts/highmaps';
+	import { onDestroy, onMount } from 'svelte';
+	import Highcharts, { mapChart } from 'highcharts/highmaps';
 	import GeoHeatmap from 'highcharts/modules/geoheatmap';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import { Data } from '$lib/Data';
@@ -275,6 +275,10 @@
 		}
 		return result;
 	}
+	onDestroy(()=>{
+		timeSeriesChart.destroy();
+		chart.destroy();
+	})
 </script>
 
 <div class="flex flex-row space-x-4">
