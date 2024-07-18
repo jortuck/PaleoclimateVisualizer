@@ -12,18 +12,19 @@
 	let chart: Highcharts.MapChart;
 	let timeSeriesChart: Highcharts.Chart;
 
+	// base state controls, what is avaliable
 	let reconstructions: Reconstruction[] = $state([]);
-
 	let varaibles: Variable[] = $state([]);
 
+	// controls of what is viewed
 	let mode: string = $state('trends');
 	let postText: string = $derived(mode == 'trends' ? ' Trend' : '');
 	let year: number = $state(1900);
 	let startYear: number = $state(1900);
 	let endYear: number = $state(2005);
+	let yearsChanged: boolean = $state(false);
 	let lat: number = $state(90);
 	let lon: number = $state(90);
-
 	let variable: Variable = $state({
 		variable: '',
 		colorMap: '',
@@ -32,7 +33,6 @@
 		trendUnit: '',
 		annualUnit: ''
 	});
-
 	let reconstruction: Reconstruction = $state({
 		reconstruction: '',
 		name: '',
@@ -42,6 +42,7 @@
 		varaibles: null
 	});
 
+	// derrived urls for fetching data from api
 	let trendUrl: string = $derived(
 		PUBLIC_API_HOST +
 			'/trends/' +
@@ -294,7 +295,7 @@
 			<div bind:this={map}></div>
 			<div bind:this={timeseries}></div>
 		</div>
-		<div class="space-y-2">
+		<div class="space-y-4">
 			<h1>Settings</h1>
 			<div class="flex md:space-x-5 md:flex-row flex-col">
 				<label class="form-control w-full">
@@ -357,18 +358,18 @@
 				</div>
 			{:else}
 				<div class="flex flex-row w-full space-x-3">
-					<select bind:value={startYear} class="input w-full" disabled={loading}>
+					<select onchange={()=>{yearsChanged=true}} bind:value={startYear} class="input w-full" disabled={loading}>
 						{#each range(reconstruction.timeStart,endYear-1) as i}
 							<option value={i}>{i}</option>
 						{/each}
 					</select>
 					<p class="my-auto block align-middle">to</p>
-					<select bind:value={endYear} class="input w-full" disabled={loading}>
+					<select onchange={()=>{yearsChanged=true}} bind:value={endYear} class="input w-full" disabled={loading}>
 						{#each range(startYear+1, reconstruction.timeEnd) as i}
 							<option value={i}>{i}</option>
 						{/each}
 					</select>					
-					<button onclick={updateMap} class="btn btn-primary">Update Time Range</button>
+					<button onclick={()=>{yearsChanged=false; updateMap()}} class="btn btn-primary" disabled={loading||!yearsChanged}>Update Time Range</button>
 				</div>
 			{/if}
 		</div>
