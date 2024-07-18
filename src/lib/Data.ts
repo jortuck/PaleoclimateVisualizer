@@ -24,6 +24,8 @@ export type Reconstruction = {
     reconstruction: string;
     name: string;
     nameShort: string;
+    timeStart:number;
+    timeEnd: number;
     varaibles: Variable[] | null;
 }
 

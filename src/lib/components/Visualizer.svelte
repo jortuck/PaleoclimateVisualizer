@@ -34,6 +34,8 @@
 	let reconstruction: Reconstruction = $state({
 		reconstruction: '',
 		name: '',
+		timeEnd: 0,
+		timeStart:0,
 		nameShort: '',
 		varaibles: null
 	});
@@ -73,6 +75,8 @@
 
 		reconstruction = reconstructions[0];
 		variable = varaibles[0];
+		startYear = reconstruction.timeStart;
+		endYear = reconstruction.timeEnd;
 
 		const topology = await fetch(
 			'https://code.highcharts.com/mapdata/custom/world-continents.topo.json'
@@ -194,7 +198,7 @@
 			mapView: {
 				projection: {
 					rotation: [180, 0, 0]
-				},
+				}
 				// fitToGeometry: { good for box focus
 				// 	type: 'Polygon',
 				// 	coordinates: [
@@ -207,9 +211,9 @@
 				// 	]
 				// }
 			},
-			legend:{
-				title:{
-					text:variable.trendUnit,
+			legend: {
+				title: {
+					text: variable.trendUnit
 				},
 				useHTML: true,
 				symbolWidth: 350
@@ -238,7 +242,7 @@
 		} else {
 			newData = await fetch(trendUrl).then((response) => response.json());
 		}
-	
+
 		// @ts-ignore
 		chart.series[0].update({
 			data: Data.createGeoPoints(newData.lats, newData.lons, newData.values)
@@ -249,8 +253,8 @@
 				max: newData.max,
 				stops: newData.colorMap
 			},
-			title:{ text: newData.name },
-			legend:{title:{text: mode=="annual" ? variable.annualUnit : variable.trendUnit}}
+			title: { text: newData.name },
+			legend: { title: { text: mode == 'annual' ? variable.annualUnit : variable.trendUnit } }
 		});
 		loading = false;
 	}
@@ -261,6 +265,15 @@
 			series: newTimeSeriesData.values,
 			title: { text: newTimeSeriesData.name }
 		});
+	}
+	function range(from: number, to: number,) {
+		const result: number[] = [];
+		let i = from;
+		while (i <= to) {
+			result.push(i);
+			i += 1;
+		}
+		return result;
 	}
 </script>
 
@@ -340,32 +353,19 @@
 					/>
 				</div>
 			{:else}
-				<div class="form-control">
-					<div class="label"><span class="label-text">Start Year {startYear}</span></div>
-
-					<input
-						bind:value={startYear}
-						type="number"
-						min="1900"
-						max="2005"
-						class="input"
-						disabled={loading}
-						onchange={updateMap}
-					/>
-				</div>
-				<div class="form-control">
-					<div class="label">
-						<span class="label-text">End Year {endYear}</span>
-					</div>
-					<input
-						onchange={updateMap}
-						bind:value={endYear}
-						type="number"
-						min={startYear + 1}
-						max="2005"
-						class="input"
-						disabled={loading}
-					/>
+				<div class="flex flex-row w-full space-x-3">
+					<select bind:value={startYear} class="input w-full" disabled={loading}>
+						{#each range(reconstruction.timeStart,endYear-1) as i}
+							<option value={i}>{i}</option>
+						{/each}
+					</select>
+					<p class="my-auto block align-middle">to</p>
+					<select bind:value={endYear} class="input w-full" disabled={loading}>
+						{#each range(startYear+1, reconstruction.timeEnd) as i}
+							<option value={i}>{i}</option>
+						{/each}
+					</select>					
+					<button onclick={updateMap} class="btn btn-primary">Update Time Range</button>
 				</div>
 			{/if}
 		</div>
