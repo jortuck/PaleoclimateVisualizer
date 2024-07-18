@@ -24,8 +24,8 @@
 	let startYear: number = $state(1900);
 	let endYear: number = $state(2005);
 	let yearsChanged: boolean = $state(false);
-	let lat: number = $state(90);
-	let lon: number = $state(90);
+	let lat: number = $state(0);
+	let lon: number = $state(0);
 	let variable: Variable = $state({
 		variable: '',
 		colorMap: '',
@@ -164,9 +164,12 @@
 					},
 					events: {
 						click: (e: any) => {
-							console.log(e);
-							console.log('Lat: ' + Math.round(e.lat));
-							console.log('Lon: ' + Math.round(e.lon));
+							lat = Math.round(e.lat);
+							lon = Math.round(e.lon);
+							if(lon < -180){
+								lon = lon+360;
+							}
+							updateTimeSeries();
 						}
 					},
 					interpolation: { enabled: true },
@@ -257,6 +260,9 @@
 	}
 	async function updateMapAndTimeSeries() {
 		await updateMap();
+		await updateTimeSeries();
+	}
+	async function updateTimeSeries(){
 		let newTimeSeriesData = await fetch(timeSeriesUrl).then((response) => response.json());
 		timeSeriesChart.update({
 			series: newTimeSeriesData.values,
@@ -281,7 +287,7 @@
 		}
 	})
 </script>
-
+{lat}-{lon}
 <div class="flex flex-row space-x-4">
 	<div class="bg-base-200 shadow-md p-4 rounded-md w-full mx-2 relative">
 		{#if loading}
