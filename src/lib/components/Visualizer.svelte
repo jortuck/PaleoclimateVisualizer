@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import Highcharts, { mapChart } from 'highcharts/highmaps';
+	import Highcharts from 'highcharts/highmaps';
 	import GeoHeatmap from 'highcharts/modules/geoheatmap';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import { Data } from '$lib/Data';
@@ -276,8 +276,12 @@
 		return result;
 	}
 	onDestroy(()=>{
-		timeSeriesChart.destroy();
-		chart.destroy();
+		if(typeof timeSeriesChart != 'undefined'){
+			timeSeriesChart.destroy();
+		}
+		if(typeof chart != 'undefined'){
+			chart.destroy();
+		}
 	})
 </script>
 
