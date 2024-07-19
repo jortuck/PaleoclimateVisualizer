@@ -1,15 +1,7 @@
 
 export class Data{
-    public static createGeoPoints(lats: any[], lons: any, values: any) : any[]{
-        let result: any = [];
-        for (let i :number = 0; i<lats.length; i++){
-            result.push([
-                lons[i],
-                lats[i],
-                values[i]
-            ])
-        }
-        return result;
+    public static createGeoPoints(lats: number[], lons: number[], values: number[]) : number[][]{
+        return lats.map((lat, index) => [lons[index], lat, values[index]]);
     }
 }
 export type Variable = {
