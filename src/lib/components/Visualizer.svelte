@@ -141,12 +141,6 @@
 				zooming: {
 					mode: 'xy'
 				},
-				events: {
-					selection: (e: any) => {
-						console.log('selection');
-						console.log(e);
-					}
-				},
 				animation: false,
 			},
 			title: { text: dataSet.name, useHTML: true },
@@ -197,7 +191,7 @@
 			],
 			mapView: {
 				projection: {
-					rotation: [180, 0, 0]
+					// rotation: [180, 0, 0]
 				}
 				// fitToGeometry: { good for box focus
 				// 	type: 'Polygon',
