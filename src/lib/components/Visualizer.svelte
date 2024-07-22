@@ -8,6 +8,7 @@
 	import continents from "@highcharts/map-collection/custom/world-continents.topo.json"
 	import antarctica from "@highcharts/map-collection/custom/antarctica.topo.json"
 	import type { AvaliableDataResponse, Variable, Reconstruction } from '$lib/Data';
+	import Controller from '$lib/components/Controller.svelte';
 	let map: any;
 	let timeseries: any;
 	let chart: Highcharts.MapChart;
@@ -263,15 +264,6 @@
 			title: { text: newTimeSeriesData.name }
 		});
 	}
-	function range(from: number, to: number,) {
-		const result: number[] = [];
-		let i = from;
-		while (i <= to) {
-			result.push(i);
-			i += 1;
-		}
-		return result;
-	}
 	onDestroy(()=>{
 		if(typeof timeSeriesChart != 'undefined'){
 			timeSeriesChart.destroy();
@@ -294,84 +286,6 @@
 		<div class="flex lg:flex-row flex-col lg:justify-center">
 			<div bind:this={map}></div>
 			<div bind:this={timeseries}></div>
-		</div>
-		<div class="space-y-4">
-			<h1>Settings</h1>
-			<div class="flex md:space-x-5 md:flex-row flex-col">
-				<label class="form-control w-full">
-					<div class="label">
-						<span class="label-text">Select a Climate Model</span>
-					</div>
-					<select
-						class="select select-bordered"
-						bind:value={reconstruction}
-						onchange={updateMap}
-						disabled={loading}
-					>
-						{#each reconstructions as rec}
-							<option value={rec}>{rec.name}</option>
-						{/each}
-					</select>
-				</label>
-				<label class="form-control w-full">
-					<div class="label">
-						<span class="label-text">Select a Variable</span>
-					</div>
-					<select
-						class="select select-bordered"
-						bind:value={variable}
-						onchange={updateMapAndTimeSeries}
-						disabled={loading}
-					>
-						{#each varaibles as varb}
-							<option value={varb}>{varb.name}{postText}</option>
-						{/each}
-					</select>
-				</label>
-				<label class="form-control w-full">
-					<div class="label">
-						<span class="label-text">Viewing Mode</span>
-					</div>
-					<select
-						class="select select-bordered"
-						bind:value={mode}
-						onchange={updateMap}
-						disabled={loading}
-					>
-						<option value="trends">Trends</option>
-						<option value="annual">Annual Data</option>
-					</select>
-				</label>
-			</div>
-			{#if mode == 'annual'}
-				<div class="form-control">
-					{year}
-					<input
-						type="range"
-						min="1900"
-						max="2005"
-						class="range"
-						bind:value={year}
-						onchange={updateMap}
-						disabled={loading}
-					/>
-				</div>
-			{:else}
-				<div class="flex flex-row w-full space-x-3">
-					<select onchange={()=>{yearsChanged=true}} bind:value={startYear} class="input w-full" disabled={loading}>
-						{#each range(reconstruction.timeStart,endYear-1) as i}
-							<option value={i}>{i}</option>
-						{/each}
-					</select>
-					<p class="my-auto block align-middle">to</p>
-					<select onchange={()=>{yearsChanged=true}} bind:value={endYear} class="input w-full" disabled={loading}>
-						{#each range(startYear+1, reconstruction.timeEnd) as i}
-							<option value={i}>{i}</option>
-						{/each}
-					</select>					
-					<button onclick={()=>{yearsChanged=false; updateMap()}} class="btn btn-primary" disabled={loading||!yearsChanged}>Update Time Range</button>
-				</div>
-			{/if}
 		</div>
 	</div>
 </div>

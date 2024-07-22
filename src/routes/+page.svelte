@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Visualizer from "$lib/components/Visualizer.svelte"
+	import Controller from '$lib/components/Controller.svelte';
+	import Map from '$lib/components/Map.svelte';
 </script>
 
 <svelte:head>
@@ -18,4 +20,5 @@
 	<meta property="og:site_name" content="Paleoclimate Visualizer" />
 	<meta property="og:locale" content="en_US" />
 </svelte:head>
-<Visualizer />
+<Map />
+<Controller />
