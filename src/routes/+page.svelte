@@ -50,13 +50,20 @@
 	<meta property="og:site_name" content="Paleoclimate Visualizer" />
 	<meta property="og:locale" content="en_US" />
 </svelte:head>
-{#if data!=null}
-	<Map dataSet={data} />
-{/if}
-{#if timeSeriesData!=null}
-		<TimeSeries timeSeriesData="{timeSeriesData}" />
-{/if}
-<Controller updateMapData="{updateMap}" updateTimeSeriesData="{updateTimeSeries}" updateMapAndTimeSeriesData="{async () =>{await updateMap();await updateTimeSeries();}}" />
+<div class="flex flex-row h-full">
+	<div class="p-5 bg-base-200">
+		<Controller updateMapData="{updateMap}" updateTimeSeriesData="{updateTimeSeries}" updateMapAndTimeSeriesData="{async () =>{await updateMap();await updateTimeSeries();}}" />
+	</div>
+	<div class="flex-1 min-h-full">
+		{#if data!=null}
+			<Map dataSet={data} />
+		{/if}
+		{#if timeSeriesData!=null}
+			<TimeSeries timeSeriesData="{timeSeriesData}" />
+		{/if}
+	</div>
+</div>
+
 <style lang="postcss">
     :global(
 			.highcharts-title,

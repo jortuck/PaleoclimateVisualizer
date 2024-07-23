@@ -24,8 +24,8 @@
 	}
 </script>
 <div class="space-y-4">
-	<h1>Settings</h1>
-	<div class="flex md:space-x-5 md:flex-row flex-col">
+	<h2 class="text-2xl font-bold">Settings</h2>
+	<div class="flex flex-col space-y-3">
 		<label class="form-control w-full">
 			<div class="label">
 				<span class="label-text">Select a Climate Model</span>
