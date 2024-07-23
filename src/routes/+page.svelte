@@ -51,12 +51,12 @@
 	<meta property="og:locale" content="en_US" />
 </svelte:head>
 {#if data!=null}
-<Map dataSet={data} />
+	<Map dataSet={data} />
 {/if}
 {#if timeSeriesData!=null}
-	<TimeSeries timeSeriesData="{timeSeriesData}" />
+		<TimeSeries timeSeriesData="{timeSeriesData}" />
 {/if}
-<Controller updateMapData="{updateMap}" updateTimeSeriesData="{updateTimeSeries}" />
+<Controller updateMapData="{updateMap}" updateTimeSeriesData="{updateTimeSeries}" updateMapAndTimeSeriesData="{async () =>{await updateMap();await updateTimeSeries();}}" />
 <style lang="postcss">
     :global(
 			.highcharts-title,
