@@ -50,11 +50,11 @@
 	<meta property="og:site_name" content="Paleoclimate Visualizer" />
 	<meta property="og:locale" content="en_US" />
 </svelte:head>
-<div class="flex flex-row h-full">
-	<div class="p-5 bg-base-200">
+<div class="flex flex-row grow">
+	<div class="p-5 bg-base-200 flex-shrink">
 		<Controller updateMapData="{updateMap}" updateTimeSeriesData="{updateTimeSeries}" updateMapAndTimeSeriesData="{async () =>{await updateMap();await updateTimeSeries();}}" />
 	</div>
-	<div class="flex-1 min-h-full">
+	<div class="flex-1 p-5">
 		{#if data!=null}
 			<Map dataSet={data} />
 		{/if}
