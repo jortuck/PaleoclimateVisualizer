@@ -2,30 +2,24 @@
 import { controller } from '$lib/ControllerState.svelte';
 import { onMount } from 'svelte';
 import { PUBLIC_API_HOST } from '$env/static/public';
-import { type AvaliableDataResponse, Data, type Reconstruction, type Variable } from '$lib/Data';
+import { type AvailableDataResponse, Data, type Reconstruction, type Variable } from '$lib/Data';
+
+let {updateMapData,updateTimeSeriesData} : {updateMapData:() => void, updateTimeSeriesData:() => void} = $props()
 
 
 let yearsChanged: boolean = $state(false);
-let postText: string = $state("fart");
-
-onMount(async ()=>{
-	let availableData = (await fetch(PUBLIC_API_HOST).then((r) =>
-		r.json()
-	)) as AvaliableDataResponse;
-	controller.reconstructions = availableData.reconstructions;
-	controller.variables = availableData.variables;
-	controller.reconstruction = controller.reconstructions[0];
-	controller.variable = controller.variables[0];
-	controller.startYear = controller.reconstruction.timeStart;
-	controller.endYear = controller.reconstruction.timeEnd;
-})
+let postText: string = $derived(controller.mode == 'trends' ? ' Trend' : '');
 
 let loading: boolean = $state(false);
 async function updateMap() {
-	console.log("test")
+	updateMapData();
 }
-async function updateMapAndTimeSeries() {
-	console.log("test")
+async function updateTimeSeries() {
+	updateTimeSeriesData();
+}
+function updateMapAndTimeSeries() {
+	updateMapData();
+	updateTimeSeriesData();
 }
 function range(from: number, to: number,) {
 	const result: number[] = [];

@@ -3,7 +3,6 @@
 	import "../app.css"
 </script>
 <div class="min-h-screen">
-	<Navbar />
 	<main class="container mx-auto mt-8">
 		<slot />
 	</main>

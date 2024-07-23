@@ -1,6 +1,7 @@
+import Highcharts from 'highcharts/highmaps';
 
 export class Data{
-    public static createGeoPoints(lats: number[], lons: number[], values: number[]) : number[][]{
+    public static createGeoPoints(lats: number[], lons: number[], values: number[]) : [number,number,number][]{
         return lats.map((lat, index) => [lons[index], lat, values[index]]);
     }
 }
@@ -18,10 +19,25 @@ export type Reconstruction = {
     nameShort: string;
     timeStart:number;
     timeEnd: number;
-    varaibles: Variable[] | null;
+    variables: Variable[] | null;
 }
 
-export type AvaliableDataResponse = {
+export type AvailableDataResponse = {
     reconstructions: Reconstruction[],
     variables: Variable[]
+}
+
+export type TimeSeriesData = {
+    name: string;
+    values: Highcharts.SeriesOptionsType[]
+}
+export type MapData = {
+    min:number,
+    max:number,
+    name:string,
+    variable:string,
+    colorMap: [number,string][],
+    lats: number[],
+    lons: number[],
+    values: number[],
 }
