@@ -85,23 +85,29 @@
 			/>
 		</div>
 	{:else}
-		<div class="flex flex-row w-full space-x-3">
-			<select onchange={()=>{yearsChanged=true}} bind:value={controller.startYear}
-							class="input w-full" disabled={loading}>
-				{#each range(controller.reconstruction.timeStart, controller.endYear - 1) as i}
-					<option value={i}>{i}</option>
-				{/each}
-			</select>
-			<p class="my-auto block align-middle">to</p>
-			<select onchange={()=>{yearsChanged=true}} bind:value={controller.endYear}
-							class="input w-full" disabled={loading}>
-				{#each range(controller.startYear + 1, controller.reconstruction.timeEnd) as i}
-					<option value={i}>{i}</option>
-				{/each}
-			</select>
-			<button onclick={()=>{yearsChanged=false; updateMapData()}} class="btn btn-primary"
-							disabled={loading||!yearsChanged}>Update Time Range
-			</button>
+		<div class="form-control">
+			<div class="label">
+				<span class="label-text">Trend Time Range</span>
+			</div>
+			<div class="flex flex-row w-full md:space-x-3 md:flex-row space-x-2">
+				<select onchange={()=>{yearsChanged=true}} bind:value={controller.startYear}
+								class="select select-sm md:select-md w-full select-bordered" disabled={loading}>
+					{#each range(controller.reconstruction.timeStart, controller.endYear - 1) as i}
+						<option value={i}>{i}</option>
+					{/each}
+				</select>
+				<p class="my-auto block align-middle">to</p>
+				<select onchange={()=>{yearsChanged=true}} bind:value={controller.endYear}
+								class="select select-sm w-full md:select-md select-bordered" disabled={loading}>
+					{#each range(controller.startYear + 1, controller.reconstruction.timeEnd) as i}
+						<option value={i}>{i}</option>
+					{/each}
+				</select>
+				<button onclick={()=>{yearsChanged=false; updateMapData()}}
+								class="btn btn-sm md:btn-md btn-primary"
+								disabled={loading||!yearsChanged}>Update
+				</button>
+			</div>
 		</div>
 	{/if}
 </div>
