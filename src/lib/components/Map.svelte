@@ -85,6 +85,12 @@
 			mapNavigation: {
 				enabled: false
 			},
+			mapView:{
+				// projection:{
+				// 		name: 'Orthographic',
+				// 		projectedBounds: 'world'
+				// }
+			},
 			colorAxis: {
 				min: dataSet.min,
 				max: dataSet.max,
