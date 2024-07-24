@@ -2,6 +2,7 @@
 	import type { TimeSeriesData } from '$lib/Data';
 	import { onMount } from 'svelte';
 	import Highcharts from 'highcharts/highmaps';
+	import { controller } from '$lib/ControllerState.svelte';
 
 	let timeseries: any;
 	let { timeSeriesData, class:className }: { timeSeriesData: TimeSeriesData, class: string} = $props();
@@ -58,6 +59,9 @@
 			series: timeSeriesData.values,
 			title: { text: timeSeriesData.name }
 		});
+	})
+	$effect(()=>{
+		chart.update({yAxis:{title:{text:controller.variable.annualUnit}}})
 	})
 	function adjust(){
 		chart.reflow();
