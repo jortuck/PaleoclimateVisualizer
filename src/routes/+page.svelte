@@ -63,8 +63,8 @@
 </svelte:head>
 <div class="flex flex-row grow">
 	<div class="p-5 bg-base-200 flex-shrink hidden lg:block">
-		<Controller updateMapData="{updateMap}" updateTimeSeriesData="{updateTimeSeries}"
-								updateMapAndTimeSeriesData="{async () =>{await updateMap();await updateTimeSeries();}}" />
+		<Controller updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
+								updateMapAndTimeSeriesData={async () =>{await updateMap();await updateTimeSeries();}} />
 	</div>
 	<div class="flex flex-col flex-shrink w-full relative">
 		{#if controller.loading > 0}
@@ -83,7 +83,7 @@
 		{/if}
 		{#if timeSeriesData != null}
 			<div class="basis-1/2">
-				<TimeSeries class="w-full" timeSeriesData="{timeSeriesData}" />
+				<TimeSeries class="w-full" timeSeriesData={timeSeriesData} />
 			</div>
 		{/if}
 	</div>
@@ -93,8 +93,8 @@
 		<form method="dialog">
 			<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 		</form>
-		<Controller updateMapData="{updateMap}" updateTimeSeriesData="{updateTimeSeries}"
-								updateMapAndTimeSeriesData="{async () =>{await updateMap();await updateTimeSeries();}}" />
+		<Controller updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
+								updateMapAndTimeSeriesData={async () =>{await updateMap();await updateTimeSeries();}} />
 	</div>
 </dialog>
 <style lang="postcss">
