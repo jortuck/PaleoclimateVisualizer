@@ -19,13 +19,9 @@
 		}
 		controller.loading--;
 	}
-	$effect(()=>{
 
-	})
 	async function updateTimeSeries() {
-		controller.loading++;
-		timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) => response.json()) as TimeSeriesData;
-		controller.loading--;
+		timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) =>  response.json()) as TimeSeriesData;
 	}
 
 	onMount(async () => {
@@ -77,7 +73,7 @@
 		{/if}
 		{#if data != null}
 			<div class="basis-1/2">
-				<Map class="w-full" dataSet={data} />
+				<Map click={updateTimeSeries} class="w-full" dataSet={data} />
 
 			</div>
 		{/if}

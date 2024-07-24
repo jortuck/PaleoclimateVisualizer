@@ -6,9 +6,7 @@ class ControllerState {
 	year: number = $state(1900);
 	startYear: number = $state(1900);
 	endYear: number = $state(2005);
-	lat: number = $state(0);
-	lon: number = $state(0);
-	point:{lat:number, lon:number}={lat:0,lon:0}
+	point:{lat:number, lon:number}=$state.frozen({lat:0,lon:0})
 	loading: number = $state(0);
 	modal: HTMLDialogElement | null = $state(null);
 	variable: Variable = $state({
@@ -52,7 +50,7 @@ class ControllerState {
 		this.year
 	);
 	timeSeriesUrl: string = $derived(
-		PUBLIC_API_HOST + '/timeseries/' + this.variable.variable + '/' + this.lat + '/' + this.lon
+		PUBLIC_API_HOST + '/timeseries/' + this.variable.variable + '/' + this.point.lat + '/' + this.point.lon
 	);
 }
 

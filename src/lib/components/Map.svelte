@@ -5,10 +5,12 @@
 	import antarctica from '@highcharts/map-collection/custom/antarctica.topo.json';
 	import continents from '@highcharts/map-collection/custom/world-continents.topo.json';
 	import GeoHeatmap from 'highcharts/modules/geoheatmap';
+	import { controller } from '$lib/ControllerState.svelte';
 
-	let { dataSet, class:className }: {
+	let { dataSet, class: className, click }: {
 		dataSet: MapData,
 		class: string,
+		click:()=>void
 	} = $props();
 
 	let map: HTMLElement | null = null;
@@ -25,7 +27,7 @@
 				zooming: {
 					mode: 'xy'
 				},
-				animation: false
+				animation: false,
 			},
 			title: { text: dataSet.name, useHTML: true },
 			colors: ['#058DC7'],
@@ -40,7 +42,18 @@
 						inactive: { opacity: 1 }
 					},
 					interpolation: { enabled: true },
-					zIndex: 0
+					zIndex: 0,
+					events: {
+						click: (e: any) => {
+							let lon = Math.round(e.lon);
+							if (lon < -180) {
+								lon =lon + 360;
+							}
+							controller.point = {lat:Math.round(e.lat), lon:lon};
+							click();
+
+						}
+					}
 				},
 				{
 					mapData: antarctica,
@@ -83,13 +96,13 @@
 			}
 		});
 	});
-	onDestroy(()=>{
-		if(typeof chart != 'undefined'){
+	onDestroy(() => {
+		if (typeof chart != 'undefined') {
 			chart.destroy();
 		}
-	})
-	$effect(()=>{
-		if(typeof chart != 'undefined') {
+	});
+	$effect(() => {
+		if (typeof chart != 'undefined') {
 			// @ts-ignore
 			chart.series[0].update({ data: Data.createGeoPoints(dataSet.lats, dataSet.lons, dataSet.values) });
 			chart.update({
@@ -102,7 +115,7 @@
 				legend: { title: { text: dataSet.variable } }
 			});
 		}
-	})
+	});
 </script>
-<svelte:window on:resize={()=>{chart.reflow()}}/>
+<svelte:window on:resize={()=>{chart.reflow()}} />
 <div class="{className}" bind:this={map}></div>
