@@ -24,7 +24,7 @@
 	}
 </script>
 <div class="space-y-4">
-	<h2 class="text-2xl font-bold">Settings {controller.loading}</h2>
+	<h2 class="text-2xl font-bold">Settings</h2>
 	<div class="flex flex-col space-y-3">
 		<label class="form-control w-full">
 			<div class="label">
