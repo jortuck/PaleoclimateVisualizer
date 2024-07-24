@@ -5,10 +5,10 @@
 	import antarctica from '@highcharts/map-collection/custom/antarctica.topo.json';
 	import continents from '@highcharts/map-collection/custom/world-continents.topo.json';
 	import GeoHeatmap from 'highcharts/modules/geoheatmap';
-	import {controller} from '$lib/ControllerState.svelte';
 
-	let { dataSet }: {
+	let { dataSet, class:className }: {
 		dataSet: MapData,
+		class: string,
 	} = $props();
 
 	let map: HTMLElement | null = null;
@@ -104,4 +104,5 @@
 		}
 	})
 </script>
-<div bind:this={map}></div>
+<svelte:window on:resize={()=>{chart.reflow()}}/>
+<div class="{className}" bind:this={map}></div>

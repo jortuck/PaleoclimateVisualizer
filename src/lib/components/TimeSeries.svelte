@@ -4,14 +4,14 @@
 	import Highcharts from 'highcharts/highmaps';
 
 	let timeseries: any;
-	let { timeSeriesData }: { timeSeriesData: TimeSeriesData } = $props();
+	let { timeSeriesData, class:className }: { timeSeriesData: TimeSeriesData, class: string} = $props();
 	let chart: Highcharts.Chart;
-
+	let size: any;
 	onMount(() => {
 		chart = Highcharts.chart(timeseries, {
 			// @ts-ignore
 			chart: {
-				backgroundColor: 'transparent'
+				backgroundColor: 'transparent',
 			},
 			title: {
 				useHTML: true
@@ -36,6 +36,9 @@
 			},
 			plotOptions: {
 				series: {
+					marker:{
+						enabled: false
+					},
 					label: {
 						connectorAllowed: true,
 						style: {
@@ -57,4 +60,5 @@
 		});
 	})
 </script>
-<div bind:this={timeseries}></div>
+<svelte:window on:resize={()=>{chart.reflow()}}/>
+<div class="{className}" bind:this={timeseries}></div>

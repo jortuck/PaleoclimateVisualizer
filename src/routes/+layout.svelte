@@ -2,7 +2,7 @@
 	import Navbar from "$lib/components/Navbar.svelte"
 	import "../app.css"
 </script>
-<div class="flex min-h-screen flex-col items-stretch">
+<div class="flex max-h-screen flex-col items-stretch min-h-screen overflow-hidden">
 	<Navbar />
 	<main class="flex grow flex-col">
 		<slot />
