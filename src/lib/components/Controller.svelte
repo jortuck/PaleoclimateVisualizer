@@ -11,7 +11,7 @@
 	let yearsChanged: boolean = $state(false);
 	let postText: string = $derived(controller.mode == 'trends' ? ' Trend' : '');
 
-	let loading: boolean = $state(false);
+	let loading: boolean = $derived(controller.loading > 0);
 
 	function range(from: number, to: number) {
 		const result: number[] = [];
@@ -24,7 +24,7 @@
 	}
 </script>
 <div class="space-y-4">
-	<h2 class="text-2xl font-bold">Settings</h2>
+	<h2 class="text-2xl font-bold">Settings {controller.loading}</h2>
 	<div class="flex flex-col space-y-3">
 		<label class="form-control w-full">
 			<div class="label">

@@ -11,18 +11,23 @@
 	let timeSeriesData: TimeSeriesData | null = null;
 
 	async function updateMap() {
+		controller.loading++;
 		if (ctr.mode == 'annual') {
 			data = await fetch(ctr.annualUrl).then((response) => response.json()) as MapData;
 		} else {
 			data = await fetch(ctr.trendUrl).then((response) => response.json()) as MapData;
 		}
+		controller.loading--;
 	}
 
 	async function updateTimeSeries() {
+		controller.loading++;
 		timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) => response.json()) as TimeSeriesData;
+		controller.loading--;
 	}
 
 	onMount(async () => {
+		controller.loading++;
 		let availableData = (await fetch(PUBLIC_API_HOST).then((r) =>
 			r.json()
 		)) as AvailableDataResponse;
@@ -32,6 +37,7 @@
 		controller.variable = controller.variables[0];
 		controller.startYear = controller.reconstruction.timeStart;
 		controller.endYear = controller.reconstruction.timeEnd;
+		controller.loading--;
 		await updateMap();
 		await updateTimeSeries();
 	});
@@ -58,12 +64,25 @@
 		<Controller updateMapData="{updateMap}" updateTimeSeriesData="{updateTimeSeries}"
 								updateMapAndTimeSeriesData="{async () =>{await updateMap();await updateTimeSeries();}}" />
 	</div>
-	<div class="flex flex-col flex-shrink w-full">
+	<div class="flex flex-col flex-shrink w-full relative">
+		{#if controller.loading > 0}
+			<div
+				class="h-full w-full z-50 bg-base-300 absolute top-0 left-0 opacity-80 flex items-center justify-center flex-col space-y-5"
+			>
+				<h2 class="text-2xl font-bold text-base-content">Loading</h2>
+				<span class="loading loading-spinner loading-lg"></span>
+			</div>
+		{/if}
 		{#if data != null}
-			<Map class="basis-1/2" dataSet={data} />
+			<div class="basis-1/2">
+				<Map class="w-full" dataSet={data} />
+
+			</div>
 		{/if}
 		{#if timeSeriesData != null}
-			<TimeSeries class="basis-1/2" timeSeriesData="{timeSeriesData}" />
+			<div class="basis-1/2">
+				<TimeSeries class="w-full" timeSeriesData="{timeSeriesData}" />
+			</div>
 		{/if}
 	</div>
 </div>

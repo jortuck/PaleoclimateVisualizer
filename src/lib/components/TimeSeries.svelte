@@ -59,6 +59,10 @@
 			title: { text: timeSeriesData.name }
 		});
 	})
+	function adjust(){
+		chart.reflow();
+		console.log("reflow");
+	}
 </script>
-<svelte:window on:resize={()=>{chart.reflow()}}/>
+<svelte:window on:resize={adjust}/>
 <div class="{className}" bind:this={timeseries}></div>
