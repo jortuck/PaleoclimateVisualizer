@@ -8,6 +8,7 @@ class ControllerState {
 	endYear: number = $state(2005);
 	lat: number = $state(0);
 	lon: number = $state(0);
+	modal: HTMLDialogElement | null = $state(null);
 	variable: Variable = $state({
 		variable: '',
 		colorMap: '',

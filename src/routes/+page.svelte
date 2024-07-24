@@ -7,7 +7,6 @@
 	import { onMount } from 'svelte';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 
-	let controllerModal: any;
 	let data: MapData | null = null;
 	let timeSeriesData: TimeSeriesData | null = null;
 
@@ -54,7 +53,7 @@
 	<meta property="og:site_name" content="Paleoclimate Visualizer" />
 	<meta property="og:locale" content="en_US" />
 </svelte:head>
-<div class="lg:flex lg:flex-row lg:grow">
+<div class="flex flex-row grow">
 	<div class="p-5 bg-base-200 flex-shrink hidden lg:block">
 		<Controller updateMapData="{updateMap}" updateTimeSeriesData="{updateTimeSeries}"
 								updateMapAndTimeSeriesData="{async () =>{await updateMap();await updateTimeSeries();}}" />
@@ -68,7 +67,7 @@
 		{/if}
 	</div>
 </div>
-<dialog bind:this={controllerModal} id="controllerModal" class="modal">
+<dialog bind:this={controller.modal} id="controllerModal" class="modal lg:hidden">
 	<div class="modal-box">
 		<form method="dialog">
 			<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
