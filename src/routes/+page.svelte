@@ -7,8 +7,8 @@
 	import { onMount } from 'svelte';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 
-	let data: MapData | null = null;
-	let timeSeriesData: TimeSeriesData | null = null;
+	let data: MapData | null =  $state.frozen(null);
+	let timeSeriesData: TimeSeriesData | null =  $state.frozen(null);
 
 	async function updateMap() {
 		controller.loading++;
@@ -19,7 +19,9 @@
 		}
 		controller.loading--;
 	}
+	$effect(()=>{
 
+	})
 	async function updateTimeSeries() {
 		controller.loading++;
 		timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) => response.json()) as TimeSeriesData;
