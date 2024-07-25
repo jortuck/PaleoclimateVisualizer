@@ -41,7 +41,7 @@
 						},
 						inactive: { opacity: 1 }
 					},
-					interpolation: { enabled: true },
+					interpolation: { enabled: true, blur:0 },
 					zIndex: 0,
 					events: {
 						click: (e: any) => {
