@@ -1,1 +1,1 @@
-Test
+<a href="https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2021GL095999" target="_blank" rel="noreferrer" class="underline">Original Study</a>
