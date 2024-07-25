@@ -10,6 +10,9 @@
 	let data: MapData | null =  $state.frozen(null);
 	let timeSeriesData: TimeSeriesData | null =  $state.frozen(null);
 
+	/**
+	 * This function is called when a controller change results in a map update.
+	 */
 	async function updateMap() {
 		controller.loading++;
 		if (ctr.mode == 'annual') {
