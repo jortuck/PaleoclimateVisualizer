@@ -88,7 +88,7 @@
 				symbolWidth: 350
 			},
 			mapNavigation: {
-				enabled: false
+				enabled: true
 			},
 			mapView:{
 				// projection:{
