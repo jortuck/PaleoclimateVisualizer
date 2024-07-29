@@ -60,6 +60,7 @@
 					zIndex: 2,
 					borderColor: '#000',
 					borderWidth: 1,
+					enableMouseTracking: false,
 					states: {
 						inactive: { opacity: 1 }
 					}
@@ -71,6 +72,7 @@
 					states: {
 						inactive: { opacity: 1 }
 					},
+					enableMouseTracking: false,
 					borderColor: '#000',
 					borderWidth: 1
 				}
