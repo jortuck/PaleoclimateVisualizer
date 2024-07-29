@@ -49,9 +49,10 @@
 							if (lon < -180) {
 								lon =lon + 360;
 							}
-							controller.point = {lat:Math.round(e.lat), lon:lon};
-							click();
-
+							if(controller.point.lat != Math.round(e.lat) || controller.point.lon!= lon){
+								controller.point = {lat:Math.round(e.lat), lon:lon};
+								click();
+							}
 						}
 					}
 				},
@@ -62,15 +63,17 @@
 					borderWidth: 1,
 					enableMouseTracking: false,
 					states: {
-						inactive: { opacity: 1 }
-					}
+						inactive: { opacity: 1 },
+						hover: {enabled: false},
+					},
 				},
 				{
 					mapData: continents,
 					type: 'map',
 					zIndex: 2,
 					states: {
-						inactive: { opacity: 1 }
+						inactive: { opacity: 1 },
+						hover: {enabled: false},
 					},
 					enableMouseTracking: false,
 					borderColor: '#000',
