@@ -9,8 +9,8 @@ const pointSchema = z.object({
 const areaSchema = z.object({
 	n: z.number().int().max(90).min(-90),
 	s: z.number().int().max(90).min(-90),
-	e: z.number().int().max(180).min(-180),
-	w: z.number().int().max(180).min(-180),
+	start: z.number().int().max(180).min(-180),
+	stop: z.number().int().max(180).min(-180),
 }).refine((data) => {return data.s <= data.n}, {
 	message: 's must be less than or equal to n',
 	path: ['s'],
@@ -23,7 +23,7 @@ class ControllerState {
 	startYear: number = $state(1900);
 	endYear: number = $state(2005);
 	point:{lat:number, lon:number}=$state({lat:0,lon:0})
-	area:{n:number, s:number, e:number, w:number}=$state({n:0,s:0,e:0,w:0})
+	area:{n:number, s:number, start:number, stop:number}=$state({n:0,s:0,start:0,stop:0})
 	invalidPoint: boolean = $derived(
 		!pointSchema.safeParse({lat:this.point.lat,lon:this.point.lon}).success
 	)
@@ -31,8 +31,8 @@ class ControllerState {
 		!areaSchema.safeParse({
 			n:this.area.n,
 			s:this.area.s,
-			e:this.area.e,
-			w:this.area.w
+			start:this.area.start,
+			stop:this.area.stop
 		}).success
 	)
 	loading: number = $state(0);
@@ -81,7 +81,7 @@ class ControllerState {
 		PUBLIC_API_HOST + '/timeseries/' + this.variable.variable + '/' + this.point.lat + '/' + this.point.lon
 	);
 	timeSeriesAreaUrl: string = $derived(
-		PUBLIC_API_HOST + '/timeseries/' + this.variable.variable + '/' + this.area.n + '/' + this.area.s + '/' + this.area.e + '/' + this.area.w
+		PUBLIC_API_HOST + '/timeseries/' + this.variable.variable + '/' + this.area.n + '/' + this.area.s + '/' + this.area.start + '/' + this.area.stop
 	);
 }
 

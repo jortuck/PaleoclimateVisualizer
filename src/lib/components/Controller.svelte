@@ -172,9 +172,9 @@
 			</label>
 			<label class="form-control w-full">
 				<div class="label">
-					<span class="label-text">E°</span>
+					<span class="label-text">Start Lon</span>
 				</div>
-				<input bind:value={controller.area.e}
+				<input bind:value={controller.area.start}
 							 onchange={()=>{areaChanged=true}}
 							 inputmode="numeric"
 							 type="number"
@@ -182,9 +182,9 @@
 			</label>
 			<label class="form-control w-full">
 				<div class="label">
-					<span class="label-text">W°</span>
+					<span class="label-text">End Lon</span>
 				</div>
-				<input bind:value={controller.area.w}
+				<input bind:value={controller.area.stop}
 							 onchange={()=>{areaChanged=true}}
 							 inputmode="numeric"
 							 type="number"
@@ -194,11 +194,11 @@
 		<button onclick={()=>{areaChanged=false; updateTimeSeriesData()}}
 						inputmode="numeric"
 						class="btn btn-sm btn-primary w-full"
-						disabled={loading||!areaChanged}>Update
+						disabled={loading||!areaChanged||controller.invalidArea}>Update
 		</button>
 		{#if controller.invalidArea}
 			<p class="text-sm text-center text-error">The area you entered is invalid. Make sure N° is
-				greater than S° and E° is greater than W°. N° and S° must be between 90 and -90. E° and W°
+				greater than S°. N° and S° must be between 90 and -90. Start Lon and Stop Lon
 				must be between -180 and 180.</p>
 		{/if}
 	{/if}
