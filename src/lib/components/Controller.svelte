@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { controller } from '$lib/ControllerState.svelte';
-	import { z } from 'zod';
 
 	let { updateMapData, updateTimeSeriesData, updateMapAndTimeSeriesData }: {
 		updateMapData: () => void,
@@ -24,17 +23,6 @@
 		}
 		return result;
 	}
-
-	const pointSchema = z.object({
-		lat: z.coerce.number().max(90).min(-90),
-		lon: z.coerce.number().max(180).min(-180)
-	});
-	// $effect(()=>{
-	// 	console.log(pointSchema.parse({
-	// 		lat: controller.point.lat,
-	// 		lon: controller.point.lon,
-	// 	}))
-	// })
 </script>
 <div class="space-y-4">
 	<h2 class="text-2xl font-bold">Settings</h2>
@@ -129,6 +117,7 @@
 			disabled={loading}
 		>
 			<option value="point">Specific Point</option>
+			<option value="region">Sub Region</option>
 		</select>
 	</label>
 	{#if controller.timeSeriesMode === "point"}
@@ -170,6 +159,7 @@
 					<span class="label-text">S°</span>
 				</div>
 				<input bind:value={controller.point.lat}
+							 inputmode="numeric"
 							 class="input input-sm w-full select-bordered" disabled={loading} />
 			</label>
 			<label class="form-control w-full">
@@ -177,6 +167,7 @@
 					<span class="label-text">E°</span>
 				</div>
 				<input bind:value={controller.point.lat}
+							 inputmode="numeric"
 							 class="input input-sm w-full select-bordered" disabled={loading} />
 			</label>
 			<label class="form-control w-full">
@@ -184,10 +175,12 @@
 					<span class="label-text">W°</span>
 				</div>
 				<input bind:value={controller.point.lat}
+							 inputmode="numeric"
 							 class="input input-sm w-full select-bordered" disabled={loading} />
 			</label>
 		</div>
 		<button onclick={()=>{yearsChanged=false; updateMapData()}}
+						inputmode="numeric"
 						class="btn btn-sm btn-primary w-full"
 						disabled={loading||!yearsChanged}>Update
 		</button>

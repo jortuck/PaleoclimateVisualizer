@@ -95,6 +95,9 @@
 		<Controller updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
 								updateMapAndTimeSeriesData={async () =>{await updateMap();await updateTimeSeries();}} />
 	</div>
+	<form method="dialog" class="modal-backdrop">
+		<button>close</button>
+	</form>
 </dialog>
 <style lang="postcss">
     :global(

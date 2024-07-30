@@ -6,7 +6,12 @@ const pointSchema = z.object({
 	lat: z.number().int().max(90).min(-90),
 	lon: z.number().int().max(180).min(-180),
 })
-
+const areaSchema = z.object({
+	n: z.number().int().max(90).min(-90),
+	s: z.number().int().max(90).min(-90),
+	e: z.number().int().max(180).min(-180),
+	w: z.number().int().max(180).min(-180),
+})
 class ControllerState {
 	mode : "trends"|"annual" = $state('trends');
 	timeSeriesMode: "point"|"region" = $state("point");
@@ -14,6 +19,7 @@ class ControllerState {
 	startYear: number = $state(1900);
 	endYear: number = $state(2005);
 	point:{lat:number, lon:number}=$state({lat:0,lon:0})
+	area:{n:number, s:number, e:number, w:number}=$state({n:0,s:0,e:0,w:0})
 	invalidPoint: boolean = $derived(
 		!pointSchema.safeParse({lat:this.point.lat,lon:this.point.lon}).success
 	)
@@ -61,6 +67,9 @@ class ControllerState {
 	);
 	timeSeriesUrl: string = $derived(
 		PUBLIC_API_HOST + '/timeseries/' + this.variable.variable + '/' + this.point.lat + '/' + this.point.lon
+	);
+	timeSeriesAreaUrl: string = $derived(
+		PUBLIC_API_HOST + '/timeseries/' + this.variable.variable + '/' + this.area.n + '/' + this.area.s + '/' + this.area.e + '/' + this.area.w
 	);
 }
 

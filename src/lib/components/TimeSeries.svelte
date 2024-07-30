@@ -65,7 +65,6 @@
 	})
 	function adjust(){
 		chart.reflow();
-		console.log("reflow");
 	}
 </script>
 <svelte:window on:resize={adjust}/>
