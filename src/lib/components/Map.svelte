@@ -55,17 +55,6 @@
 							}
 						}
 					},
-					tooltip:{
-
-						pointFormatter: function(this: any){
-							let lon = this.lon;
-							if(lon < 0){
-								lon = lon+360;
-							}
-							let prefix = controller.mode == "annual" ? "Value" : "Trend"
-							return `Lat: ${Math.abs(this.lat)}°S<br>Lon: ${lon}°E<br>${prefix}: ${this.value}`;
-						}
-					},
 					nullInteraction: false
 				},
 				{
@@ -106,26 +95,12 @@
 			},
 			mapView: {
 				projection: {
-					// name: 'WebMercator',
-					// projectedBounds: 'world',
-					// name: 'EqualEarth',
-					// projectedBounds: 'world'
-					name: 'Miller',
+					name: 'EqualEarth',
 					projectedBounds: 'world',
+					// name: 'Orthographic',
+					// projectedBounds: 'world',
 					rotation: [180,0,0],
 				},
-				fitToGeometry: {
-					"type": "Polygon",
-					"coordinates": [
-						[
-							[-180, -90],
-							[180, -90],
-							[180, 0],
-							[-180, 0],
-							[-180, -90]
-						]
-					]
-				}
 			},
 			colorAxis: {
 				min: dataSet.min,
