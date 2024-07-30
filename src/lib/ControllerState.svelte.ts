@@ -1,12 +1,22 @@
 import type { Reconstruction, Variable } from '$lib/Data';
 import { PUBLIC_API_HOST } from '$env/static/public';
+import { z } from 'zod';
+
+const pointSchema = z.object({
+	lat: z.number().int().max(90).min(-90),
+	lon: z.number().int().max(180).min(-180),
+})
 
 class ControllerState {
-	mode: string = $state('trends');
+	mode : "trends"|"annual" = $state('trends');
+	timeSeriesMode: "point"|"region" = $state("point");
 	year: number = $state(1900);
 	startYear: number = $state(1900);
 	endYear: number = $state(2005);
-	point:{lat:number, lon:number}=$state.frozen({lat:0,lon:0})
+	point:{lat:number, lon:number}=$state({lat:0,lon:0})
+	invalidPoint: boolean = $derived(
+		!pointSchema.safeParse({lat:this.point.lat,lon:this.point.lon}).success
+	)
 	loading: number = $state(0);
 	modal: HTMLDialogElement | null = $state(null);
 	variable: Variable = $state({

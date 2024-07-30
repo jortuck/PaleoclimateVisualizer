@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { controller } from '$lib/ControllerState.svelte';
+	import { z } from 'zod';
 
 	let { updateMapData, updateTimeSeriesData, updateMapAndTimeSeriesData }: {
 		updateMapData: () => void,
@@ -9,6 +10,7 @@
 
 
 	let yearsChanged: boolean = $state(false);
+	let pointChanged: boolean = $state(false);
 	let postText: string = $derived(controller.mode == 'trends' ? ' Trend' : '');
 
 	let loading: boolean = $derived(controller.loading > 0);
@@ -22,6 +24,17 @@
 		}
 		return result;
 	}
+
+	const pointSchema = z.object({
+		lat: z.coerce.number().max(90).min(-90),
+		lon: z.coerce.number().max(180).min(-180)
+	});
+	// $effect(()=>{
+	// 	console.log(pointSchema.parse({
+	// 		lat: controller.point.lat,
+	// 		lon: controller.point.lon,
+	// 	}))
+	// })
 </script>
 <div class="space-y-4">
 	<h2 class="text-2xl font-bold">Settings</h2>
@@ -58,7 +71,7 @@
 		</label>
 		<label class="form-control w-full">
 			<div class="label">
-				<span class="label-text">Viewing Mode</span>
+				<span class="label-text">Map Mode</span>
 			</div>
 			<select
 				class="select select-bordered"
@@ -110,4 +123,89 @@
 			</div>
 		</div>
 	{/if}
+	<label class="form-control w-full">
+		<div class="label">
+			<span class="label-text">Timeseries Mode</span>
+		</div>
+		<select
+			class="select select-bordered"
+			bind:value={controller.timeSeriesMode}
+			disabled={loading}
+		>
+			<option value="point">Specific Point</option>
+		</select>
+	</label>
+	{#if controller.timeSeriesMode === "point"}
+		<div class="flex flex-row w-full md:space-x-3 md:flex-row space-x-2">
+			<input bind:value={controller.point.lat}
+						 onchange={()=>{pointChanged=true}}
+						 type="number"
+						 inputmode="numeric"
+						 placeholder="Lat"
+						 class:input-error="{controller.invalidPoint}"
+						 class="input input-sm w-full md:input-md" disabled={loading} />
+			<input bind:value={controller.point.lon}
+						 placeholder="Lon"
+						 onchange={()=>{pointChanged=true}}
+						 type="number"
+						 inputmode="numeric"
+						 class:input-error="{controller.invalidPoint}"
+						 class="input input-sm w-full md:input-md" disabled={loading} />
+			<button onclick={()=>{pointChanged=false; updateTimeSeriesData()}}
+							class="btn btn-sm md:btn-md btn-primary"
+							disabled={loading||controller.invalidPoint||!pointChanged}>Update
+			</button>
+		</div>
+		{#if controller.invalidPoint}
+			<p class="text-sm text-center text-error">The point you entered is invalid. Make sure the lat is between -90 and 90, and the lon is
+				between -180 and 180. Only whole numbers are accepted.</p>
+		{/if}
+	{:else}
+		<div class="flex flex-row w-full md:space-x-3 md:flex-row space-x-2">
+			<label class="form-control w-full">
+				<div class="label">
+					<span class="label-text">N°</span>
+				</div>
+				<input bind:value={controller.point.lat}
+							 class="input input-sm w-full select-bordered" disabled={loading} />
+			</label>
+			<label class="form-control w-full">
+				<div class="label">
+					<span class="label-text">S°</span>
+				</div>
+				<input bind:value={controller.point.lat}
+							 class="input input-sm w-full select-bordered" disabled={loading} />
+			</label>
+			<label class="form-control w-full">
+				<div class="label">
+					<span class="label-text">E°</span>
+				</div>
+				<input bind:value={controller.point.lat}
+							 class="input input-sm w-full select-bordered" disabled={loading} />
+			</label>
+			<label class="form-control w-full">
+				<div class="label">
+					<span class="label-text">W°</span>
+				</div>
+				<input bind:value={controller.point.lat}
+							 class="input input-sm w-full select-bordered" disabled={loading} />
+			</label>
+		</div>
+		<button onclick={()=>{yearsChanged=false; updateMapData()}}
+						class="btn btn-sm btn-primary w-full"
+						disabled={loading||!yearsChanged}>Update
+		</button>
+	{/if}
 </div>
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+</style>

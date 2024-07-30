@@ -34,6 +34,7 @@
 	"type": "module",
 	"dependencies": {
 		"@highcharts/map-collection": "^2.2.0",
-		"highcharts": "^11.4.4"
+		"highcharts": "^11.4.4",
+		"zod": "^3.23.8"
 	}
 }
