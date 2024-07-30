@@ -44,7 +44,6 @@
 				<span class="label-text">Select a Climate Model</span>
 			</div>
 			<select
-				class="select select-bordered"
 				bind:value={controller.reconstruction}
 				onchange={updateMapData}
 				disabled={loading}
@@ -59,7 +58,6 @@
 				<span class="label-text">Select a Variable</span>
 			</div>
 			<select
-				class="select select-bordered"
 				bind:value={controller.variable}
 				onchange={updateMapAndTimeSeriesData}
 				disabled={loading}
@@ -74,7 +72,6 @@
 				<span class="label-text">Map Mode</span>
 			</div>
 			<select
-				class="select select-bordered"
 				bind:value={controller.mode}
 				onchange={updateMapData}
 				disabled={loading}
@@ -104,14 +101,14 @@
 			</div>
 			<div class="flex flex-row w-full md:space-x-3 md:flex-row space-x-2">
 				<select onchange={()=>{yearsChanged=true}} bind:value={controller.startYear}
-								class="select select-sm md:select-md w-full select-bordered" disabled={loading}>
+								disabled={loading}>
 					{#each range(controller.reconstruction.timeStart, controller.endYear - 1) as i}
 						<option value={i}>{i}</option>
 					{/each}
 				</select>
 				<p class="my-auto block align-middle">to</p>
 				<select onchange={()=>{yearsChanged=true}} bind:value={controller.endYear}
-								class="select select-sm w-full md:select-md select-bordered" disabled={loading}>
+								disabled={loading}>
 					{#each range(controller.startYear + 1, controller.reconstruction.timeEnd) as i}
 						<option value={i}>{i}</option>
 					{/each}
@@ -128,7 +125,6 @@
 			<span class="label-text">Timeseries Mode</span>
 		</div>
 		<select
-			class="select select-bordered"
 			bind:value={controller.timeSeriesMode}
 			disabled={loading}
 		>
@@ -143,14 +139,14 @@
 						 inputmode="numeric"
 						 placeholder="Lat"
 						 class:input-error="{controller.invalidPoint}"
-						 class="input input-sm w-full md:input-md" disabled={loading} />
+						 disabled={loading} />
 			<input bind:value={controller.point.lon}
 						 placeholder="Lon"
 						 onchange={()=>{pointChanged=true}}
 						 type="number"
 						 inputmode="numeric"
 						 class:input-error="{controller.invalidPoint}"
-						 class="input input-sm w-full md:input-md" disabled={loading} />
+						 disabled={loading} />
 			<button onclick={()=>{pointChanged=false; updateTimeSeriesData()}}
 							class="btn btn-sm md:btn-md btn-primary"
 							disabled={loading||controller.invalidPoint||!pointChanged}>Update
@@ -197,7 +193,7 @@
 		</button>
 	{/if}
 </div>
-<style>
+<style lang="postcss">
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
         -webkit-appearance: none;
@@ -208,4 +204,11 @@
     input[type=number] {
         -moz-appearance: textfield;
     }
+    input:not([type=range]){
+				@apply input input-sm w-full md:input-md;
+        -moz-appearance: textfield;
+    }
+		select{
+				@apply select select-sm md:select-md w-full select-bordered;
+		}
 </style>

@@ -88,7 +88,7 @@
 	</div>
 </div>
 <dialog bind:this={controller.modal} id="controllerModal" class="modal lg:hidden">
-	<div class="modal-box">
+	<div class="modal-box bg-base-300">
 		<form method="dialog">
 			<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 		</form>
