@@ -10,7 +10,7 @@
 	let { dataSet, class: className, click }: {
 		dataSet: MapData,
 		class: string,
-		click:()=>void
+		click: () => void
 	} = $props();
 
 	let map: HTMLElement | null = null;
@@ -27,7 +27,7 @@
 				zooming: {
 					mode: 'xy'
 				},
-				animation: false,
+				animation: false
 			},
 			title: { text: dataSet.name, useHTML: true },
 			colors: ['#058DC7'],
@@ -41,21 +41,21 @@
 						},
 						inactive: { opacity: 1 }
 					},
-					interpolation: { enabled: true, blur:0 },
+					interpolation: { enabled: true, blur: 0 },
 					zIndex: 0,
 					events: {
 						click: (e: any) => {
 							let lon = Math.round(e.lon);
 							if (lon < -180) {
-								lon =lon + 360;
+								lon = lon + 360;
 							}
-							if(controller.point.lat != Math.round(e.lat) || controller.point.lon!= lon){
-								controller.point = {lat:Math.round(e.lat), lon:lon};
+							if (controller.point.lat != Math.round(e.lat) || controller.point.lon != lon) {
+								controller.point = { lat: Math.round(e.lat), lon: lon };
 								click();
 							}
 						}
 					},
-					nullInteraction: false,
+					nullInteraction: false
 				},
 				{
 					mapData: antarctica,
@@ -65,9 +65,9 @@
 					enableMouseTracking: false,
 					states: {
 						inactive: { opacity: 1 },
-						hover: {enabled: false},
+						hover: { enabled: false }
 					},
-					nullInteraction: false,
+					nullInteraction: false
 				},
 				{
 					mapData: continents,
@@ -75,12 +75,12 @@
 					zIndex: 2,
 					states: {
 						inactive: { opacity: 1 },
-						hover: {enabled: false},
+						hover: { enabled: false }
 					},
 					enableMouseTracking: false,
 					borderColor: '#000',
 					borderWidth: 1,
-					nullInteraction: false,
+					nullInteraction: false
 				}
 			],
 			legend: {
@@ -93,11 +93,27 @@
 			mapNavigation: {
 				enabled: true
 			},
-			mapView:{
-				// projection:{
-				// 		name: 'Orthographic',
-				// 		projectedBounds: 'world'
-				// }
+			mapView: {
+				projection: {
+					// name: 'WebMercator',
+					// projectedBounds: 'world',
+					// name: 'EqualEarth',
+					// projectedBounds: 'world'
+					name: 'Miller',
+					projectedBounds: 'world'
+				},
+				fitToGeometry: {
+					"type": "Polygon",
+					"coordinates": [
+						[
+							[-180, -90],
+							[180, -90],
+							[180, 0],
+							[-180, 0],
+							[-180, -90]
+						]
+					]
+				}
 			},
 			colorAxis: {
 				min: dataSet.min,

@@ -11,7 +11,11 @@ const areaSchema = z.object({
 	s: z.number().int().max(90).min(-90),
 	e: z.number().int().max(180).min(-180),
 	w: z.number().int().max(180).min(-180),
+}).refine((data) => {return data.s <= data.n}, {
+	message: 's must be less than or equal to n',
+	path: ['s'],
 })
+
 class ControllerState {
 	mode : "trends"|"annual" = $state('trends');
 	timeSeriesMode: "point"|"region" = $state("point");
@@ -22,6 +26,14 @@ class ControllerState {
 	area:{n:number, s:number, e:number, w:number}=$state({n:0,s:0,e:0,w:0})
 	invalidPoint: boolean = $derived(
 		!pointSchema.safeParse({lat:this.point.lat,lon:this.point.lon}).success
+	)
+	invalidArea: boolean = $derived(
+		!areaSchema.safeParse({
+			n:this.area.n,
+			s:this.area.s,
+			e:this.area.e,
+			w:this.area.w
+		}).success
 	)
 	loading: number = $state(0);
 	modal: HTMLDialogElement | null = $state(null);

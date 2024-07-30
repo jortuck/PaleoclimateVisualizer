@@ -10,6 +10,7 @@
 
 	let yearsChanged: boolean = $state(false);
 	let pointChanged: boolean = $state(false);
+	let areaChanged: boolean = $state(false);
 	let postText: string = $derived(controller.mode == 'trends' ? ' Trend' : '');
 
 	let loading: boolean = $derived(controller.loading > 0);
@@ -114,6 +115,7 @@
 		</div>
 		<select
 			bind:value={controller.timeSeriesMode}
+			onchange={updateTimeSeriesData}
 			disabled={loading}
 		>
 			<option value="point">Specific Point</option>
@@ -142,7 +144,8 @@
 			</button>
 		</div>
 		{#if controller.invalidPoint}
-			<p class="text-sm text-center text-error">The point you entered is invalid. Make sure the lat is between -90 and 90, and the lon is
+			<p class="text-sm text-center text-error">The point you entered is invalid. Make sure the lat
+				is between -90 and 90, and the lon is
 				between -180 and 180. Only whole numbers are accepted.</p>
 		{/if}
 	{:else}
@@ -151,39 +154,53 @@
 				<div class="label">
 					<span class="label-text">N°</span>
 				</div>
-				<input bind:value={controller.point.lat}
+				<input bind:value={controller.area.n}
+							 onchange={()=>{areaChanged=true}}
+							 inputmode="numeric"
+							 type="number"
 							 class="input input-sm w-full select-bordered" disabled={loading} />
 			</label>
 			<label class="form-control w-full">
 				<div class="label">
 					<span class="label-text">S°</span>
 				</div>
-				<input bind:value={controller.point.lat}
+				<input bind:value={controller.area.s}
+							 onchange={()=>{areaChanged=true}}
 							 inputmode="numeric"
+							 type="number"
 							 class="input input-sm w-full select-bordered" disabled={loading} />
 			</label>
 			<label class="form-control w-full">
 				<div class="label">
 					<span class="label-text">E°</span>
 				</div>
-				<input bind:value={controller.point.lat}
+				<input bind:value={controller.area.e}
+							 onchange={()=>{areaChanged=true}}
 							 inputmode="numeric"
+							 type="number"
 							 class="input input-sm w-full select-bordered" disabled={loading} />
 			</label>
 			<label class="form-control w-full">
 				<div class="label">
 					<span class="label-text">W°</span>
 				</div>
-				<input bind:value={controller.point.lat}
+				<input bind:value={controller.area.w}
+							 onchange={()=>{areaChanged=true}}
 							 inputmode="numeric"
+							 type="number"
 							 class="input input-sm w-full select-bordered" disabled={loading} />
 			</label>
 		</div>
-		<button onclick={()=>{yearsChanged=false; updateMapData()}}
+		<button onclick={()=>{areaChanged=false; updateTimeSeriesData()}}
 						inputmode="numeric"
 						class="btn btn-sm btn-primary w-full"
-						disabled={loading||!yearsChanged}>Update
+						disabled={loading||!areaChanged}>Update
 		</button>
+		{#if controller.invalidArea}
+			<p class="text-sm text-center text-error">The area you entered is invalid. Make sure N° is
+				greater than S° and E° is greater than W°. N° and S° must be between 90 and -90. E° and W°
+				must be between -180 and 180.</p>
+		{/if}
 	{/if}
 </div>
 <style lang="postcss">
@@ -197,11 +214,13 @@
     input[type=number] {
         -moz-appearance: textfield;
     }
-    input:not([type=range]){
-				@apply input input-sm w-full md:input-md;
+
+    input:not([type=range]) {
+        @apply input input-sm w-full md:input-md;
         -moz-appearance: textfield;
     }
-		select{
-				@apply select select-sm md:select-md w-full select-bordered;
-		}
+
+    select {
+        @apply select select-sm md:select-md w-full select-bordered;
+    }
 </style>

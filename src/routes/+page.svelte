@@ -24,7 +24,11 @@
 	}
 
 	async function updateTimeSeries() {
-		timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) =>  response.json()) as TimeSeriesData;
+		if(controller.timeSeriesMode == "point"){
+			timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) =>  response.json()) as TimeSeriesData;
+		}else{
+			timeSeriesData = await fetch(ctr.timeSeriesAreaUrl).then((response) =>  response.json()) as TimeSeriesData;
+		}
 	}
 
 	onMount(async () => {
