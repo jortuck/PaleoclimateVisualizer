@@ -111,7 +111,7 @@
 	{/if}
 	<label class="form-control w-full">
 		<div class="label">
-			<span class="label-text">Timeseries Mode</span>
+			<span class="label-text">Time Series Mode</span>
 		</div>
 		<select
 			bind:value={controller.timeSeriesMode}

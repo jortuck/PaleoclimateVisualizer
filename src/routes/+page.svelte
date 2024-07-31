@@ -24,11 +24,13 @@
 	}
 
 	async function updateTimeSeries() {
-		if(controller.timeSeriesMode == "point"){
-			timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) =>  response.json()) as TimeSeriesData;
-		}else{
-			timeSeriesData = await fetch(ctr.timeSeriesAreaUrl).then((response) =>  response.json()) as TimeSeriesData;
-		}
+w
+			if(controller.timeSeriesMode == "point" && !controller.invalidPoint){
+				timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) =>  response.json()) as TimeSeriesData;
+			}else if(!controller.invalidArea){
+				timeSeriesData = await fetch(ctr.timeSeriesAreaUrl).then((response) =>  response.json()) as TimeSeriesData;
+			}
+
 	}
 
 	onMount(async () => {
