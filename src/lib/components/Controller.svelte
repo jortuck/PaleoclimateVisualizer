@@ -24,6 +24,11 @@
 		}
 		return result;
 	}
+	$effect(()=>{
+		if(controller.startYear < controller.reconstruction.timeStart){
+			controller.startYear=controller.reconstruction.timeStart;
+		}
+	})
 </script>
 <div class="space-y-4">
 	<h2 class="text-2xl font-bold">Settings</h2>
