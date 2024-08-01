@@ -3,12 +3,12 @@
     import { page } from '$app/stores';
 </script>
 <nav class="bg-base-300 py-4">
-    <div class="items-center justify-between px-2 flex xl:px-0 mx-5">
+    <div class="items-center justify-between flex mx-4">
         <div>
             <h1 class="text-2xl font-bold teext-primary hidden lg:block">Paleoclimate Visualizer</h1>
             <h1 class="text-2xl font-bold teext-primary lg:hidden">PV</h1>
         </div>
-        <div class="lg:space-x-8">
+        <div class="lg:space-x-4">
             <button title="Settings" onclick="{()=>{controller.modal.showModal()}}" class="btn btn-sm btn-outline btn-primary lg:hidden" class:hidden={$page.route.id!=='/'}>
                 <i class="fa-solid fa-cog fa-lg"></i>
                 <span class="hidden md:inline">Settings</span>
