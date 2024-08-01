@@ -24,7 +24,6 @@
 	}
 
 	async function updateTimeSeries() {
-w
 			if(controller.timeSeriesMode == "point" && !controller.invalidPoint){
 				timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) =>  response.json()) as TimeSeriesData;
 			}else if(!controller.invalidArea){
