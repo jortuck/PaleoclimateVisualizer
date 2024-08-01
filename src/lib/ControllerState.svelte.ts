@@ -51,7 +51,7 @@ class ControllerState {
 		timeEnd: 0,
 		timeStart:0,
 		nameShort: '',
-		variables: null
+		variables: []
 	});
 
 	reconstructions: Reconstruction[] = $state([]);
