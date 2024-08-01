@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { TimeSeriesData } from '$lib/Data';
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import Highcharts from 'highcharts/highmaps';
 	import { controller } from '$lib/ControllerState.svelte';
 
@@ -58,10 +58,13 @@
 		});
 	});
 	$effect(()=>{
-		chart.update({
-			series: timeSeriesData.values,
-			title: { text: timeSeriesData.name }
+		while(untrack(()=>chart.series.length) > 0){
+			chart.series[0].remove(true);
+		}
+		timeSeriesData.values.forEach(seriesData => {
+			chart.addSeries(seriesData);
 		});
+		chart.setTitle({ text: timeSeriesData.name });
 	})
 	$effect(()=>{
 		chart.update({yAxis:{title:{text:controller.variable.annualUnit}}})
