@@ -8,7 +8,7 @@
             <h1 class="text-2xl font-bold teext-primary hidden lg:block">Paleoclimate Visualizer</h1>
             <h1 class="text-2xl font-bold teext-primary lg:hidden">PV</h1>
         </div>
-        <div class="lg:space-x-4">
+        <div class="lg:space-x-4 space-x-2">
             <button title="Settings" onclick="{()=>{controller.modal.showModal()}}" class="btn btn-sm btn-outline btn-primary lg:hidden" class:hidden={$page.route.id!=='/'}>
                 <i class="fa-solid fa-cog fa-lg"></i>
                 <span class="hidden md:inline">Settings</span>
