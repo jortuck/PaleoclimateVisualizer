@@ -1,5 +1,5 @@
 <script>
-    import {controller} from '$lib/ControllerState.svelte.ts';
+    import {controller} from '$lib/ControllerState.svelte';
     import { page } from '$app/stores';
 </script>
 <nav class="bg-base-300 py-4">
