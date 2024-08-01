@@ -38,9 +38,8 @@
 			r.json()
 		)) as AvailableDataResponse;
 		controller.reconstructions = availableData.reconstructions;
-		controller.variables = availableData.variables;
 		controller.reconstruction = controller.reconstructions[0];
-		controller.variable = controller.variables[0];
+		controller.variable = controller.reconstructions[0].variables[0];
 		controller.startYear = controller.reconstruction.timeStart;
 		controller.endYear = controller.reconstruction.timeEnd;
 		controller.loading--;

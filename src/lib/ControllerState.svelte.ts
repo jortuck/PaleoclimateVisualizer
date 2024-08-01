@@ -55,7 +55,6 @@ class ControllerState {
 	});
 
 	reconstructions: Reconstruction[] = $state([]);
-	variables: Variable[] = $state([]);
 
 	trendUrl: string = $derived(
 		PUBLIC_API_HOST +

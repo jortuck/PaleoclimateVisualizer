@@ -51,9 +51,11 @@
 				onchange={updateMapAndTimeSeriesData}
 				disabled={loading}
 			>
-				{#each controller.variables as varb}
-					<option value={varb}>{varb.name}{postText}</option>
-				{/each}
+				{#if controller.reconstruction.variables != null }
+					{#each controller.reconstruction.variables as varb}
+						<option value={varb}>{varb.name}{postText}</option>
+					{/each}
+				{/if}
 			</select>
 		</label>
 		<label class="form-control w-full">
