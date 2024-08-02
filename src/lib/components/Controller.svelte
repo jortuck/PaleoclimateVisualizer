@@ -43,7 +43,7 @@
 				disabled={loading}
 			>
 				{#each controller.reconstructions as rec}
-					<option value={rec}>{rec.name}</option>
+					<option disabled="{!rec.variables.includes(controller.variable.variable)}" value={rec}>{rec.name}</option>
 				{/each}
 			</select>
 		</label>
@@ -56,9 +56,9 @@
 				onchange={updateMapAndTimeSeriesData}
 				disabled={loading}
 			>
-				{#if controller.reconstruction.variables != null }
-					{#each controller.reconstruction.variables as varb}
-						<option value={varb}>{varb.name}{postText}</option>
+				{#if controller.variables != null }
+					{#each controller.variables as varb}
+						<option disabled={!controller.reconstruction.variables.includes(varb.variable)}  value={varb}>{varb.name}{postText}</option>
 					{/each}
 				{/if}
 			</select>

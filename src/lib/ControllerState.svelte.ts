@@ -45,6 +45,7 @@ class ControllerState {
 		trendUnit: '',
 		annualUnit: ''
 	});
+	variables: Variable[] = $state([])
 	reconstruction: Reconstruction = $state({
 		reconstruction: '',
 		name: '',

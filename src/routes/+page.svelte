@@ -39,7 +39,15 @@
 		)) as AvailableDataResponse;
 		controller.reconstructions = availableData.reconstructions;
 		controller.reconstruction = controller.reconstructions[0];
-		controller.variable = controller.reconstructions[0].variables[0];
+		controller.variables = availableData.variables;
+
+		for(let i =0; i<controller.variables.length; i++){
+			if(controller.variables[i].variable ===controller.reconstructions[0].variables[0]){
+				controller.variable = controller.variables[i];
+				break;
+			}
+		}
+
 		controller.startYear = controller.reconstruction.timeStart;
 		controller.endYear = controller.reconstruction.timeEnd;
 		controller.loading--;

@@ -26,7 +26,7 @@ export type Reconstruction = {
     nameShort: string;
     timeStart:number;
     timeEnd: number;
-    variables: Variable[];
+    variables: string [];
 }
 
 export type AvailableDataResponse = {
