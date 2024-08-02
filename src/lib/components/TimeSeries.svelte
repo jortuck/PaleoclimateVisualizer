@@ -58,12 +58,10 @@
 		});
 	});
 	$effect(()=>{
-		while(untrack(()=>chart.series.length) > 0){
-			chart.series[0].remove(true);
-		}
-		timeSeriesData.values.forEach(seriesData => {
-			chart.addSeries(seriesData);
-		});
+		chart.update({
+			series:timeSeriesData.values,
+
+		}, true, true)
 		chart.setTitle({ text: timeSeriesData.name });
 	})
 	$effect(()=>{
