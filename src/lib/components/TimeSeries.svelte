@@ -47,9 +47,6 @@
 						}
 					}
 				},
-				line:{
-					lineWidth: 1,
-				}
 			},
 			series: timeSeriesData.values,
 			legend: {
