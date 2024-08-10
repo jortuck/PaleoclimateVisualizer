@@ -119,9 +119,16 @@
 		}
 	});
 	$effect(() => {
+
+		// prevent weird gridded globe when using smaller amounts of lats and lons
+		let size = 1;
+		if(dataSet.lats.length < 17000){
+			size = 2
+		}
+
 		if (typeof chart != 'undefined') {
 			// @ts-ignore
-			chart.series[0].update({ data: Data.createGeoPoints(dataSet.lats, dataSet.lons, dataSet.values) });
+			chart.series[0].update({ data: Data.createGeoPoints(dataSet.lats, dataSet.lons, dataSet.values), colsize: size, rowsize:size });
 			chart.update({
 				colorAxis: {
 					min: dataSet.min,
