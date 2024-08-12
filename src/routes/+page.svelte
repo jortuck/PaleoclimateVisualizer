@@ -7,8 +7,8 @@
 	import { onMount } from 'svelte';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 
-	let data: MapData | null =  $state.frozen(null);
-	let timeSeriesData: TimeSeriesData | null =  $state.frozen(null);
+	let data: MapData | null =  $state.raw(null);
+	let timeSeriesData: TimeSeriesData | null =  $state.raw(null);
 
 	/**
 	 * This function is called when a controller change results in a map update.
