@@ -43,6 +43,7 @@ class ControllerState {
 		trendUnit: '',
 		annualUnit: ''
 	});
+	projection:'EqualEarth'| 'Orthographic' = $state('EqualEarth')
 	variables: Variable[] = $state([])
 	reconstruction: Reconstruction = $state({
 		reconstruction: '',

@@ -24,16 +24,26 @@
 		}
 		return result;
 	}
-	// might need to refactor. effect is for reading, derived is for syncing
-	// $effect(()=>{
-	// 	if(controller.startYear < controller.reconstruction.timeStart){
-	// 		controller.startYear=controller.reconstruction.timeStart;
-	// 	}
-	// })
+	$effect(()=>{
+		if(controller.startYear < controller.reconstruction.timeStart){
+			controller.startYear=controller.reconstruction.timeStart;
+		}
+	})
 </script>
 <div class="space-y-4">
 	<h2 class="text-2xl font-bold">Settings</h2>
 	<div class="flex flex-col space-y-3">
+		<label class="form-control w-full">
+			<div class="label">
+				<span class="label-text">Select a Projection</span>
+			</div>
+			<select
+				bind:value={controller.projection}
+			>
+					<option value="EqualEarth">Equal Earth</option>
+					<option value="Orthographic">Orthographic</option>
+			</select>
+		</label>
 		<label class="form-control w-full">
 			<div class="label">
 				<span class="label-text">Select a Climate Model</span>

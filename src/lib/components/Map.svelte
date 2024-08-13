@@ -98,7 +98,7 @@
 			},
 			mapView: {
 				projection: {
-					name: 'EqualEarth',
+					name: 'Orthographic',
 					projectedBounds: 'world',
 					// name: 'Orthographic',
 					// projectedBounds: 'world',
@@ -122,7 +122,6 @@
 		}
 	});
 	$effect(() => {
-
 		// prevent weird gridded globe when using smaller amounts of lats and lons
 		let size = 1;
 		if(dataSet.lats.length < 17000){
@@ -143,6 +142,13 @@
 			});
 		}
 	});
+	$effect(()=>{
+		chart.update({mapView:{projection:{
+					name:  controller.projection,
+					projectedBounds: 'world',
+					rotation: [180,0,0],
+				}}})
+	})
 </script>
 <svelte:window on:resize={()=>{chart.reflow()}} />
 <div class="{className}" bind:this={map}></div>
