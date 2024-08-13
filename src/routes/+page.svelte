@@ -15,11 +15,7 @@
 	 */
 	async function updateMap() {
 		controller.loading++;
-		if (ctr.mode == 'annual') {
-			data = await fetch(ctr.annualUrl).then((response) => response.json()) as MapData;
-		} else {
-			data = await fetch(ctr.trendUrl).then((response) => response.json()) as MapData;
-		}
+		data = await fetch(ctr.mode == 'annual' ? ctr.annualUrl : ctr.trendUrl).then((response) => response.json()) as MapData;
 		controller.loading--;
 	}
 

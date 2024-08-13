@@ -64,9 +64,9 @@ class ControllerState {
 		'/' +
 		this.variable.variable +
 		'?startYear=' +
-		this.startYear +
+		Math.max(this.startYear,this.reconstruction.timeStart) +
 		'&endYear=' +
-		this.endYear
+		Math.min(this.endYear,this.reconstruction.timeEnd)
 	);
 	annualUrl: string = $derived(
 		PUBLIC_API_HOST +

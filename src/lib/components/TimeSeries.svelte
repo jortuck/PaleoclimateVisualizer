@@ -14,6 +14,9 @@
 			chart: {
 				backgroundColor: 'transparent',
 			},
+			credits:{
+				text:"Gemma O'Connor"
+			},
 			title: {
 				useHTML: true
 			},

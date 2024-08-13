@@ -27,7 +27,10 @@
 				zooming: {
 					mode: 'xy'
 				},
-				animation: false
+				animation: false,
+			},
+			credits:{
+				text:"Gemma O'Connor"
 			},
 			title: { text: dataSet.name, useHTML: true },
 			colors: ['#058DC7'],
