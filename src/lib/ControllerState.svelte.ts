@@ -20,8 +20,6 @@ class ControllerState {
 	mode : "trends"|"annual" = $state('trends');
 	timeSeriesMode: "point"|"region" = $state("point");
 	year: number = $state(1900);
-	startYear: number = $state(1900);
-	endYear: number = $state(2005);
 	point:{lat:number, lon:number}=$state({lat:0,lon:0})
 	area:{n:number, s:number, start:number, stop:number}=$state({n:0,s:0,start:0,stop:0})
 	invalidPoint: boolean = $derived(
@@ -38,7 +36,7 @@ class ControllerState {
 	loading: number = $state(0);
 	modal: HTMLDialogElement | null = $state(null);
 	variable: Variable = $state({
-		variable: '',
+		id: '',
 		colorMap: '',
 		name: '',
 		nameShort: '',
@@ -54,15 +52,15 @@ class ControllerState {
 		nameShort: '',
 		variables: []
 	});
-
 	reconstructions: Reconstruction[] = $state([]);
-
+	startYear: number = $state(1900);
+	endYear: number = $state(2005);
 	trendUrl: string = $derived(
 		PUBLIC_API_HOST +
 		'/trends/' +
 		this.reconstruction.reconstruction +
 		'/' +
-		this.variable.variable +
+		this.variable.id +
 		'?startYear=' +
 		Math.max(this.startYear,this.reconstruction.timeStart) +
 		'&endYear=' +
@@ -73,15 +71,15 @@ class ControllerState {
 		'/values/' +
 		this.reconstruction.reconstruction +
 		'/' +
-		this.variable.variable +
+		this.variable.id +
 		'/' +
 		this.year
 	);
 	timeSeriesUrl: string = $derived(
-		PUBLIC_API_HOST + '/timeseries/' + this.variable.variable + '/' + this.point.lat + '/' + this.point.lon
+		PUBLIC_API_HOST + '/timeseries/' + this.variable.id + '/' + this.point.lat + '/' + this.point.lon
 	);
 	timeSeriesAreaUrl: string = $derived(
-		PUBLIC_API_HOST + '/timeseries/' + this.variable.variable + '/' + this.area.n + '/' + this.area.s + '/' + this.area.start + '/' + this.area.stop
+		PUBLIC_API_HOST + '/timeseries/' + this.variable.id + '/' + this.area.n + '/' + this.area.s + '/' + this.area.start + '/' + this.area.stop
 	);
 }
 

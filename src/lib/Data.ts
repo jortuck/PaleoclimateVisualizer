@@ -13,7 +13,7 @@ export class Data{
     }
 }
 export type Variable = {
-    variable: string;
+    id: string;
     colorMap: string;
     name: string;
     nameShort: string;

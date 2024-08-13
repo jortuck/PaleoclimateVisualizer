@@ -24,11 +24,12 @@
 		}
 		return result;
 	}
-	$effect(()=>{
-		if(controller.startYear < controller.reconstruction.timeStart){
-			controller.startYear=controller.reconstruction.timeStart;
-		}
-	})
+	// might need to refactor. effect is for reading, derived is for syncing
+	// $effect(()=>{
+	// 	if(controller.startYear < controller.reconstruction.timeStart){
+	// 		controller.startYear=controller.reconstruction.timeStart;
+	// 	}
+	// })
 </script>
 <div class="space-y-4">
 	<h2 class="text-2xl font-bold">Settings</h2>
@@ -43,7 +44,7 @@
 				disabled={loading}
 			>
 				{#each controller.reconstructions as rec}
-					<option disabled="{!rec.variables.includes(controller.variable.variable)}" value={rec}>{rec.name}</option>
+					<option disabled="{!rec.variables.includes(controller.variable.id)}" value={rec}>{rec.name}</option>
 				{/each}
 			</select>
 		</label>
@@ -58,7 +59,7 @@
 			>
 				{#if controller.variables != null }
 					{#each controller.variables as varb}
-						<option disabled={!controller.reconstruction.variables.includes(varb.variable)}  value={varb}>{varb.name}{postText}</option>
+						<option disabled={!controller.reconstruction.variables.includes(varb.id)} value={varb}>{varb.name}{postText}</option>
 					{/each}
 				{/if}
 			</select>
