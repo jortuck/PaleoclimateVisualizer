@@ -7,8 +7,8 @@
 	import { onMount } from 'svelte';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 
-	let data: MapData | null =  $state.raw(null);
-	let timeSeriesData: TimeSeriesData | null =  $state.raw(null);
+	let data: MapData | null = $state.raw(null);
+	let timeSeriesData: TimeSeriesData | null = $state.raw(null);
 
 	/**
 	 * This function is called when a controller change results in a map update.
@@ -20,11 +20,11 @@
 	}
 
 	async function updateTimeSeries() {
-			if(controller.timeSeriesMode == "point" && !controller.invalidPoint){
-				timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) =>  response.json()) as TimeSeriesData;
-			}else if(!controller.invalidArea){
-				timeSeriesData = await fetch(ctr.timeSeriesAreaUrl).then((response) =>  response.json()) as TimeSeriesData;
-			}
+		if (controller.timeSeriesMode == 'point' && !controller.invalidPoint) {
+			timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) => response.json()) as TimeSeriesData;
+		} else if (!controller.invalidArea) {
+			timeSeriesData = await fetch(ctr.timeSeriesAreaUrl).then((response) => response.json()) as TimeSeriesData;
+		}
 
 	}
 
@@ -37,8 +37,8 @@
 		controller.reconstruction = controller.reconstructions[0];
 		controller.variables = availableData.variables;
 
-		for(let i =0; i<controller.variables.length; i++){
-			if(controller.variables[i].id ===controller.reconstructions[0].variables[0]){
+		for (let i = 0; i < controller.variables.length; i++) {
+			if (controller.variables[i].id === controller.reconstructions[0].variables[0]) {
 				controller.variable = controller.variables[i];
 				break;
 			}
@@ -68,12 +68,12 @@
 	<meta property="og:site_name" content="Paleoclimate Visualizer" />
 	<meta property="og:locale" content="en_US" />
 </svelte:head>
-<div class="flex flex-row grow">
-	<div class="p-5 bg-base-200 flex-shrink hidden lg:block">
+<div class="grid grid-cols-12 grow">
+	<aside class="p-5 bg-base-200 hidden lg:block lg:col-span-4 xl:col-span-3">
 		<Controller updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
 								updateMapAndTimeSeriesData={async () =>{await updateMap();await updateTimeSeries();}} />
-	</div>
-	<div class="flex flex-col flex-shrink w-full relative">
+	</aside>
+	<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
 		{#if controller.loading > 0}
 			<div
 				class="h-full w-full z-50 bg-base-300 absolute top-0 left-0 opacity-80 flex items-center justify-center flex-col space-y-5"
@@ -83,22 +83,17 @@
 			</div>
 		{/if}
 		{#if data != null}
-			<div class="basis-1/2">
-				<Map click={updateTimeSeries} class="w-full" dataSet={data} />
-
-			</div>
+			<Map click={updateTimeSeries} class="row-span-6 lg:row-span-7"  dataSet={data} />
 		{/if}
 		{#if timeSeriesData != null}
-			<div class="basis-1/2">
-				<TimeSeries class="w-full" timeSeriesData={timeSeriesData} />
-			</div>
+			<TimeSeries timeSeriesData={timeSeriesData} class="row-span-6 lg:row-span-5" />
 		{/if}
 	</div>
 </div>
 <dialog bind:this={controller.modal} id="controllerModal" class="modal lg:hidden">
 	<div class="modal-box bg-base-300">
 		<form method="dialog">
-			<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+			<button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
 		</form>
 		<Controller updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
 								updateMapAndTimeSeriesData={async () =>{await updateMap();await updateTimeSeries();}} />
@@ -115,5 +110,9 @@
 			.highcharts-legend-item > span
 		) {
         @apply !text-base-content lg:text-left text-center;
+    }
+    :global(.highcharts-container) {
+        width:100% !important;
+        height:100% !important;
     }
 </style>

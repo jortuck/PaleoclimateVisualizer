@@ -2,9 +2,9 @@
 	import Navbar from "$lib/components/Navbar.svelte"
 	import "../app.css"
 </script>
-<div class="flex max-h-screen flex-col items-stretch min-h-screen">
+<div class="flex flex-col max-h-dvh min-h-dvh">
 	<Navbar />
-	<main class="flex grow flex-col">
-		<slot />
+	<main class="flex flex-col grow">
+			<slot />
 	</main>
 </div>

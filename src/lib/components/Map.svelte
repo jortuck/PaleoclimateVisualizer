@@ -150,5 +150,5 @@
 				}}})
 	})
 </script>
-<svelte:window on:resize={()=>{chart.reflow()}} />
+<svelte:window on:resize={()=>{chart.reflow(); chart.redraw()}} />
 <div class="{className}" bind:this={map}></div>

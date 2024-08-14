@@ -2,7 +2,7 @@
     import {controller} from '$lib/ControllerState.svelte';
     import { page } from '$app/stores';
 </script>
-<nav class="bg-base-300 py-4">
+<nav class="bg-base-300 py-4 grow-0">
     <div class="items-center justify-between flex mx-4">
         <div>
             <h1 class="text-2xl font-bold teext-primary hidden lg:block">Paleoclimate Visualizer</h1>
