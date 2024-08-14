@@ -20,7 +20,7 @@ class ControllerState {
 	mode : "trends"|"annual" = $state('trends');
 	timeSeriesMode: "point"|"region" = $state("point");
 	year: number = $state(1900);
-	point:{lat:number, lon:number}=$state({lat:0,lon:0})
+	point:{lat:number, lon:number}=$state({lat:0,lon:-150})
 	area:{n:number, s:number, start:number, stop:number}=$state({n:0,s:0,start:0,stop:0})
 	invalidPoint: boolean = $derived(
 		!pointSchema.safeParse({lat:this.point.lat,lon:this.point.lon}).success
