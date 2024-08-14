@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Controller from '$lib/components/Controller.svelte';
+	import Controller from '$lib/components/Controller/Controller.svelte';
 	import Map from '$lib/components/Map.svelte';
 	import { controller, controller as ctr } from '$lib/ControllerState.svelte';
 	import type { AvailableDataResponse, MapData, TimeSeriesData } from '$lib/Data';
