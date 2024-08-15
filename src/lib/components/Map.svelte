@@ -119,10 +119,7 @@
 			},
 			mapView: {
 				projection: {
-					name: 'Orthographic',
 					projectedBounds: 'world',
-					// name: 'Orthographic',
-					// projectedBounds: 'world',
 					rotation: [180,0,0],
 				},
 			},
