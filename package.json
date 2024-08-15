@@ -13,8 +13,6 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/adapter-cloudflare": "^4.6.1",
-		"@sveltejs/adapter-node": "^5.2.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/d3": "^7.4.3",
@@ -35,6 +33,7 @@
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^6.6.0",
 		"@highcharts/map-collection": "^2.2.0",
+		"@sveltejs/adapter-static": "^3.0.4",
 		"highcharts": "^11.4.4",
 		"zod": "^3.23.8"
 	}
