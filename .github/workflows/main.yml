@@ -15,7 +15,6 @@ jobs:
           node-version: 20
           cache: npm
       - name: Install dependencies
-        run: env
         run: npm ci
       - name: build
         env:
@@ -23,7 +22,8 @@ jobs:
           PUBLIC_API_HOST: '${{ vars.PUBLIC_API_HOST }}'
         run: |
           npm run build
-
+      - name: env2
+        run: env
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
