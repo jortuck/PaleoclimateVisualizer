@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { controller } from '$lib/ControllerState.svelte';
 	import { onMount } from 'svelte';
-	let theme : 'light' | 'dark' = $state('dark')
+	type theme = 'light' | 'dark'
+	let theme : theme = $state('dark')
 	onMount(()=>{
-		theme = localStorage.getItem('theme') ?? 'dark'
+		theme = localStorage.getItem('theme') as theme ?? 'dark'
 	})
 	$effect(()=>{
 		document.querySelector("html")?.setAttribute('data-theme',theme);

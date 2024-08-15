@@ -9,7 +9,7 @@
 
 	let data: MapData | null = $state.raw(null);
 	let timeSeriesData: TimeSeriesData | null = $state.raw(null);
-
+	let map: Map;
 	/**
 	 * This function is called when a controller change results in a map update.
 	 */
@@ -22,6 +22,7 @@
 	async function updateTimeSeries() {
 		if (controller.timeSeriesMode == 'point' && !controller.invalidPoint) {
 			timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) => response.json()) as TimeSeriesData;
+			map.updatePoint()
 		} else if (!controller.invalidArea) {
 			timeSeriesData = await fetch(ctr.timeSeriesAreaUrl).then((response) => response.json()) as TimeSeriesData;
 		}
@@ -83,7 +84,7 @@
 			</div>
 		{/if}
 		{#if data != null}
-			<Map click={updateTimeSeries} class="row-span-6 lg:row-span-7"  dataSet={data} />
+			<Map bind:this={map} click={updateTimeSeries} class="row-span-6 lg:row-span-7"  dataSet={data} />
 		{/if}
 		{#if timeSeriesData != null}
 			<TimeSeries timeSeriesData={timeSeriesData} class="row-span-6 lg:row-span-5" />

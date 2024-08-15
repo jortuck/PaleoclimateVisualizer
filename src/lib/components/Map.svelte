@@ -84,6 +84,27 @@
 					borderColor: '#000',
 					borderWidth: 1,
 					nullInteraction: false
+				},
+				{
+					type:"mappoint",
+					states: {
+						inactive: { opacity: 1 },
+						hover: { enabled: false }
+					},
+					dataLabels: {
+						crop: true,
+						format: '',
+						inside: true,
+						y: -14,
+						style: {
+							color: 'contrast',
+							textOutline: 'none',
+						},
+						shape: 'mapmarker',
+						borderColor: 'black',
+						borderWidth: 1,
+						backgroundColor: 'auto'
+					},
 				}
 			],
 			legend: {
@@ -142,6 +163,8 @@
 			});
 		}
 	});
+
+	// Sync projection value with projection set in controller.
 	$effect(()=>{
 		chart.update({mapView:{projection:{
 					name:  controller.projection,
@@ -149,6 +172,28 @@
 					rotation: [180,0,0],
 				}}})
 	})
+
+	// Sync point series visibility with time series mode in controller.
+	$effect(()=>{
+		// @ts-ignore
+		chart.series[3].update({
+			visible:controller.timeSeriesMode==="point"
+		})
+	})
+
+	/**
+	 * Tells the map to move the visible point to the controllers current point.
+	 * The map does not automatically sync with the controller point to avoid invalid point inputs.
+	 * I could look into using effect and checking for an invalid point.
+	 */
+	export function updatePoint(): void{
+		// @ts-ignore
+		chart.series[3].update({
+			data:[
+				{lat:controller.point.lat,lon:controller.point.lon}
+			]
+		})
+	}
 </script>
 <svelte:window on:resize={()=>{chart.reflow(); chart.redraw()}} />
 <div class="{className}" bind:this={map}></div>
