@@ -15,7 +15,8 @@ jobs:
         node-version: '18'
     - run: npm ci
     - run: npm run build
-
+      env:
+        PUBLIC_API_HOST: ${{ vars.PUBLIC_API_HOST }}
     - name: Init new repo in dist folder and commit generated files
       run: |
         cd build
