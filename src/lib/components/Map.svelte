@@ -107,6 +107,18 @@
 					},
 					enableMouseTracking: false,
 				},
+				{
+					type:"map",
+					zIndex:7,
+					mapData:Data.createGeoJsonRegion(-50,-10,106,150),
+					nullColor: "rgba(255,0,0,0.2)",
+					borderColor:"red",
+					states: {
+						inactive: { opacity: 1 },
+						hover: { enabled: false }
+					},
+					enableMouseTracking: false,
+				}
 			],
 			legend: {
 				title: {
@@ -178,11 +190,15 @@
 		});
 	});
 
-	// Sync point series visibility with time series mode in controller.
+	// Sync point/region series visibility with time series mode in controller.
 	$effect(() => {
 		// @ts-ignore
 		chart.series[3].update({
 			visible: controller.timeSeriesMode === 'point'
+		});
+		// @ts-ignore
+		chart.series[4].update({
+			visible: controller.timeSeriesMode === 'region'
 		});
 	});
 
@@ -197,6 +213,18 @@
 			data: [
 				{ lat: controller.point.lat, lon: controller.point.lon }
 			]
+		});
+	}
+
+	/**
+	 * Tells the map to move the visible region to the controllers current focused area.
+	 * The map does not automatically sync with the controller area to avoid invalid point areas.
+	 * I could look into using effect and checking for an invalid area.
+	 */
+	export function updateRegion(): void {
+		// @ts-ignore
+		chart.series[4].update({
+			mapData:Data.createGeoJsonRegion(controller.area.n,controller.area.s,controller.area.start,controller.area.stop)
 		});
 	}
 </script>

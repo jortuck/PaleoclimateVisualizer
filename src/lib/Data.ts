@@ -11,6 +11,52 @@ export class Data{
     public static createGeoPoints(lats: number[], lons: number[], values: number[]) : [number,number,number][]{
         return lats.map((lat, index) => [lons[index], lat, values[index]]);
     }
+
+    /**
+     * Returns a GeoJSON polygon that covers a "square area" defined by the arguments.
+     * @param startLat
+     * @param endLat
+     * @param startLon
+     * @param endLon
+     */
+    public static createGeoJsonRegion(startLat: number, endLat:number, startLon:number, endLon:number){
+        return {
+            "type": "FeatureCollection",
+            "features": [
+                {
+                    "type": "Feature",
+                    "properties": {},
+                    "geometry": {
+                        "coordinates": [
+                            [
+                                [
+                                    startLon,
+                                    startLat
+                                ],
+                                [
+                                    endLon,
+                                    startLat
+                                ],
+                                [
+                                    endLon,
+                                    endLat
+                                ],
+                                [
+                                    startLon,
+                                    endLat
+                                ],
+                                [
+                                    startLon,
+                                    startLat
+                                ]
+                            ]
+                        ],
+                        "type": "Polygon"
+                    }
+                }
+            ]
+        }
+    }
 }
 export type Variable = {
     id: string;

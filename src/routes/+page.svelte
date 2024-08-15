@@ -25,6 +25,7 @@
 			map.updatePoint()
 		} else if (!controller.invalidArea) {
 			timeSeriesData = await fetch(ctr.timeSeriesAreaUrl).then((response) => response.json()) as TimeSeriesData;
+			map.updateRegion()
 		}
 
 	}
