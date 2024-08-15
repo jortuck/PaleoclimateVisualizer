@@ -27,10 +27,10 @@
 				zooming: {
 					mode: 'xy'
 				},
-				animation: false,
+				animation: false
 			},
-			credits:{
-				text:"Gemma O'Connor"
+			credits: {
+				text: 'Gemma O\'Connor'
 			},
 			title: { text: dataSet.name, useHTML: true },
 			colors: ['#058DC7'],
@@ -86,7 +86,7 @@
 					nullInteraction: false
 				},
 				{
-					type:"mappoint",
+					type: 'mappoint',
 					states: {
 						inactive: { opacity: 1 },
 						hover: { enabled: false }
@@ -98,13 +98,13 @@
 						y: -14,
 						style: {
 							color: 'contrast',
-							textOutline: 'none',
+							textOutline: 'none'
 						},
 						shape: 'mapmarker',
 						borderColor: 'black',
 						borderWidth: 1,
 						backgroundColor: 'auto'
-					},
+					}
 				}
 			],
 			legend: {
@@ -120,8 +120,8 @@
 			mapView: {
 				projection: {
 					projectedBounds: 'world',
-					rotation: [180,0,0],
-				},
+					rotation: [180, 0, 0]
+				}
 			},
 			colorAxis: {
 				min: dataSet.min,
@@ -142,13 +142,17 @@
 	$effect(() => {
 		// prevent weird gridded globe when using smaller amounts of lats and lons
 		let size = 1;
-		if(dataSet.lats.length < 17000){
-			size = 2
+		if (dataSet.lats.length < 17000) {
+			size = 2;
 		}
 
 		if (typeof chart != 'undefined') {
 			// @ts-ignore
-			chart.series[0].update({ data: Data.createGeoPoints(dataSet.lats, dataSet.lons, dataSet.values), colsize: size, rowsize:size });
+			chart.series[0].update({
+				data: Data.createGeoPoints(dataSet.lats, dataSet.lons, dataSet.values),
+				colsize: size,
+				rowsize: size
+			});
 			chart.update({
 				colorAxis: {
 					min: dataSet.min,
@@ -161,35 +165,38 @@
 		}
 	});
 
-	// Sync projection value with projection set in controller.
-	$effect(()=>{
-		chart.update({mapView:{projection:{
-					name:  controller.projection,
+	$effect(() => {
+		chart.update({
+			mapView: {
+				projection: {
+					name: controller.projection,
 					projectedBounds: 'world',
-					rotation: [180,0,0],
-				}}})
-	})
+					rotation: [180, 0, 0]
+				}
+			}
+		});
+	});
 
 	// Sync point series visibility with time series mode in controller.
-	$effect(()=>{
+	$effect(() => {
 		// @ts-ignore
 		chart.series[3].update({
-			visible:controller.timeSeriesMode==="point"
-		})
-	})
+			visible: controller.timeSeriesMode === 'point'
+		});
+	});
 
 	/**
 	 * Tells the map to move the visible point to the controllers current point.
 	 * The map does not automatically sync with the controller point to avoid invalid point inputs.
 	 * I could look into using effect and checking for an invalid point.
 	 */
-	export function updatePoint(): void{
+	export function updatePoint(): void {
 		// @ts-ignore
 		chart.series[3].update({
-			data:[
-				{lat:controller.point.lat,lon:controller.point.lon}
+			data: [
+				{ lat: controller.point.lat, lon: controller.point.lon }
 			]
-		})
+		});
 	}
 </script>
 <svelte:window on:resize={()=>{chart.reflow(); chart.redraw()}} />
