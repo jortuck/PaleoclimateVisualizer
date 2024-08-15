@@ -89,7 +89,7 @@
 					type: 'mappoint',
 					states: {
 						inactive: { opacity: 1 },
-						hover: { enabled: false }
+						hover: { enabled: false },
 					},
 					dataLabels: {
 						crop: true,
@@ -104,8 +104,9 @@
 						borderColor: 'black',
 						borderWidth: 1,
 						backgroundColor: 'auto'
-					}
-				}
+					},
+					enableMouseTracking: false,
+				},
 			],
 			legend: {
 				title: {
