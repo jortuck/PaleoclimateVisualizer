@@ -40,7 +40,13 @@
 					enableMouseTracking: false,
 				},
 				series:{
-					nullInteraction: false
+					nullInteraction: false,
+					states: {
+						hover: {
+							enabled: false
+						},
+						inactive: { opacity: 1 }
+					},
 				}
 			},
 			title: { text: dataSet.name, useHTML: true },
@@ -49,12 +55,6 @@
 				{
 					type: 'geoheatmap',
 					cursor: 'crosshair',
-					states: {
-						hover: {
-							enabled: false
-						},
-						inactive: { opacity: 1 }
-					},
 					interpolation: { enabled: true, blur: 1 },
 					zIndex: 0,
 					events: {
@@ -75,28 +75,16 @@
 					zIndex: 2,
 					borderColor: '#000',
 					borderWidth: 1,
-					states: {
-						inactive: { opacity: 1 },
-						hover: { enabled: false }
-					},
 				},
 				{
 					mapData: continents,
 					type: 'map',
 					zIndex: 2,
-					states: {
-						inactive: { opacity: 1 },
-						hover: { enabled: false }
-					},
 					borderColor: '#000',
 					borderWidth: 1,
 				},
 				{
 					type: 'mappoint',
-					states: {
-						inactive: { opacity: 1 },
-						hover: { enabled: false },
-					},
 					dataLabels: {
 						crop: true,
 						format: '',
@@ -118,10 +106,6 @@
 					mapData:Highcharts.geojson(Data.createGeoJsonRegion(controller.area.n,controller.area.s,controller.area.start,controller.area.stop)),
 					nullColor: "rgba(255,0,0,0.2)",
 					borderColor:"red",
-					states: {
-						inactive: { opacity: 1 },
-						hover: { enabled: false }
-					},
 				}
 			],
 			legend: {
