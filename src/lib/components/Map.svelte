@@ -32,6 +32,14 @@
 			credits: {
 				text: 'Gemma O\'Connor'
 			},
+			plotOptions:{
+				map:{
+					enableMouseTracking: false,
+				},
+				mappoint:{
+					enableMouseTracking: false,
+				}
+			},
 			title: { text: dataSet.name, useHTML: true },
 			colors: ['#058DC7'],
 			series: [
@@ -65,7 +73,6 @@
 					zIndex: 2,
 					borderColor: '#000',
 					borderWidth: 1,
-					enableMouseTracking: false,
 					states: {
 						inactive: { opacity: 1 },
 						hover: { enabled: false }
@@ -80,7 +87,6 @@
 						inactive: { opacity: 1 },
 						hover: { enabled: false }
 					},
-					enableMouseTracking: false,
 					borderColor: '#000',
 					borderWidth: 1,
 					nullInteraction: false
@@ -105,19 +111,17 @@
 						borderWidth: 1,
 						backgroundColor: 'auto'
 					},
-					enableMouseTracking: false,
 				},
 				{
 					type:"map",
 					zIndex:7,
-					mapData:Data.createGeoJsonRegion(-50,-10,106,150),
+					mapData:Data.createGeoJsonRegion(-10,-50,106,150),
 					nullColor: "rgba(255,0,0,0.2)",
 					borderColor:"red",
 					states: {
 						inactive: { opacity: 1 },
 						hover: { enabled: false }
 					},
-					enableMouseTracking: false,
 				}
 			],
 			legend: {
