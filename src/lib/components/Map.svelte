@@ -38,6 +38,9 @@
 				},
 				mappoint:{
 					enableMouseTracking: false,
+				},
+				series:{
+					nullInteraction: false
 				}
 			},
 			title: { text: dataSet.name, useHTML: true },
@@ -66,7 +69,6 @@
 							}
 						}
 					},
-					nullInteraction: false
 				},
 				{
 					mapData: antarctica,
@@ -77,7 +79,6 @@
 						inactive: { opacity: 1 },
 						hover: { enabled: false }
 					},
-					nullInteraction: false
 				},
 				{
 					mapData: continents,
@@ -89,7 +90,6 @@
 					},
 					borderColor: '#000',
 					borderWidth: 1,
-					nullInteraction: false
 				},
 				{
 					type: 'mappoint',
