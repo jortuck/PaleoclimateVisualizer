@@ -115,7 +115,7 @@
 				{
 					type:"map",
 					zIndex:7,
-					mapData:Data.createGeoJsonRegion(-10,-50,106,150),
+					mapData:Data.createGeoJsonRegion(controller.area.n,controller.area.s,controller.area.start,controller.area.stop),
 					nullColor: "rgba(255,0,0,0.2)",
 					borderColor:"red",
 					states: {
@@ -228,7 +228,7 @@
 	export function updateRegion(): void {
 		// @ts-ignore
 		chart.series[4].update({
-			mapData:Data.createGeoJsonRegion(controller.area.n,controller.area.s,controller.area.start,controller.area.stop)
+			mapData:Highcharts.geojson(Data.createGeoJsonRegion(controller.area.n,controller.area.s,controller.area.start,controller.area.stop))
 		});
 	}
 </script>
