@@ -115,7 +115,7 @@
 				{
 					type:"map",
 					zIndex:7,
-					mapData:Data.createGeoJsonRegion(controller.area.n,controller.area.s,controller.area.start,controller.area.stop),
+					mapData:Highcharts.geojson(Data.createGeoJsonRegion(controller.area.n,controller.area.s,controller.area.start,controller.area.stop)),
 					nullColor: "rgba(255,0,0,0.2)",
 					borderColor:"red",
 					states: {
