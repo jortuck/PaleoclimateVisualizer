@@ -1,5 +1,4 @@
 import Highcharts from 'highcharts/highmaps';
-import { i } from '../../.svelte-kit/output/server/chunks';
 
 export class Data{
     /**
@@ -62,9 +61,11 @@ export class Data{
         }
         let lats:number[] = this.rangeBetween(startLat,endLat);
         console.log(lats)
+        // top border
         lons.forEach(lon => {
             coordinates.push([lon,startLat]);
         })
+        // right border
         lats.forEach(lat => {
             coordinates.push([endLon,lat]);
         })
