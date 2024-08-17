@@ -1,4 +1,5 @@
 import Highcharts from 'highcharts/highmaps';
+import { i } from '../../.svelte-kit/output/server/chunks';
 
 export class Data{
     /**
@@ -12,6 +13,34 @@ export class Data{
         return lats.map((lat, index) => [lons[index], lat, values[index]]);
     }
 
+    private static toDegreesEast(lon:number): number {
+        if(lon < 0){
+            lon = lon + 360
+        }
+        return lon;
+    }
+    private static arrange(start:number, stop:number):number[]{
+        let result:number[] =[]
+        for(let i:number = start; i < stop; i++){
+            result.push(i);
+        }
+        return result
+    }
+    private static rangeBetween(start: number, end: number): number[] {
+        const result: number[] = [];
+
+        if (start <= end) {
+            for (let i = start; i <= end; i++) {
+                result.push(i);
+            }
+        } else {
+            for (let i = start; i >= end; i--) {
+                result.push(i);
+            }
+        }
+
+        return result;
+    }
     /**
      * Returns a GeoJSON polygon that covers a "square area" defined by the arguments.
      * @param startLat
@@ -20,6 +49,31 @@ export class Data{
      * @param endLon
      */
     public static createGeoJsonRegion(startLat: number, endLat:number, startLon:number, endLon:number){
+        startLon = this.toDegreesEast(startLon);
+        endLon = this.toDegreesEast(endLon);
+        let coordinates: number[][] = []
+        let lons: number[];
+        if(startLon < endLon){
+            lons = this.arrange(Math.min(startLon,endLon),Math.max(startLon,endLon)+1)
+        }else if(startLon === endLon){
+            lons=[startLon];
+        }else{
+            lons = [...this.arrange(startLon,361),...this.arrange(0,endLon+1)];
+        }
+        let lats:number[] = this.rangeBetween(startLat,endLat);
+        console.log(lats)
+        lons.forEach(lon => {
+            coordinates.push([lon,startLat]);
+        })
+        lats.forEach(lat => {
+            coordinates.push([endLon,lat]);
+        })
+        lons.reverse().forEach(lon => {
+            coordinates.push([lon,endLat]);
+        })
+        lats.reverse().forEach(lat => {
+            coordinates.push([startLon,lat]);
+        })
         return {
             "type": "FeatureCollection",
             "features": [
@@ -28,32 +82,12 @@ export class Data{
                     "properties": {},
                     "geometry": {
                         "coordinates": [
-                            [
-                                [
-                                    startLon,
-                                    startLat
-                                ],
-                                [
-                                    endLon,
-                                    startLat
-                                ],
-                                [
-                                    endLon,
-                                    endLat
-                                ],
-                                [
-                                    startLon,
-                                    endLat
-                                ],
-                                [
-                                    startLon,
-                                    startLat
-                                ]
-                            ]
+                            [...coordinates, coordinates[0]],
                         ],
                         "type": "Polygon"
                     }
-                }
+                },
+
             ]
         }
     }
