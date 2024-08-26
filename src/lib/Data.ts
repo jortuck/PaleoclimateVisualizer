@@ -18,13 +18,6 @@ export class Data{
         }
         return lon;
     }
-    private static arrange(start:number, stop:number):number[]{
-        let result:number[] =[]
-        for(let i:number = start; i < stop; i++){
-            result.push(i);
-        }
-        return result
-    }
     private static rangeBetween(start: number, end: number): number[] {
         const result: number[] = [];
 
@@ -53,11 +46,11 @@ export class Data{
         let coordinates: number[][] = []
         let lons: number[];
         if(startLon < endLon){
-            lons = this.arrange(Math.min(startLon,endLon),Math.max(startLon,endLon)+1)
+            lons = this.rangeBetween(Math.min(startLon,endLon),Math.max(startLon,endLon)+1)
         }else if(startLon === endLon){
             lons=[startLon];
         }else{
-            lons = [...this.arrange(startLon,361),...this.arrange(0,endLon+1)];
+            lons = [...this.rangeBetween(startLon,361),...this.rangeBetween(0,endLon+1)];
         }
         let lats:number[] = this.rangeBetween(startLat,endLat);
         console.log(lats)

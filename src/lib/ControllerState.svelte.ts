@@ -18,7 +18,7 @@ const areaSchema = z.object({
 
 class ControllerState {
 	mode : "trends"|"annual" = $state('trends');
-	timeSeriesMode: "point"|"region" = $state("point");
+	timeSeriesMode: "point"|"region"|"asl"|"nino"|"cww" = $state("point");
 	year: number = $state(1900);
 	point:{lat:number, lon:number}=$state({lat:0,lon:-150})
 	area:{n:number, s:number, start:number, stop:number}=$state({n:10,s:-50,start:106,stop:150})

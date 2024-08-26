@@ -20,6 +20,18 @@
 	}
 
 	async function updateTimeSeries() {
+		// adds preset area functionality
+		switch (controller.timeSeriesMode){
+			case 'asl':
+				controller.area = {n:-60,s:-80,start:170, stop:-62}
+				break;
+			case 'nino':
+				controller.area = {n:5,s:-5,start:-170, stop:-120}
+				break;
+			case 'cww':
+				controller.area = {n:-20,s:-70,start:-179, stop:180}
+				break;
+		}
 		if (controller.timeSeriesMode == 'point' && !controller.invalidPoint) {
 			timeSeriesData = await fetch(ctr.timeSeriesUrl).then((response) => response.json()) as TimeSeriesData;
 			map.updatePoint()

@@ -122,7 +122,10 @@
 		disabled={loading}
 	>
 		<option value="point">Specific Point</option>
-		<option value="region">Sub Region</option>
+		<option value="asl">Amundsen Sea Low Index</option>
+		<option value="nino">Niño3.4 Index</option>
+		<option value="cww">Circumpolar Westerly Winds</option>
+		<option value="region">Custom Sub Region</option>
 	</select>
 </label>
 {#if controller.timeSeriesMode === "point"}
@@ -151,7 +154,7 @@
 			is between -90 and 90, and the lon is
 			between -180 and 180. Only whole numbers are accepted.</p>
 	{/if}
-{:else}
+{:else if controller.timeSeriesMode === "region"}
 	<div class="flex flex-row w-full md:space-x-3 md:flex-row space-x-2">
 		<label class="form-control w-full">
 			<div class="label">

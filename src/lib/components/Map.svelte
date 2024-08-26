@@ -186,7 +186,7 @@
 		});
 		// @ts-ignore
 		chart.series[4].update({
-			visible: controller.timeSeriesMode === 'region'
+			visible: controller.timeSeriesMode != 'point'
 		});
 	});
 
