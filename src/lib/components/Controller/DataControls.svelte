@@ -30,7 +30,7 @@
 </script>
 <label class="form-control w-full">
 	<div class="label">
-		<span class="label-text">Select a Climate Model</span>
+		<span class="label-text">Select a Climate Model Prior</span>
 	</div>
 	<select
 		bind:value={controller.reconstruction}
