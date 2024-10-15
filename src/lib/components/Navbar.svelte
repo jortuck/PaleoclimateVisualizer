@@ -1,6 +1,7 @@
 <script>
     import {controller} from '$lib/ControllerState.svelte';
     import { page } from '$app/stores';
+    import {base} from "$app/paths"
 </script>
 <nav class="bg-base-300 py-4 grow-0">
     <div class="items-center justify-between flex mx-4">
@@ -13,11 +14,11 @@
                 <i class="fa-solid fa-cog fa-lg"></i>
                 <span class="hidden md:inline">Settings</span>
             </button>
-            <a title="Visualizer" href="/" class="btn btn-sm btn-ghost btn-outline" class:btn-active={$page.route.id==='/'}>
+            <a title="Visualizer" href="{base}/" class="btn btn-sm btn-ghost btn-outline" class:btn-active={$page.route.id==='/'}>
                 <i class="fa-solid fa-magnifying-glass-chart fa-lg"></i>
                 <span class="hidden md:inline">Visualizer</span>
             </a>
-            <a title="About" href="/about" class="btn btn-sm btn-outline btn-ghost" class:btn-active={$page.route.id==='/about'}>
+            <a title="About" href="{base}/about" class="btn btn-sm btn-outline btn-ghost" class:btn-active={$page.route.id==='/about'}>
                 <i class="fa-solid fa-info-circle fa-lg"></i>
                 <span class="hidden md:inline">About</span>
             </a>
