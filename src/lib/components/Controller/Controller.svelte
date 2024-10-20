@@ -17,7 +17,7 @@
 	<div role="tablist" class="tabs tabs-bordered w-full">
 		<button onclick={()=>{activeTab='data'}} value="data" role="tab" class="tab" class:tab-active={activeTab==='data'}>Data</button>
 		<button onclick={()=>{activeTab='view'}} value="view" role="tab" class="tab" class:tab-active={activeTab==='view'}>View</button>
-		<button onclick={()=>{activeTab='download'}} value="download" role="tab" class="tab" class:tab-active={activeTab==='download'}>Download</button>
+		<button onclick={()=>{activeTab='download'}} value="download" role="tab" class="tab hidden" class:tab-active={activeTab==='download'}>Download</button>
 	</div>
 	<div class="flex flex-col space-y-3">
 		{#if activeTab==='view'}
