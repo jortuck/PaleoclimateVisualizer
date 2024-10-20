@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { controller } from '$lib/ControllerState.svelte';
 	import { onMount } from 'svelte';
-	type theme = 'light' | 'dark'
-	let theme : theme = $state('dark')
+	type themes = 'light' | 'dark'
+	let theme : themes = $state('dark')
 	onMount(()=>{
 		theme = localStorage.getItem('theme') as theme ?? 'dark'
 	})
