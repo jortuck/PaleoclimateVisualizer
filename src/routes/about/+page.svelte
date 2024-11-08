@@ -10,11 +10,11 @@
 
     <p>
         Ideally, we would have an expansive global database of proxy records with minimal uncertainty. If this were the case, all of the reconstructions would converge to a similar 
-        reconstruction state -- regardless of the climate model prior used. Because we do not have perfect proxy observations available, the reconstructions generated with different 
+        reconstruction state, regardless of the climate model prior used. Because we do not have perfect proxy observations available, the reconstructions generated with different 
         priors have several differences. In regions where climate models have high confidence in their ability to simulate the climate, and in regions where the proxies provide
-        excellent coverage, the reconstructions have small uncertainty. Some climate model priors result in more skillful reconstructions (i.e., better agreement with instrumental data)
-        in certain regions, but not in others. There is no one-size-fits-all reconstruction that is best for all paleoclimate questions. This web app allows you to easily compare 
-        these differences at different locations that are of interest to you.
+        excellent coverage, the reconstructions have small uncertainty. Some climate model priors result in more skillful reconstructions (i.e., better agreement with instrumental 
+        data, as shown by the correlations) in certain regions, but not in others. There is no one-size-fits-all reconstruction that is best for all paleoclimate questions. This web 
+        app allows you to easily compare these differences at different locations that are of interest to you.
     </p>
 
     <p>
