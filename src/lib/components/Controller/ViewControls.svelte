@@ -4,7 +4,7 @@
 	type themes = 'light' | 'dark'
 	let theme : themes = $state('dark')
 	onMount(()=>{
-		theme = localStorage.getItem('theme') as theme ?? 'dark'
+		theme = localStorage.getItem('theme') as typeof theme ?? 'dark'
 	})
 	$effect(()=>{
 		document.querySelector("html")?.setAttribute('data-theme',theme);
