@@ -12,7 +12,6 @@
 	})
 	$inspect(theme)
 </script>
-<svelte:window data-theme="light" ></svelte:window>
 <label class="form-control w-full">
 	<div class="label">
 		<span class="label-text">Projection</span>
