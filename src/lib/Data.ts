@@ -1,4 +1,4 @@
-import Highcharts from 'highcharts/highmaps';
+import * as Highcharts from 'highcharts/highmaps';
 
 export class Data{
     /**

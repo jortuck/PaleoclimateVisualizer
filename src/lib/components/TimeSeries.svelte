@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { TimeSeriesData } from '$lib/Data';
 	import { onMount, untrack } from 'svelte';
-	import Highcharts from 'highcharts/highmaps';
+	import * as Highcharts from 'highcharts';
 	import { controller } from '$lib/ControllerState.svelte';
 
 	let timeseries: any;
@@ -10,7 +10,6 @@
 	let size: any;
 	onMount(() => {
 		chart = Highcharts.chart(timeseries, {
-			// @ts-ignore
 			chart: {
 				backgroundColor: 'transparent',
 			},

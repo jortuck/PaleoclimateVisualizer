@@ -6,7 +6,6 @@
 	import TimeSeries from '$lib/components/TimeSeries.svelte';
 	import { onMount } from 'svelte';
 	import { PUBLIC_API_HOST } from '$env/static/public';
-
 	let data: MapData | null = $state.raw(null);
 	let timeSeriesData: TimeSeriesData | null = $state.raw(null);
 	let map: Map;

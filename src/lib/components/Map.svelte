@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import Highcharts from 'highcharts/highmaps';
+	// import * as Highcharts from 'highcharts';
+	import * as Highcharts from'highcharts/highmaps'
 	import { Data, type MapData, type Variable } from '$lib/Data';
 	import antarctica from '@highcharts/map-collection/custom/antarctica.topo.json';
 	import continents from '@highcharts/map-collection/custom/world-continents.topo.json';
-	import GeoHeatmap from 'highcharts/modules/geoheatmap';
+	import 'highcharts/modules/geoheatmap';
 	import { controller } from '$lib/ControllerState.svelte';
 
 	let { dataSet, class: className, click }: {
@@ -17,7 +18,6 @@
 	let chart: Highcharts.MapChart;
 
 	onMount(async () => {
-		GeoHeatmap(Highcharts);
 
 		// @ts-ignore
 		chart = Highcharts.mapChart(map, {
