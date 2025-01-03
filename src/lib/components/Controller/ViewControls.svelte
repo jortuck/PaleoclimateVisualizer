@@ -10,7 +10,6 @@
 		document.querySelector("html")?.setAttribute('data-theme',theme);
 		localStorage.setItem('theme',theme)
 	})
-	$inspect(theme)
 </script>
 <label class="form-control w-full">
 	<div class="label">
