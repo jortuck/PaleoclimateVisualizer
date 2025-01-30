@@ -1,3 +1,5 @@
+[![Front End Status](https://status.jortuck.com/api/badge/6/status?style=for-the-badge)](https://status.jortuck.com/status/pv)
+
 # About
 
 This website contains interactive visuals and charts for the study "Strengthening Southern
