@@ -208,6 +208,7 @@
 			must be between -180 and 180.</p>
 	{/if}
 {/if}
+<!-- svelte-ignore css_unused_selector -->
 <style lang="postcss">
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {

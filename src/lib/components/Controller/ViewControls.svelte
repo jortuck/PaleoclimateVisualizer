@@ -31,7 +31,8 @@
 		<option value="light">Light</option>
 	</select>
 </label>
-<style>
+<!-- svelte-ignore css_unused_selector -->
+<style lang="postcss">
     select {
         @apply select select-sm md:select-md w-full select-bordered;
     }
