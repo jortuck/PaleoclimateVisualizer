@@ -4,7 +4,6 @@
 	let yearsChanged: boolean = $state(false);
 	let pointChanged: boolean = $state(false);
 	let areaChanged: boolean = $state(false);
-	let postText: string = $derived(controller.mode == 'trends' ? ' Trend' : '');
 	let { updateMapData, updateTimeSeriesData, updateMapAndTimeSeriesData }: {
 		updateMapData: () => void,
 		updateTimeSeriesData: () => void,
@@ -55,7 +54,7 @@
 		{#if controller.variables != null }
 			{#each controller.variables as varb}
 				<option disabled={!controller.reconstruction.variables.includes(varb.id)}
-								value={varb}>{varb.name}{postText}</option>
+								value={varb}>{varb.name}</option>
 			{/each}
 		{/if}
 	</select>
