@@ -77,7 +77,7 @@ class ControllerState {
 		this.year
 	);
 	timeSeriesUrl: string = $derived(
-		PUBLIC_API_HOST + '/timeseries/' + this.variable.id + '/' + this.point.lat + '/' + this.point.lon
+		PUBLIC_API_HOST + '/timeseries/' + this.variable.id + '/' + this.point.lat + '/' + this.point.lon+'?time_start=' + this.startYear + '&time_end=' + this.endYear
 	);
 	timeSeriesAreaUrl: string = $derived(
 		PUBLIC_API_HOST + '/timeseries/' + this.variable.id + '/' + this.area.n + '/' + this.area.s + '/' + this.area.start + '/' + this.area.stop

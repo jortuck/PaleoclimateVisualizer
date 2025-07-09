@@ -85,10 +85,10 @@
 			disabled={loading}
 		/>
 	</div>
-{:else}
+{/if}
 	<div class="form-control">
 		<div class="label">
-			<span class="label-text">Trend Time Range</span>
+			<span class="label-text">Time Range</span>
 		</div>
 		<div class="flex flex-row w-full md:space-x-3 md:flex-row space-x-2">
 			<select onchange={()=>{yearsChanged=true}} bind:value={controller.startYear}
@@ -104,13 +104,19 @@
 					<option value={i}>{i}</option>
 				{/each}
 			</select>
-			<button onclick={()=>{yearsChanged=false; updateMapData()}}
+			<button onclick={()=>{
+				yearsChanged=false;
+				if(controller.mode==='annual'){
+					updateTimeSeriesData()
+				}else{
+					updateMapAndTimeSeriesData()
+				}
+			}}
 							class="btn btn-sm md:btn-md btn-primary"
 							disabled={loading||!yearsChanged}>Update
 			</button>
 		</div>
 	</div>
-{/if}
 <label class="form-control w-full">
 	<div class="label">
 		<span class="label-text">Time Series Mode</span>
