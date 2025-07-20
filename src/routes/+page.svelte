@@ -116,6 +116,7 @@
 	</form>
 </dialog>
 <style lang="postcss">
+    @reference "../app.css";
     :global(
 			.highcharts-title,
 			.highcharts-axis-labels > span,

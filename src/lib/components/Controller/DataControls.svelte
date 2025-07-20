@@ -215,6 +215,8 @@
 {/if}
 <!-- svelte-ignore css_unused_selector -->
 <style lang="postcss">
+    @reference "../../../app.css";
+
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
         -webkit-appearance: none;
@@ -232,6 +234,6 @@
     }
 
     select {
-        @apply select select-sm md:select-md w-full select-bordered;
+        @apply select select-sm md:select-md w-full;
     }
 </style>

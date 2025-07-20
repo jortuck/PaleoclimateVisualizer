@@ -14,7 +14,7 @@
 </script>
 <div class="space-y-4">
 	<h2 class="text-2xl font-bold">Settings</h2>
-	<div role="tablist" class="tabs tabs-bordered w-full">
+	<div role="tablist" class="tabs tabs-border w-full">
 		<button onclick={()=>{activeTab='data'}} value="data" role="tab" class="tab" class:tab-active={activeTab==='data'}>Data</button>
 		<button onclick={()=>{activeTab='view'}} value="view" role="tab" class="tab" class:tab-active={activeTab==='view'}>View</button>
 		<button onclick={()=>{activeTab='download'}} value="download" role="tab" class="tab hidden" class:tab-active={activeTab==='download'}>Download</button>
