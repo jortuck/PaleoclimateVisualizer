@@ -1,14 +1,16 @@
 <script lang="ts">
-	import type { TimeSeriesData } from '$lib/Data';
-	import { onMount, untrack } from 'svelte';
+	import { onMount } from 'svelte';
 	import * as Highcharts from 'highcharts';
 	import { controller } from '$lib/ControllerState.svelte';
+	import { PUBLIC_API_HOST } from '$env/static/public';
+	import type { TimeSeriesData } from '$lib/Data';
 
-	let timeseries: any;
-	let { timeSeriesData, class:className }: { timeSeriesData: TimeSeriesData, class: string} = $props();
+	let timeseries: any = $state(null);
+	let { class:className, timeSeriesData}: { class: string, timeSeriesData:TimeSeriesData} = $props();
 	let chart: Highcharts.Chart;
 	let size: any;
-	onMount(() => {
+	$inspect(timeSeriesData)
+	$effect(()=> {
 		chart = Highcharts.chart(timeseries, {
 			chart: {
 				backgroundColor: 'transparent',
@@ -55,7 +57,7 @@
 				useHTML: true
 			}
 		});
-	});
+	})
 	$effect(()=>{
 		chart.update({
 			series:timeSeriesData.values,
@@ -63,11 +65,11 @@
 		}, true, true)
 		chart.setTitle({ text: timeSeriesData.name });
 	})
-	$effect(()=>{
-		chart.update({yAxis:{title:{text:controller.variable.annualUnit}}})
-	})
+	// $effect(()=>{
+	// 	chart.update({yAxis:{title:{text:controller.variable.annualUnit}}})
+	// })
 	function adjust(){
-		chart.reflow();
+		console.log("adjust")
 	}
 </script>
 <svelte:window on:resize={adjust}/>
