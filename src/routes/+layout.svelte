@@ -16,7 +16,12 @@
 
 
 			{@render children()}
+			{#snippet pending()}
 
+			{/snippet}
+			{#snippet failed(error)}
+				{error}
+			{/snippet}
 		</svelte:boundary>
 	</main>
 </div>

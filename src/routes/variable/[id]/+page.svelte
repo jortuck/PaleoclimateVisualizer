@@ -9,14 +9,17 @@
 	import { DataController } from '$lib/DataController.svelte';
 	let data: MapData | null = $state.raw(null);
 	let timeSeriesData: TimeSeriesData | null = $state.raw(null);
-	let ctr: DataController | null = $state(null);
 	async function updateMap(){
 		console.log("update map");
 	}
 	async function updateTimeSeries(){
 		console.log("update map");
 	}
-
+	async function getTimeSeriesData(): Promise<TimeSeriesData> {
+		let timeSeriesURL = PUBLIC_API_HOST + '/variables/psl/timeseries';
+		let request = await fetch(timeSeriesURL)
+		return await request.json() as TimeSeriesData;
+	}
 	async function getController() {
 		const id = page.params.id;
 		const request = await fetch(PUBLIC_API_HOST + `/variables/${id}`);
@@ -25,9 +28,9 @@
 			throw new Error(data.detail);
 		}
 		data = data as VariableMetadata
-		ctr = new DataController(data)
-		return ctr;
+		return new DataController(data);
 	}
+	let ctr: DataController = $state(await getController());
 </script>
 
 <svelte:head>
@@ -47,16 +50,23 @@
 	<meta property="og:locale" content="en_US" />
 </svelte:head>
 <svelte:boundary>
-
-<div class="grid grid-cols-12 grow">
-		<aside class="p-5 bg-base-200 hidden lg:block lg:col-span-4 xl:col-span-3">
-			<Controller controller={await getController()} updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
-									updateMapAndTimeSeriesData={async () =>{await updateMap();await updateTimeSeries();}} />
-		</aside>
-		<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
-			<TimeSeries class="row-span-6 lg:row-span-5" />
-		</div>
-</div>
+	<div class="grid grid-cols-12 grow">
+			<aside class="p-5 bg-base-200 hidden lg:block lg:col-span-4 xl:col-span-3">
+				<Controller controller={ctr} updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
+										updateMapAndTimeSeriesData={async () =>{await updateMap();await updateTimeSeries();}} />
+			</aside>
+			<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
+				<svelte:boundary>
+					<TimeSeries timeSeriesData={await getTimeSeriesData()} class="row-span-6 lg:row-span-5" />
+					{#snippet pending()}
+						<p>loading</p>
+					{/snippet}
+					{#snippet failed(error)}
+						{error}
+					{/snippet}
+				</svelte:boundary>
+			</div>
+	</div>
 	{#snippet pending()}
 		<div
 			class="h-full w-full z-50 bg-base-300 absolute top-0 left-0 opacity-80 flex items-center justify-center flex-col space-y-5"

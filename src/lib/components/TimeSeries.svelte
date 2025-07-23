@@ -6,16 +6,11 @@
 	import type { TimeSeriesData } from '$lib/Data';
 
 	let timeseries: any;
-	let { class:className }: { class: string} = $props();
+	let { class:className, timeSeriesData}: { class: string, timeSeriesData:TimeSeriesData} = $props();
 	let chart: Highcharts.Chart;
 	let size: any;
-	async function getTimeSeriesData(): Promise<TimeSeriesData> {
-		let timeSeriesURL = PUBLIC_API_HOST + '/variables/psl/timeseries';
-		let request = await fetch(timeSeriesURL)
-		return await request.json() as TimeSeriesData;
-	}
-	let timeSeriesData: TimeSeriesData = $derived(await getTimeSeriesData());
-	onMount(() => {
+
+	$effect(() => {
 		chart = Highcharts.chart(timeseries, {
 			chart: {
 				backgroundColor: 'transparent',

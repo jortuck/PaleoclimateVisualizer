@@ -34,7 +34,7 @@
 		<span class="label-text">Select a Climate Model Prior</span>
 	</div>
 	<select
-		bind:value={controller.reconstruction}
+		bind:value={ctr.currentDataset}
 		onchange={updateMapData}
 		disabled={loading}
 	>
