@@ -30,7 +30,7 @@
 					<div class="card w-96 bg-base-300 card-md shadow-sm">
 						<div class="card-body">
 							<h2 class="card-title">{variable.name}</h2>
-							<p>{variable.datasets.length} reconstructions to explore.</p>
+							<p>{variable.dataset_count} reconstructions to explore.</p>
 							<div class="justify-end card-actions">
 								<button class="btn btn-primary">Explore</button>
 							</div>
@@ -53,7 +53,7 @@
 		</div>
 	</div>
 <style lang="postcss">
-    @reference "../app.css";
+    @reference "$lib/app.css";
     :global(
 			.highcharts-title,
 			.highcharts-axis-labels > span,

@@ -215,7 +215,7 @@
 {/if}
 <!-- svelte-ignore css_unused_selector -->
 <style lang="postcss">
-    @reference "../../../app.css";
+    @reference "$lib//app.css";
 
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Navbar from "$lib/components/Navbar.svelte"
-	import "../app.css"
+	import "$lib/app.css"
 	import { onMount } from 'svelte';
 	let {children} = $props();
 	type theme = 'light' | 'dark'
