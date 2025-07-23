@@ -1,15 +1,12 @@
 <script lang="ts">
-	import { controller } from '$lib/ControllerState.svelte';
 	import type { MouseEventHandler } from 'svelte/elements';
 	import ViewControls from '$lib/components/Controller/ViewControls.svelte';
 	import DataControls from '$lib/components/Controller/DataControls.svelte';
+	import type { DataController } from '$lib/DataController.svelte';
 
-	let { updateMapData, updateTimeSeriesData, updateMapAndTimeSeriesData }: {
-		updateMapData: () => void,
-		updateTimeSeriesData: () => void,
-		updateMapAndTimeSeriesData: () => void
+	let { controller}: {
+		controller: DataController
 	} = $props();
-
 	let activeTab: "data"|"view"|"download" = $state("data")
 </script>
 <div class="space-y-4">
@@ -23,7 +20,7 @@
 		{#if activeTab==='view'}
 			<ViewControls />
 			{:else if activeTab==='data'}
-				<DataControls {updateTimeSeriesData} {updateMapData} {updateMapAndTimeSeriesData} />
+				<DataControls {controller} />
 		{/if}
 	</div>
 </div>

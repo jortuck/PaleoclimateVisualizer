@@ -103,10 +103,7 @@ export type Reconstruction = {
     variables: string [];
 }
 
-export type AvailableDataResponse = {
-    reconstructions: Reconstruction[],
-    variables: Variable[]
-}
+
 
 export type TimeSeriesData = {
     name: string;
@@ -121,4 +118,39 @@ export type MapData = {
     lats: number[],
     lons: number[],
     values: number[],
+}
+export type DatasetIndividual = {
+	id: string;
+	name: string;
+	nameShort: string;
+	timeStart: number | null;
+	timeEnd: number | null;
+	path: string;
+	type: "default"|"instrumental";
+	p_value: string;
+	r: string;
+};
+export type Dataset = {
+	id: string;
+	name: string;
+	nameShort: string;
+	variables: Record<string, string>; // variable_id -> file path
+	type: string; // assume DatasetType is defined elsewhere
+	timeStart: number; // optional with default 0
+	timeEnd: number;   // optional with default 0
+};
+export type VariableMetadata = {
+	id: string;
+	colorMap: string;
+	name: string;
+	nameShort: string;
+	multiplier: number;
+	trendUnit: string;
+	annualUnit: string;
+	dataset_count: number;
+	datasets: DatasetIndividual[];
+};
+export type AvailableDataResponse = {
+	variables: VariableMetadata[],
+	datasets: Dataset[]
 }

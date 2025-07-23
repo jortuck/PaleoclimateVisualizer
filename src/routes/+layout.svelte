@@ -1,7 +1,8 @@
 <script lang="ts">
 	import Navbar from "$lib/components/Navbar.svelte"
-	import "../app.css"
+	import "$lib/app.css"
 	import { onMount } from 'svelte';
+	let {children} = $props();
 	type theme = 'light' | 'dark'
 	onMount(()=>{
 		let thm: theme = localStorage.getItem('theme') as theme ?? 'dark'
@@ -11,6 +12,16 @@
 <div class="flex flex-col max-h-dvh min-h-dvh">
 	<Navbar />
 	<main class="flex flex-col grow">
-			<slot />
+		<svelte:boundary onerror={(e) => {console.log(e)}}>
+
+
+			{@render children()}
+			{#snippet pending()}
+				<p>Loading</p>
+			{/snippet}
+			{#snippet failed(error)}
+				{error}
+			{/snippet}
+		</svelte:boundary>
 	</main>
 </div>
