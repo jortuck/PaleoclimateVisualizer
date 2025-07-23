@@ -12,12 +12,12 @@
 <div class="flex flex-col max-h-dvh min-h-dvh">
 	<Navbar />
 	<main class="flex flex-col grow">
-		<svelte:boundary>
+		<svelte:boundary onerror={(e) => {console.log(e)}}>
 
 
 			{@render children()}
 			{#snippet pending()}
-
+				<p>Loading</p>
 			{/snippet}
 			{#snippet failed(error)}
 				{error}

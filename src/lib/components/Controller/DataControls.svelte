@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { controller } from '$lib/ControllerState.svelte';
+	import type { DataController } from '$lib/DataController.svelte';
 
 	let yearsChanged: boolean = $state(false);
 	let pointChanged: boolean = $state(false);
 	let areaChanged: boolean = $state(false);
-	let { updateMapData, updateTimeSeriesData, updateMapAndTimeSeriesData }: {
+	let { updateMapData, updateTimeSeriesData, updateMapAndTimeSeriesData, controller: ctr}: {
 		updateMapData: () => void,
 		updateTimeSeriesData: () => void,
-		updateMapAndTimeSeriesData: () => void
+		updateMapAndTimeSeriesData: () => void,
+		controller: DataController
 	} = $props();
 	let loading: boolean = $derived(controller.loading > 0);
 
@@ -32,13 +34,12 @@
 		<span class="label-text">Select a Climate Model Prior</span>
 	</div>
 	<select
-		bind:value={controller.reconstruction}
+		bind:value={ctr.currentDataset}
 		onchange={updateMapData}
 		disabled={loading}
 	>
-		{#each controller.reconstructions as rec}
-			<option disabled="{!rec.variables.includes(controller.variable.id)}"
-							value={rec}>{rec.name}</option>
+		{#each ctr.variable.datasets as dataset}
+			<option value={dataset}>{dataset.name}</option >
 		{/each}
 	</select>
 </label>

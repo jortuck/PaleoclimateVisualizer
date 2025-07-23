@@ -29,7 +29,6 @@
 		data = data as VariableMetadata
 		return new DataController(data);
 	}
-	let ctr: DataController = $state(await getController());
 	let timeSeriesData: TimeSeriesData = $state(await getTimeSeriesData());
 </script>
 
@@ -52,7 +51,7 @@
 <svelte:boundary>
 	<div class="grid grid-cols-12 grow">
 			<aside class="p-5 bg-base-200 hidden lg:block lg:col-span-4 xl:col-span-3">
-				<Controller controller={ctr} updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
+				<Controller controller={await getController()} updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
 										updateMapAndTimeSeriesData={async () =>{await updateMap();await updateTimeSeries();}} />
 			</aside>
 			<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
