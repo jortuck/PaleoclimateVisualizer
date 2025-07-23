@@ -1,13 +1,20 @@
 <script lang="ts">
-	import type { TimeSeriesData } from '$lib/Data';
-	import { onMount, untrack } from 'svelte';
+	import { onMount } from 'svelte';
 	import * as Highcharts from 'highcharts';
 	import { controller } from '$lib/ControllerState.svelte';
+	import { PUBLIC_API_HOST } from '$env/static/public';
+	import type { TimeSeriesData } from '$lib/Data';
 
 	let timeseries: any;
-	let { timeSeriesData, class:className }: { timeSeriesData: TimeSeriesData, class: string} = $props();
+	let { class:className }: { class: string} = $props();
 	let chart: Highcharts.Chart;
 	let size: any;
+	async function getTimeSeriesData(): Promise<TimeSeriesData> {
+		let timeSeriesURL = PUBLIC_API_HOST + '/variables/psl/timeseries';
+		let request = await fetch(timeSeriesURL)
+		return await request.json() as TimeSeriesData;
+	}
+	let timeSeriesData: TimeSeriesData = $derived(await getTimeSeriesData());
 	onMount(() => {
 		chart = Highcharts.chart(timeseries, {
 			chart: {
@@ -50,7 +57,6 @@
 					}
 				},
 			},
-			series: timeSeriesData.values,
 			legend: {
 				useHTML: true
 			}

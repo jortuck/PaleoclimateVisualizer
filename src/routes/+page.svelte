@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { PUBLIC_API_HOST } from '$env/static/public';
+	import type { VariableMetadata } from '$lib/Data';
 
 	async function getVariables(){
 		let data = await fetch(PUBLIC_API_HOST+"/variables")
-		return await data.json();
+		return await data.json() as VariableMetadata[];
 	}
 </script>
 <svelte:head>
@@ -32,7 +33,7 @@
 							<h2 class="card-title">{variable.name}</h2>
 							<p>{variable.dataset_count} reconstructions to explore.</p>
 							<div class="justify-end card-actions">
-								<button class="btn btn-primary">Explore</button>
+								<a  href={`/variable/${variable.id}`} class="btn btn-primary">Explore</a>
 							</div>
 						</div>
 					</div>
@@ -49,7 +50,6 @@
 					</div>
 				{/snippet}
 			</svelte:boundary>
-
 		</div>
 	</div>
 <style lang="postcss">

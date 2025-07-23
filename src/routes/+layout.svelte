@@ -13,9 +13,7 @@
 	<Navbar />
 	<main class="flex flex-col grow">
 		<svelte:boundary>
-			{#snippet pending()}
-				<p>loadig</p>
-			{/snippet}
+
 
 			{@render children()}
 

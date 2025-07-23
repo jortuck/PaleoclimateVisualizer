@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { controller } from '$lib/ControllerState.svelte';
 	import type { MouseEventHandler } from 'svelte/elements';
 	import ViewControls from '$lib/components/Controller/ViewControls.svelte';
 	import DataControls from '$lib/components/Controller/DataControls.svelte';
+	import type { DataController } from '$lib/DataController.svelte';
 
-	let { updateMapData, updateTimeSeriesData, updateMapAndTimeSeriesData }: {
+	let { updateMapData, updateTimeSeriesData, updateMapAndTimeSeriesData, controller }: {
 		updateMapData: () => void,
 		updateTimeSeriesData: () => void,
 		updateMapAndTimeSeriesData: () => void,
-		variable:any
+		controller: DataController,
 	} = $props();
 
 	let activeTab: "data"|"view"|"download" = $state("data")
 </script>
 <div class="space-y-4">
-	<h2 class="text-2xl font-bold">Settings</h2>
+	<h2 class="text-2xl font-bold">{controller.variable.name}</h2>
 	<div role="tablist" class="tabs tabs-border flex w-full">
 		<button onclick={()=>{activeTab='data'}} value="data" role="tab" class="tab flex-1" class:tab-active={activeTab==='data'}>Data</button>
 		<button onclick={()=>{activeTab='view'}} value="view" role="tab" class="tab flex-1" class:tab-active={activeTab==='view'}>View</button>
@@ -24,7 +24,7 @@
 		{#if activeTab==='view'}
 			<ViewControls />
 			{:else if activeTab==='data'}
-				<DataControls {updateTimeSeriesData} {updateMapData} {updateMapAndTimeSeriesData} />
+				<DataControls {updateTimeSeriesData} {updateMapData} {updateMapAndTimeSeriesData} {controller} />
 		{/if}
 	</div>
 </div>

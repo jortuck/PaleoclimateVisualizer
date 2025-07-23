@@ -122,3 +122,26 @@ export type MapData = {
     lons: number[],
     values: number[],
 }
+
+export type DatasetIndividual = {
+	id: string;
+	name: string;
+	nameShort: string;
+	timeStart: number | null;
+	timeEnd: number | null;
+	path: string;
+	type: "default"|"instrumental";
+	p_value: string;
+	r: string;
+};
+export type VariableMetadata = {
+	id: string;
+	colorMap: string;
+	name: string;
+	nameShort: string;
+	multiplier: number;
+	trendUnit: string;
+	annualUnit: string;
+	dataset_count: number;
+	datasets: DatasetIndividual[];
+};

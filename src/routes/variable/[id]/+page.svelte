@@ -2,14 +2,14 @@
 
 	import {page} from "$app/state"
 	import Controller from '$lib/components/Controller/Controller.svelte';
-	import { controller, controller as ctr } from '$lib/ControllerState.svelte';
-	import type { AvailableDataResponse, MapData, TimeSeriesData } from '$lib/Data';
+	import type { AvailableDataResponse, MapData, TimeSeriesData, VariableMetadata } from '$lib/Data';
 	import TimeSeries from '$lib/components/TimeSeries.svelte';
 	import { onMount } from 'svelte';
 	import { PUBLIC_API_HOST } from '$env/static/public';
+	import { DataController } from '$lib/DataController.svelte';
 	let data: MapData | null = $state.raw(null);
 	let timeSeriesData: TimeSeriesData | null = $state.raw(null);
-
+	let ctr: DataController | null = $state(null);
 	async function updateMap(){
 		console.log("update map");
 	}
@@ -17,13 +17,17 @@
 		console.log("update map");
 	}
 
-	async function getVariable(){
+	async function getController() {
 		const id = page.params.id;
-		let request = await fetch(PUBLIC_API_HOST+`/variables/${id}`)
-		return await request.json();
+		const request = await fetch(PUBLIC_API_HOST + `/variables/${id}`);
+		let data = await request.json();
+		if (!request.ok) {
+			throw new Error(data.detail);
+		}
+		data = data as VariableMetadata
+		ctr = new DataController(data)
+		return ctr;
 	}
-
-
 </script>
 
 <svelte:head>
@@ -42,28 +46,36 @@
 	<meta property="og:site_name" content="Paleoclimate Visualizer" />
 	<meta property="og:locale" content="en_US" />
 </svelte:head>
+<svelte:boundary>
+
 <div class="grid grid-cols-12 grow">
-	<svelte:boundary>
 		<aside class="p-5 bg-base-200 hidden lg:block lg:col-span-4 xl:col-span-3">
-			<Controller variable={await getVariable()} updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
+			<Controller controller={await getController()} updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
 									updateMapAndTimeSeriesData={async () =>{await updateMap();await updateTimeSeries();}} />
 		</aside>
 		<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
-			{#if controller.loading > 0}
-				<div
-					class="h-full w-full z-50 bg-base-300 absolute top-0 left-0 opacity-80 flex items-center justify-center flex-col space-y-5"
-				>
-					<h2 class="text-2xl font-bold text-base-content">Loading</h2>
-					<span class="loading loading-spinner loading-lg"></span>
-				</div>
-			{/if}
+			<TimeSeries class="row-span-6 lg:row-span-5" />
 		</div>
-		{#snippet pending()}
-		Loading
-		{/snippet}
-	</svelte:boundary>
 </div>
-<dialog bind:this={controller.modal} id="controllerModal" class="modal lg:hidden">
+	{#snippet pending()}
+		<div
+			class="h-full w-full z-50 bg-base-300 absolute top-0 left-0 opacity-80 flex items-center justify-center flex-col space-y-5"
+		>
+			<h2 class="text-2xl font-bold text-base-content">Loading</h2>
+			<span class="loading loading-spinner loading-lg"></span>
+		</div>
+	{/snippet}
+	{#snippet failed(error, reset)}
+		<div class="p-10 space-y-8">
+			<div role="alert" class=" alert alert-error alert-outline w-full text-lg">
+				<span>{error}</span>
+			</div>
+			<a class="btn btn-primary" href="/">Return Home</a>
+		</div>
+	{/snippet}
+</svelte:boundary>
+
+<dialog  id="controllerModal" class="modal lg:hidden">
 	<div class="modal-box bg-base-300">
 		<form method="dialog">
 			<button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
