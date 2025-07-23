@@ -7,7 +7,8 @@
 	let { updateMapData, updateTimeSeriesData, updateMapAndTimeSeriesData }: {
 		updateMapData: () => void,
 		updateTimeSeriesData: () => void,
-		updateMapAndTimeSeriesData: () => void
+		updateMapAndTimeSeriesData: () => void,
+		variable:any
 	} = $props();
 
 	let activeTab: "data"|"view"|"download" = $state("data")

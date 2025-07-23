@@ -44,23 +44,6 @@
 </label>
 <label class="form-control w-full">
 	<div class="label">
-		<span class="label-text">Select a Variable</span>
-	</div>
-	<select
-		bind:value={controller.variable}
-		onchange={updateMapAndTimeSeriesData}
-		disabled={loading}
-	>
-		{#if controller.variables != null }
-			{#each controller.variables as varb}
-				<option disabled={!controller.reconstruction.variables.includes(varb.id)}
-								value={varb}>{varb.name}</option>
-			{/each}
-		{/if}
-	</select>
-</label>
-<label class="form-control w-full">
-	<div class="label">
 		<span class="label-text">Map Mode</span>
 	</div>
 	<select

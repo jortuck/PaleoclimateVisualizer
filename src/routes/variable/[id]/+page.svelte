@@ -1,8 +1,6 @@
 <script lang="ts">
-	export const ssr = false;
 
 	import {page} from "$app/state"
-	console.log(page.params.id)
 	import Controller from '$lib/components/Controller/Controller.svelte';
 	import { controller, controller as ctr } from '$lib/ControllerState.svelte';
 	import type { AvailableDataResponse, MapData, TimeSeriesData } from '$lib/Data';
@@ -19,6 +17,11 @@
 		console.log("update map");
 	}
 
+	async function getVariable(){
+		const id = page.params.id;
+		let request = await fetch(PUBLIC_API_HOST+`/variables/${id}`)
+		return await request.json();
+	}
 
 
 </script>
@@ -40,21 +43,25 @@
 	<meta property="og:locale" content="en_US" />
 </svelte:head>
 <div class="grid grid-cols-12 grow">
-	<aside class="p-5 bg-base-200 hidden lg:block lg:col-span-4 xl:col-span-3">
-		<Controller updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
-								updateMapAndTimeSeriesData={async () =>{await updateMap();await updateTimeSeries();}} />
-	</aside>
-	<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
-		{#if controller.loading > 0}
-			<div
-				class="h-full w-full z-50 bg-base-300 absolute top-0 left-0 opacity-80 flex items-center justify-center flex-col space-y-5"
-			>
-				<h2 class="text-2xl font-bold text-base-content">Loading</h2>
-				<span class="loading loading-spinner loading-lg"></span>
-			</div>
-		{/if}
-
-	</div>
+	<svelte:boundary>
+		<aside class="p-5 bg-base-200 hidden lg:block lg:col-span-4 xl:col-span-3">
+			<Controller variable={await getVariable()} updateMapData={updateMap} updateTimeSeriesData={updateTimeSeries}
+									updateMapAndTimeSeriesData={async () =>{await updateMap();await updateTimeSeries();}} />
+		</aside>
+		<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
+			{#if controller.loading > 0}
+				<div
+					class="h-full w-full z-50 bg-base-300 absolute top-0 left-0 opacity-80 flex items-center justify-center flex-col space-y-5"
+				>
+					<h2 class="text-2xl font-bold text-base-content">Loading</h2>
+					<span class="loading loading-spinner loading-lg"></span>
+				</div>
+			{/if}
+		</div>
+		{#snippet pending()}
+		Loading
+		{/snippet}
+	</svelte:boundary>
 </div>
 <dialog bind:this={controller.modal} id="controllerModal" class="modal lg:hidden">
 	<div class="modal-box bg-base-300">
