@@ -148,7 +148,7 @@ export type VariableMetadata = {
 	trendUnit: string;
 	annualUnit: string;
 	dataset_count: number;
-	datasets: DatasetIndividual[];
+	datasets: string[];
 };
 export type AvailableDataResponse = {
 	variables: VariableMetadata[],

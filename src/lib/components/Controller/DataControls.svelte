@@ -26,11 +26,21 @@
 	<select
 		bind:value={controller.currentDataset}
 	>
-		{#each  controller.datasets as dataset}
+		{#each  controller.datasets.filter(data => Object.keys(data.variables).includes(controller.currentVariable.id)) as dataset}
 			<option
+				disabled={!controller.currentVariable.datasets.includes(dataset.id)}
 				value={dataset}
 					>{dataset.name}</option>
 			{/each}
+		{#if controller.datasets.filter(data => !Object.keys(data.variables).includes(controller.currentVariable.id)).length > 0}
+			<option disabled>--- Unsupported Models ---</option>
+			{#each  controller.datasets.filter(data => !Object.keys(data.variables).includes(controller.currentVariable.id)) as dataset}
+				<option
+					disabled={!controller.currentVariable.datasets.includes(dataset.id)}
+					value={dataset}
+				>{dataset.name}</option>
+			{/each}
+		{/if}
 	</select>
 </label>
 <label class="form-control w-full">
