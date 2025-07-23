@@ -8,7 +8,6 @@
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import { DataController } from '$lib/DataController.svelte';
 	let data: MapData | null = $state.raw(null);
-	let timeSeriesData: TimeSeriesData | null = $state.raw(null);
 	async function updateMap(){
 		console.log("update map");
 	}
@@ -31,6 +30,7 @@
 		return new DataController(data);
 	}
 	let ctr: DataController = $state(await getController());
+	let timeSeriesData: TimeSeriesData = $state(await getTimeSeriesData());
 </script>
 
 <svelte:head>
@@ -56,15 +56,8 @@
 										updateMapAndTimeSeriesData={async () =>{await updateMap();await updateTimeSeries();}} />
 			</aside>
 			<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
-				<svelte:boundary>
-					<TimeSeries timeSeriesData={await getTimeSeriesData()} class="row-span-6 lg:row-span-5" />
-					{#snippet pending()}
-						<p>loading</p>
-					{/snippet}
-					{#snippet failed(error)}
-						{error}
-					{/snippet}
-				</svelte:boundary>
+					<TimeSeries timeSeriesData={timeSeriesData} class="row-span-6 lg:row-span-5" />
+
 			</div>
 	</div>
 	{#snippet pending()}

@@ -5,12 +5,12 @@
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import type { TimeSeriesData } from '$lib/Data';
 
-	let timeseries: any;
+	let timeseries: any = $state(null);
 	let { class:className, timeSeriesData}: { class: string, timeSeriesData:TimeSeriesData} = $props();
 	let chart: Highcharts.Chart;
 	let size: any;
-
-	$effect(() => {
+	$inspect(timeSeriesData)
+	$effect(()=> {
 		chart = Highcharts.chart(timeseries, {
 			chart: {
 				backgroundColor: 'transparent',
@@ -52,11 +52,12 @@
 					}
 				},
 			},
+			series: timeSeriesData.values,
 			legend: {
 				useHTML: true
 			}
 		});
-	});
+	})
 	$effect(()=>{
 		chart.update({
 			series:timeSeriesData.values,
@@ -64,11 +65,11 @@
 		}, true, true)
 		chart.setTitle({ text: timeSeriesData.name });
 	})
-	$effect(()=>{
-		chart.update({yAxis:{title:{text:controller.variable.annualUnit}}})
-	})
+	// $effect(()=>{
+	// 	chart.update({yAxis:{title:{text:controller.variable.annualUnit}}})
+	// })
 	function adjust(){
-		chart.reflow();
+		console.log("adjust")
 	}
 </script>
 <svelte:window on:resize={adjust}/>
