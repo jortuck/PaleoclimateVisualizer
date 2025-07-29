@@ -5,6 +5,8 @@
 	import type { AvailableDataResponse, MapData, TimeSeriesData } from '$lib/Data';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import { DataController } from '$lib/DataController.svelte';
+	import TimeSeries from '$lib/components/TimeSeries.svelte';
+	import { onMount } from 'svelte';
 
 	let data: MapData | null = $state.raw(null);
 	let timeSeriesData: TimeSeriesData | null = $state.raw(null);
@@ -26,7 +28,10 @@
 		return new DataController(data as AvailableDataResponse);
 	}
 
-	let dataController: DataController = $derived(await getAvailable());
+	let dataController: DataController | null = $state(null);
+	onMount(async () => {
+		dataController = await getAvailable();
+	});
 	let variables;
 	let reconstructions;
 	let currentReconstruction;
@@ -51,13 +56,14 @@
 </svelte:head>
 <svelte:boundary>
 	<div class="grid grid-cols-12 grow">
-		<aside class="p-5 bg-base-200 hidden lg:block lg:col-span-4 xl:col-span-3">
-			<Controller controller={dataController} />
-		</aside>
-		<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
-			{JSON.stringify(dataController.currentDataset)}
-			{JSON.stringify(dataController.currentVariable)}
-		</div>
+		{#if dataController != null}
+			<aside class="p-5 bg-base-200 hidden lg:block lg:col-span-4 xl:col-span-3">
+				<Controller controller={dataController} />
+			</aside>
+			<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
+				<TimeSeries timeSeriesUrl={dataController.timeSeriesUrl} class="row-span-6 lg:row-span-5" />
+			</div>
+		{/if}
 	</div>
 	<dialog bind:this={controller.modal} id="controllerModal" class="modal lg:hidden">
 		<div class="modal-box bg-base-300">

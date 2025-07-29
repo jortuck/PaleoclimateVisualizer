@@ -4,26 +4,27 @@ import type {
 	DatasetIndividual,
 	VariableMetadata
 } from '$lib/Data';
+import { PUBLIC_API_HOST } from '$env/static/public';
 
 export class DataController {
 	variables: VariableMetadata[];
 	datasets: Dataset[];
 	currentDataset: Dataset;
 	currentVariable: VariableMetadata;
+	timeSeriesUrl: string;
 	constructor(response: AvailableDataResponse) {
 		this.variables = response.variables;
 		this.datasets = response.datasets;
 
 		const initialDataset = response.datasets[0];
 		const initialVariable = $state(
-			response.variables.filter(
-				(v) => v.id === Object.keys(initialDataset.variables)[0]
-			)[0]
+			response.variables.filter((v) => v.id === Object.keys(initialDataset.variables)[0])[0]
 		);
 
 		this.currentDataset = $state(initialDataset);
 		this.currentVariable = $state(initialVariable);
+		this.timeSeriesUrl = $derived(
+			PUBLIC_API_HOST + '/variables/' + this.currentVariable.id + '/timeseries'
+		);
 	}
-
 }
-

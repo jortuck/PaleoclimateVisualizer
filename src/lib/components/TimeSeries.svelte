@@ -1,22 +1,21 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import * as Highcharts from 'highcharts';
-	import { controller } from '$lib/ControllerState.svelte';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import type { TimeSeriesData } from '$lib/Data';
 
 	let timeseries: any = $state(null);
-	let { class:className, timeSeriesData}: { class: string, timeSeriesData:TimeSeriesData} = $props();
+	let { class: className, timeSeriesUrl }: { class: string; timeSeriesUrl: string } = $props();
 	let chart: Highcharts.Chart;
 	let size: any;
-	$inspect(timeSeriesData)
-	$effect(()=> {
+	$effect(() => {
+		console.log('effect 1');
 		chart = Highcharts.chart(timeseries, {
 			chart: {
-				backgroundColor: 'transparent',
+				backgroundColor: 'transparent'
 			},
-			credits:{
-				text:"Gemma O'Connor"
+			credits: {
+				text: "Gemma O'Connor"
 			},
 			title: {
 				useHTML: true
@@ -41,7 +40,7 @@
 			},
 			plotOptions: {
 				series: {
-					marker:{
+					marker: {
 						enabled: false
 					},
 					label: {
@@ -50,27 +49,33 @@
 							color: 'white'
 						}
 					}
-				},
+				}
 			},
-			series: timeSeriesData.values,
+			// series: timeSeriesData.values,
 			legend: {
 				useHTML: true
 			}
 		});
-	})
-	$effect(()=>{
-		chart.update({
-			series:timeSeriesData.values,
-
-		}, true, true)
+	});
+	$effect(async () => {
+		let request = await fetch(timeSeriesUrl);
+		let timeSeriesData: TimeSeriesData = (await request.json()) as TimeSeriesData;
+		chart.update(
+			{
+				series: timeSeriesData.values
+			},
+			true,
+			true
+		);
 		chart.setTitle({ text: timeSeriesData.name });
-	})
-	// $effect(()=>{
-	// 	chart.update({yAxis:{title:{text:controller.variable.annualUnit}}})
-	// })
-	function adjust(){
-		console.log("adjust")
+	});
+	// $effect(() => {
+	// 	chart.update({ yAxis: { title: { text: controller.variable.annualUnit } } });
+	// });
+	function adjust() {
+		console.log('adjust');
 	}
 </script>
-<svelte:window on:resize={adjust}/>
-<div class="{className}" bind:this={timeseries}></div>
+
+<svelte:window on:resize={adjust} />
+<div class={className} bind:this={timeseries}></div>
