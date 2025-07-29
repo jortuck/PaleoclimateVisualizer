@@ -1,12 +1,11 @@
 <script lang="ts">
 	import Controller from '$lib/components/Controller/Controller.svelte';
 	import Map from '$lib/components/Map.svelte';
-	import { controller, controller as ctr } from '$lib/ControllerState.svelte';
+	import { controller } from '$lib/ControllerState.svelte';
 	import type { AvailableDataResponse, MapData, TimeSeriesData } from '$lib/Data';
-	import TimeSeries from '$lib/components/TimeSeries.svelte';
-	import { onMount } from 'svelte';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import { DataController } from '$lib/DataController.svelte';
+
 	let data: MapData | null = $state.raw(null);
 	let timeSeriesData: TimeSeriesData | null = $state.raw(null);
 	let map: Map | null = $state.raw(null);
@@ -15,24 +14,23 @@
 	 */
 	async function updateMap() {
 		console.log('update map');
-
 	}
 
 	async function updateTimeSeries() {
 		console.log('update timeSeries');
 	}
 
-	async function getAvailable(){
-		let request = await fetch(PUBLIC_API_HOST+"/variables")
+	async function getAvailable() {
+		let request = await fetch(PUBLIC_API_HOST + '/variables');
 		let data = await request.json();
-		return data as AvailableDataResponse;
+		return new DataController(data as AvailableDataResponse);
 	}
-	let dataController: DataController = new DataController(await getAvailable());
+
+	let dataController: DataController = $derived(await getAvailable());
 	let variables;
 	let reconstructions;
 	let currentReconstruction;
 	let currentVariable;
-
 </script>
 
 <svelte:head>
@@ -51,37 +49,65 @@
 	<meta property="og:site_name" content="Paleoclimate Visualizer" />
 	<meta property="og:locale" content="en_US" />
 </svelte:head>
-<div class="grid grid-cols-12 grow">
-	<aside class="p-5 bg-base-200 hidden lg:block lg:col-span-4 xl:col-span-3">
-		<Controller controller={dataController}  />
-	</aside>
-	<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
-		{JSON.stringify(dataController.currentDataset)}
-		{JSON.stringify(dataController.currentVariable)}
+<svelte:boundary>
+	<div class="grid grid-cols-12 grow">
+		<aside class="p-5 bg-base-200 hidden lg:block lg:col-span-4 xl:col-span-3">
+			<Controller controller={dataController} />
+		</aside>
+		<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
+			{JSON.stringify(dataController.currentDataset)}
+			{JSON.stringify(dataController.currentVariable)}
+		</div>
 	</div>
-</div>
-<dialog bind:this={controller.modal} id="controllerModal" class="modal lg:hidden">
-	<div class="modal-box bg-base-300">
-		<form method="dialog">
-			<button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
+	<dialog bind:this={controller.modal} id="controllerModal" class="modal lg:hidden">
+		<div class="modal-box bg-base-300">
+			<form method="dialog">
+				<button class="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
+			</form>
+		</div>
+		<form method="dialog" class="modal-backdrop">
+			<button>close</button>
 		</form>
-	</div>
-	<form method="dialog" class="modal-backdrop">
-		<button>close</button>
-	</form>
-</dialog>
+	</dialog>
+	{#snippet pending()}
+		<div
+			class="h-full w-full z-50 bg-base-300 absolute top-0 left-0 opacity-80 flex items-center justify-center flex-col space-y-5"
+		>
+			<h2 class="text-2xl font-bold text-base-content">Loading</h2>
+			<span class="loading loading-spinner loading-lg"></span>
+		</div>
+	{/snippet}
+	{#snippet failed(error)}
+		<div class="p-10 space-y-8">
+			<div role="alert" class="alert alert-error alert-outline w-full text-lg">
+				<p>
+					<span>
+						The API that this web application relies on cannot be reached. Please visit the <a
+							target="_blank"
+							class="underline"
+							href="https://status.jortuck.com/status/pv">status page</a
+						> for updates.
+					</span>
+					<br />
+					<span>Error Message: {error}</span>
+				</p>
+			</div>
+		</div>
+	{/snippet}
+</svelte:boundary>
+
 <style lang="postcss">
-    @reference "$lib/app.css";
-    :global(
-			.highcharts-title,
-			.highcharts-axis-labels > span,
-			.highcharts-axis-title,
-			.highcharts-legend-item > span
-		) {
-        @apply !text-base-content lg:text-left text-center;
-    }
-    :global(.highcharts-container) {
-        width:100% !important;
-        height:100% !important;
-    }
+	@reference "$lib/app.css";
+	:global(
+		.highcharts-title,
+		.highcharts-axis-labels > span,
+		.highcharts-axis-title,
+		.highcharts-legend-item > span
+	) {
+		@apply !text-base-content lg:text-left text-center;
+	}
+	:global(.highcharts-container) {
+		width: 100% !important;
+		height: 100% !important;
+	}
 </style>
