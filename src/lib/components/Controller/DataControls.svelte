@@ -1,14 +1,26 @@
 <script lang="ts">
 	import type { DataController } from '$lib/DataController.svelte';
+	import { z } from 'zod';
 
-	let yearsChanged: boolean = $state(false);
-	let pointChanged: boolean = $state(false);
-	let areaChanged: boolean = $state(false);
 	let {
 		controller
 	}: {
 		controller: DataController;
 	} = $props();
+
+	const pointSchema = z.object({
+		lat: z.number().int().max(90).min(-90),
+		lon: z.number().int().max(180).min(-180)
+	});
+
+	let yearsChanged: boolean = $state(false);
+	let pointChanged: boolean = $state(false);
+	let areaChanged: boolean = $state(false);
+	let point: { lat: number; lon: number } = $state({ ...controller.timeSeriesPoint });
+	let invalidPoint: boolean = $derived(
+		!pointSchema.safeParse({ lat: point.lat, lon: point.lon }).success
+	);
+
 	function range(from: number, to: number) {
 		const result: number[] = [];
 		let i = from;
@@ -82,6 +94,58 @@
 		<!--		<button class="btn btn-sm md:btn-md btn-primary">Update</button>-->
 	</div>
 </div>
+<label class="form-control w-full">
+	<div class="label">
+		<span class="label-text">Time Series Mode</span>
+	</div>
+	<select bind:value={controller.timeSeriesMode}>
+		<option value="point">Specific Point</option>
+		<option value="asl">Amundsen Sea Low Index</option>
+		<option value="nino">Niño3.4 Index</option>
+		<option value="cww">Circumpolar Westerly Winds</option>
+		<option value="area">Custom Sub Region</option>
+	</select>
+</label>
+<div class="join">
+	<input
+		class="join-item input"
+		type="number"
+		inputmode="numeric"
+		placeholder="Lat"
+		min="-90"
+		max="90"
+		oninput={() => {
+			pointChanged = true;
+		}}
+		class:input-error={invalidPoint}
+		bind:value={point.lat}
+	/>
+	<input
+		class="join-item input"
+		placeholder="Lon"
+		type="number"
+		inputmode="numeric"
+		oninput={() => {
+			pointChanged = true;
+		}}
+		class:input-error={invalidPoint}
+		bind:value={point.lon}
+	/>
+	<button
+		class="btn btn-sm md:btn-md btn-primary join-item"
+		disabled={invalidPoint || !pointChanged}
+		onclick={(e) => {
+			pointChanged = false;
+			controller.timeSeriesPoint = point;
+		}}>Update</button
+	>
+</div>
+{#if invalidPoint}
+	<p class="text-sm text-error">
+		The point you entered is invalid. Make sure the lat is between -90 and 90, and the lon is
+		between -180 and 180. Only whole numbers are accepted.
+	</p>
+{/if}
 
 <!-- svelte-ignore css_unused_selector -->
 <style lang="postcss">
@@ -99,7 +163,7 @@
 	}
 
 	input:not([type='range']) {
-		@apply input input-sm w-full md:input-md;
+		@apply input-sm w-full md:input-md;
 		-moz-appearance: textfield;
 	}
 

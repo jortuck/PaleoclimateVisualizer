@@ -14,6 +14,8 @@ export class DataController {
 	timeSeriesUrl: string;
 	startYear: number;
 	endYear: number;
+	timeSeriesMode: 'point' | 'area' = $state('point');
+	timeSeriesPoint: { lat: number; lon: number } = $state({ lat: 0, lon: -150 });
 	constructor(response: AvailableDataResponse) {
 		this.variables = response.variables;
 		this.datasets = response.datasets;
@@ -28,7 +30,7 @@ export class DataController {
 		this.startYear = $state(initialDataset.timeStart);
 		this.endYear = $state(initialDataset.timeEnd);
 		this.timeSeriesUrl = $derived(
-			`${PUBLIC_API_HOST}/variables/${this.currentVariable.id}/timeseries`
+			`${PUBLIC_API_HOST}/variables/${this.currentVariable.id}/timeseries?lat=${this.timeSeriesPoint.lat}&lon=${this.timeSeriesPoint.lon}`
 		);
 	}
 }

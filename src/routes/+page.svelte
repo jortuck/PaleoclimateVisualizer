@@ -32,10 +32,6 @@
 	onMount(async () => {
 		dataController = await getAvailable();
 	});
-	let variables;
-	let reconstructions;
-	let currentReconstruction;
-	let currentVariable;
 </script>
 
 <svelte:head>
