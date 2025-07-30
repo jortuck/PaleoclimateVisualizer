@@ -5,7 +5,19 @@
 	import type { TimeSeriesData } from '$lib/Data';
 
 	let timeseries: any = $state(null);
-	let { class: className, timeSeriesUrl }: { class: string; timeSeriesUrl: string } = $props();
+	let {
+		class: className,
+		timeSeriesUrl,
+		startYear,
+		endYear,
+		unit = 'Units'
+	}: {
+		class: string;
+		timeSeriesUrl: string;
+		startYear: number;
+		endYear: number;
+		unit: string;
+	} = $props();
 	let chart: Highcharts.Chart;
 	let size: any;
 	$effect(() => {
@@ -35,7 +47,9 @@
 				},
 				labels: {
 					useHTML: true
-				}
+				},
+				max: 2000,
+				min: 1995
 			},
 			plotOptions: {
 				series: {
@@ -50,7 +64,7 @@
 					}
 				}
 			},
-			// series: timeSeriesData.values,
+
 			legend: {
 				useHTML: true
 			}
@@ -73,9 +87,19 @@
 			});
 		});
 	});
-	// $effect(() => {
-	// 	chart.update({ yAxis: { title: { text: controller.variable.annualUnit } } });
-	// });
+	$effect(() => {
+		// when the time series loads initially, it already does the full range, no need to refetch data
+		// if we can only make the range smaller
+		chart.update({
+			xAxis: {
+				max: endYear,
+				min: startYear
+			}
+		});
+	});
+	$effect(() => {
+		chart.update({ yAxis: { title: { text: unit } } });
+	});
 	function adjust() {
 		chart.reflow();
 	}

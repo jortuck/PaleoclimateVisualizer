@@ -12,6 +12,8 @@ export class DataController {
 	currentDataset: Dataset;
 	currentVariable: VariableMetadata;
 	timeSeriesUrl: string;
+	startYear: number;
+	endYear: number;
 	constructor(response: AvailableDataResponse) {
 		this.variables = response.variables;
 		this.datasets = response.datasets;
@@ -23,8 +25,10 @@ export class DataController {
 
 		this.currentDataset = $state(initialDataset);
 		this.currentVariable = $state(initialVariable);
+		this.startYear = $state(initialDataset.timeStart);
+		this.endYear = $state(initialDataset.timeEnd);
 		this.timeSeriesUrl = $derived(
-			PUBLIC_API_HOST + '/variables/' + this.currentVariable.id + '/timeseries'
+			`${PUBLIC_API_HOST}/variables/${this.currentVariable.id}/timeseries`
 		);
 	}
 }

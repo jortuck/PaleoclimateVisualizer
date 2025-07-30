@@ -61,7 +61,13 @@
 				<Controller controller={dataController} />
 			</aside>
 			<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
-				<TimeSeries timeSeriesUrl={dataController.timeSeriesUrl} class="row-span-6 lg:row-span-5" />
+				<TimeSeries
+					unit={dataController.currentVariable.annualUnit}
+					startYear={dataController.startYear}
+					endYear={dataController.endYear}
+					timeSeriesUrl={dataController.timeSeriesUrl}
+					class="row-span-6 lg:row-span-5"
+				/>
 			</div>
 		{/if}
 	</div>
