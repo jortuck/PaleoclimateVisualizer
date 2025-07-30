@@ -9,7 +9,6 @@
 	let chart: Highcharts.Chart;
 	let size: any;
 	$effect(() => {
-		console.log('effect 1');
 		chart = Highcharts.chart(timeseries, {
 			chart: {
 				backgroundColor: 'transparent'
@@ -56,24 +55,29 @@
 				useHTML: true
 			}
 		});
+		return () => {
+			chart.destroy();
+		};
 	});
-	$effect(async () => {
-		let request = await fetch(timeSeriesUrl);
-		let timeSeriesData: TimeSeriesData = (await request.json()) as TimeSeriesData;
-		chart.update(
-			{
-				series: timeSeriesData.values
-			},
-			true,
-			true
-		);
-		chart.setTitle({ text: timeSeriesData.name });
+	$effect(() => {
+		fetch(timeSeriesUrl).then((response) => {
+			response.json().then((data) => {
+				chart.update(
+					{
+						series: data.values
+					},
+					true,
+					true
+				);
+				chart.setTitle({ text: data.name });
+			});
+		});
 	});
 	// $effect(() => {
 	// 	chart.update({ yAxis: { title: { text: controller.variable.annualUnit } } });
 	// });
 	function adjust() {
-		console.log('adjust');
+		chart.reflow();
 	}
 </script>
 
