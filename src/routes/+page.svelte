@@ -64,6 +64,7 @@
 					timeSeriesUrl={dataController.timeSeriesUrl}
 					class="row-span-6 lg:row-span-5"
 				/>
+				{dataController.timeSeriesUrl}
 			</div>
 		{/if}
 	</div>

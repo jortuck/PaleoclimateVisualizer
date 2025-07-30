@@ -14,8 +14,14 @@ export class DataController {
 	timeSeriesUrl: string;
 	startYear: number;
 	endYear: number;
-	timeSeriesMode: 'point' | 'area' = $state('point');
+	timeSeriesMode: 'point' | 'area' | 'asl' | 'nino' | 'cww' = $state('point');
 	timeSeriesPoint: { lat: number; lon: number } = $state({ lat: 0, lon: -150 });
+	area: { n: number; s: number; start: number; stop: number } = $state({
+		n: 10,
+		s: -50,
+		start: 106,
+		stop: 150
+	});
 	constructor(response: AvailableDataResponse) {
 		this.variables = response.variables;
 		this.datasets = response.datasets;
@@ -29,8 +35,11 @@ export class DataController {
 		this.currentVariable = $state(initialVariable);
 		this.startYear = $state(initialDataset.timeStart);
 		this.endYear = $state(initialDataset.timeEnd);
-		this.timeSeriesUrl = $derived(
-			`${PUBLIC_API_HOST}/variables/${this.currentVariable.id}/timeseries?lat=${this.timeSeriesPoint.lat}&lon=${this.timeSeriesPoint.lon}`
-		);
+		this.timeSeriesUrl = $derived.by(() => {
+			if (this.timeSeriesMode === 'point') {
+				return `${PUBLIC_API_HOST}/variables/${this.currentVariable.id}/timeseries?lat=${this.timeSeriesPoint.lat}&lon=${this.timeSeriesPoint.lon}`;
+			}
+			return `${PUBLIC_API_HOST}/variables/${this.currentVariable.id}/timeseries-area?n=${this.area.n}&s=${this.area.s}&start=${this.area.start}&stop=${this.area.stop}`;
+		});
 	}
 }

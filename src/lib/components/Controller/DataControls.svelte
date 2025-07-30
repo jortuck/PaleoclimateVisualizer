@@ -12,15 +12,43 @@
 		lat: z.number().int().max(90).min(-90),
 		lon: z.number().int().max(180).min(-180)
 	});
+	const areaSchema = z
+		.object({
+			n: z.number().int().max(90).min(-90),
+			s: z.number().int().max(90).min(-90),
+			start: z.number().int().max(180).min(-180),
+			stop: z.number().int().max(180).min(-180)
+		})
+		.refine(
+			(data) => {
+				return data.s <= data.n;
+			},
+			{
+				message: 's must be less than or equal to n',
+				path: ['s']
+			}
+		);
 
-	let yearsChanged: boolean = $state(false);
 	let pointChanged: boolean = $state(false);
 	let areaChanged: boolean = $state(false);
+
+	let area: { n: number; s: number; start: number; stop: number } = $state({ ...controller.area });
 	let point: { lat: number; lon: number } = $state({ ...controller.timeSeriesPoint });
+
 	let invalidPoint: boolean = $derived(
 		!pointSchema.safeParse({ lat: point.lat, lon: point.lon }).success
 	);
+	let invalidArea: boolean = $derived(
+		!areaSchema.safeParse({
+			n: area.n,
+			s: area.s,
+			start: area.start,
+			stop: area.stop
+		}).success
+	);
 
+	// true if using a predefined sub-region
+	let preDefSub: boolean = $derived(controller.timeSeriesMode !== 'area');
 	function range(from: number, to: number) {
 		const result: number[] = [];
 		let i = from;
@@ -30,6 +58,22 @@
 		}
 		return result;
 	}
+	$effect(() => {
+		switch (controller.timeSeriesMode) {
+			case 'asl':
+				area = { n: -60, s: -80, start: 170, stop: -62 };
+				controller.area = { n: -60, s: -80, start: 170, stop: -62 };
+				break;
+			case 'nino':
+				controller.area = { n: 5, s: -5, start: -170, stop: -120 };
+				area = { n: 5, s: -5, start: -170, stop: -120 };
+				break;
+			case 'cww':
+				controller.area = { n: -20, s: -70, start: -179, stop: 180 };
+				area = { n: -20, s: -70, start: -179, stop: 180 };
+				break;
+		}
+	});
 </script>
 
 <label class="form-control w-full">
@@ -106,45 +150,124 @@
 		<option value="area">Custom Sub Region</option>
 	</select>
 </label>
-<div class="join">
-	<input
-		class="join-item input"
-		type="number"
-		inputmode="numeric"
-		placeholder="Lat"
-		min="-90"
-		max="90"
-		oninput={() => {
-			pointChanged = true;
-		}}
-		class:input-error={invalidPoint}
-		bind:value={point.lat}
-	/>
-	<input
-		class="join-item input"
-		placeholder="Lon"
-		type="number"
-		inputmode="numeric"
-		oninput={() => {
-			pointChanged = true;
-		}}
-		class:input-error={invalidPoint}
-		bind:value={point.lon}
-	/>
+{#if controller.timeSeriesMode === 'point'}
+	<div class="join">
+		<input
+			class="join-item input"
+			type="number"
+			inputmode="numeric"
+			placeholder="Lat"
+			min="-90"
+			max="90"
+			oninput={() => {
+				pointChanged = true;
+			}}
+			class:input-error={invalidPoint}
+			bind:value={point.lat}
+		/>
+		<input
+			class="join-item input"
+			placeholder="Lon"
+			type="number"
+			inputmode="numeric"
+			oninput={() => {
+				pointChanged = true;
+			}}
+			class:input-error={invalidPoint}
+			bind:value={point.lon}
+		/>
+		<button
+			class="btn btn-sm md:btn-md btn-primary join-item"
+			disabled={invalidPoint || !pointChanged}
+			onclick={(e) => {
+				pointChanged = false;
+				controller.timeSeriesPoint = point;
+			}}>Update</button
+		>
+	</div>
+	{#if invalidPoint}
+		<p class="text-sm text-error">
+			The point you entered is invalid. Make sure the lat is between -90 and 90, and the lon is
+			between -180 and 180. Only whole numbers are accepted.
+		</p>
+	{/if}
+{:else}
+	<div class="flex flex-row w-full md:space-x-3 md:flex-row space-x-2">
+		<label class="form-control w-full">
+			<div class="label">
+				<span class="label-text">N°</span>
+			</div>
+			<input
+				onchange={() => {
+					areaChanged = true;
+				}}
+				inputmode="numeric"
+				type="number"
+				class="input input-sm w-full"
+				disabled={preDefSub}
+				bind:value={area.n}
+			/>
+		</label>
+		<label class="form-control w-full">
+			<div class="label">
+				<span class="label-text">S°</span>
+			</div>
+			<input
+				onchange={() => {
+					areaChanged = true;
+				}}
+				bind:value={area.s}
+				inputmode="numeric"
+				type="number"
+				class="input input-sm w-full"
+				disabled={preDefSub}
+			/>
+		</label>
+		<label class="form-control w-full">
+			<div class="label">
+				<span class="label-text">Start Lon</span>
+			</div>
+			<input
+				onchange={() => {
+					areaChanged = true;
+				}}
+				bind:value={area.start}
+				inputmode="numeric"
+				type="number"
+				class="input input-sm w-full"
+				disabled={preDefSub}
+			/>
+		</label>
+		<label class="form-control w-full">
+			<div class="label">
+				<span class="label-text">End Lon</span>
+			</div>
+			<input
+				onchange={() => {
+					areaChanged = true;
+				}}
+				bind:value={area.stop}
+				disabled={preDefSub}
+				inputmode="numeric"
+				type="number"
+				class="input input-sm w-full"
+			/>
+		</label>
+	</div>
 	<button
-		class="btn btn-sm md:btn-md btn-primary join-item"
-		disabled={invalidPoint || !pointChanged}
-		onclick={(e) => {
-			pointChanged = false;
-			controller.timeSeriesPoint = point;
+		inputmode="numeric"
+		class="btn btn-sm btn-primary w-full"
+		disabled={preDefSub || invalidArea || !areaChanged}
+		onclick={() => {
+			controller.area = area;
 		}}>Update</button
 	>
-</div>
-{#if invalidPoint}
-	<p class="text-sm text-error">
-		The point you entered is invalid. Make sure the lat is between -90 and 90, and the lon is
-		between -180 and 180. Only whole numbers are accepted.
-	</p>
+	{#if invalidArea}
+		<p class="text-sm text-error">
+			The area you entered is invalid. Make sure N° is greater than S°. N° and S° must be between 90
+			and -90. Start Lon and Stop Lon must be between -180 and 180.
+		</p>
+	{/if}
 {/if}
 
 <!-- svelte-ignore css_unused_selector -->
