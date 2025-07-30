@@ -8,20 +8,6 @@
 	import TimeSeries from '$lib/components/TimeSeries.svelte';
 	import { onMount } from 'svelte';
 
-	let data: MapData | null = $state.raw(null);
-	let timeSeriesData: TimeSeriesData | null = $state.raw(null);
-	let map: Map | null = $state.raw(null);
-	/**
-	 * This function is called when a controller change results in a map update.
-	 */
-	async function updateMap() {
-		console.log('update map');
-	}
-
-	async function updateTimeSeries() {
-		console.log('update timeSeries');
-	}
-
 	async function getAvailable() {
 		let request = await fetch(PUBLIC_API_HOST + '/variables');
 		let data = await request.json();
@@ -57,6 +43,16 @@
 				<Controller controller={dataController} />
 			</aside>
 			<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
+				<Map
+					overrideColorBarLimit={dataController.overrideColorBar}
+					colorBarLimit={dataController.colorBarLimit}
+					bind:point={dataController.timeSeriesPoint}
+					showArea={dataController.timeSeriesMode !== 'point'}
+					area={dataController.area}
+					trendURL={dataController.trendUrl}
+					class="row-span-6 lg:row-span-7"
+				/>
+
 				<TimeSeries
 					unit={dataController.currentVariable.annualUnit}
 					startYear={dataController.startYear}
@@ -64,7 +60,6 @@
 					timeSeriesUrl={dataController.timeSeriesUrl}
 					class="row-span-6 lg:row-span-5"
 				/>
-				{dataController.timeSeriesUrl}
 			</div>
 		{/if}
 	</div>
@@ -118,5 +113,8 @@
 	:global(.highcharts-container) {
 		width: 100% !important;
 		height: 100% !important;
+	}
+	:global(.highcharts-label.highcharts-legend-title > span) {
+		@apply dark:!text-white;
 	}
 </style>

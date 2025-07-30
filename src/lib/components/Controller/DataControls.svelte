@@ -74,6 +74,13 @@
 				break;
 		}
 	});
+
+	// watch for data set creating invalid year
+	$effect(() => {
+		if (controller.startYear < controller.currentDataset.timeStart) {
+			controller.startYear = controller.currentDataset.timeStart;
+		}
+	});
 </script>
 
 <label class="form-control w-full">
@@ -268,6 +275,26 @@
 			and -90. Start Lon and Stop Lon must be between -180 and 180.
 		</p>
 	{/if}
+{/if}
+<label class="form-control w-full">
+	<div class="label">
+		<span class="label-text">Color Bar Settings</span>
+	</div>
+	<select bind:value={controller.overrideColorBar}>
+		<option value={false}>Auto</option>
+		<option value={true}>Custom Limit</option>
+	</select>
+</label>
+{#if controller.overrideColorBar}
+	<label class="input w-full">
+		<span class="label">Limit:</span>
+		<input
+			type="number"
+			inputmode="numeric"
+			placeholder="1"
+			bind:value={controller.colorBarLimit}
+		/>
+	</label>
 {/if}
 
 <!-- svelte-ignore css_unused_selector -->

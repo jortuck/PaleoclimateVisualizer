@@ -12,8 +12,11 @@ export class DataController {
 	currentDataset: Dataset;
 	currentVariable: VariableMetadata;
 	timeSeriesUrl: string;
+	trendUrl: string;
 	startYear: number;
 	endYear: number;
+	overrideColorBar: boolean = $state(false);
+	colorBarLimit: number = $state(1);
 	timeSeriesMode: 'point' | 'area' | 'asl' | 'nino' | 'cww' = $state('point');
 	timeSeriesPoint: { lat: number; lon: number } = $state({ lat: 0, lon: -150 });
 	area: { n: number; s: number; start: number; stop: number } = $state({
@@ -41,5 +44,8 @@ export class DataController {
 			}
 			return `${PUBLIC_API_HOST}/variables/${this.currentVariable.id}/timeseries-area?n=${this.area.n}&s=${this.area.s}&start=${this.area.start}&stop=${this.area.stop}`;
 		});
+		this.trendUrl = $derived(
+			`${PUBLIC_API_HOST}/variables/${this.currentVariable.id}/trend/${this.currentDataset.id}?startYear=${this.startYear}&endYear=${this.endYear}`
+		);
 	}
 }

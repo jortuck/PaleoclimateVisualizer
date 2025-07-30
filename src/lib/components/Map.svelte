@@ -1,24 +1,33 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
 	// import * as Highcharts from 'highcharts';
-	import * as Highcharts from'highcharts/highmaps'
+	import * as Highcharts from 'highcharts/highmaps';
 	import { Data, type MapData, type Variable } from '$lib/Data';
 	import antarctica from '@highcharts/map-collection/custom/antarctica.topo.json';
 	import continents from '@highcharts/map-collection/custom/world-continents.topo.json';
 	import 'highcharts/modules/geoheatmap';
-	import { controller } from '$lib/ControllerState.svelte';
+	import { onMount } from 'svelte';
 
-	let { dataSet, class: className, click }: {
-		dataSet: MapData,
-		class: string,
-		click: () => void
+	let {
+		trendURL,
+		class: className,
+		showArea,
+		area,
+		colorBarLimit,
+		overrideColorBarLimit,
+		point = $bindable()
+	}: {
+		trendURL: string;
+		class: string;
+		showArea: boolean;
+		colorBarLimit: number;
+		overrideColorBarLimit: boolean;
+		area: { n: number; s: number; start: number; stop: number };
+		point: { lat: number; lon: number };
 	} = $props();
-
 	let map: HTMLElement | null = null;
 	let chart: Highcharts.MapChart;
 
-	onMount(async () => {
-
+	$effect(() => {
 		// @ts-ignore
 		chart = Highcharts.mapChart(map, {
 			// @ts-ignore
@@ -30,26 +39,26 @@
 				animation: false
 			},
 			credits: {
-				text: 'Gemma O\'Connor'
+				text: "Gemma O'Connor"
 			},
-			plotOptions:{
-				map:{
-					enableMouseTracking: false,
+			plotOptions: {
+				map: {
+					enableMouseTracking: false
 				},
-				mappoint:{
-					enableMouseTracking: false,
+				mappoint: {
+					enableMouseTracking: false
 				},
-				series:{
+				series: {
 					nullInteraction: false,
 					states: {
 						hover: {
 							enabled: false
 						},
 						inactive: { opacity: 1 }
-					},
+					}
 				}
 			},
-			title: { text: dataSet.name, useHTML: true },
+			title: { useHTML: true },
 			colors: ['#058DC7'],
 			series: [
 				{
@@ -63,25 +72,24 @@
 							if (lon < -180) {
 								lon = lon + 360;
 							}
-							if (controller.point.lat != Math.round(e.lat) || controller.point.lon != lon) {
-								controller.point = { lat: Math.round(e.lat), lon: lon };
-								click();
+							if (point.lat != Math.round(e.lat) || point.lon != lon) {
+								point = { lat: Math.round(e.lat), lon: lon };
 							}
 						}
-					},
+					}
 				},
 				{
 					mapData: antarctica,
 					zIndex: 2,
 					borderColor: '#000',
-					borderWidth: 1,
+					borderWidth: 1
 				},
 				{
 					mapData: continents,
 					type: 'map',
 					zIndex: 2,
 					borderColor: '#000',
-					borderWidth: 1,
+					borderWidth: 1
 				},
 				{
 					type: 'mappoint',
@@ -98,20 +106,16 @@
 						borderColor: 'black',
 						borderWidth: 1,
 						backgroundColor: 'auto'
-					},
+					}
 				},
 				{
-					type:"map",
-					zIndex:7,
-					mapData:Highcharts.geojson(Data.createGeoJsonRegion(controller.area.n,controller.area.s,controller.area.start,controller.area.stop)),
-					nullColor: "rgba(255,0,0,0.2)",
-					borderColor:"red",
+					type: 'map',
+					zIndex: 7,
+					nullColor: 'rgba(255,0,0,0.2)',
+					borderColor: 'red'
 				}
 			],
 			legend: {
-				title: {
-					text: dataSet.variable
-				},
 				useHTML: true,
 				symbolWidth: 350
 			},
@@ -125,68 +129,38 @@
 				}
 			},
 			colorAxis: {
-				min: dataSet.min,
-				max: dataSet.max,
-				stops: dataSet.colorMap,
 				labels: {
 					useHTML: true,
 					format: '{value}'
 				}
 			}
 		});
-	});
-	onDestroy(() => {
-		if (typeof chart != 'undefined') {
+		return () => {
 			chart.destroy();
-		}
-	});
-	$effect(() => {
-		// prevent weird gridded globe when using smaller amounts of lats and lons
-		let size = 1;
-		if (dataSet.lats.length < 17000) {
-			size = 2;
-		}
-
-		if (typeof chart != 'undefined') {
-			// @ts-ignore
-			chart.series[0].update({
-				data: Data.createGeoPoints(dataSet.lats, dataSet.lons, dataSet.values),
-				colsize: size,
-				rowsize: size
-			});
-			chart.update({
-				colorAxis: {
-					min: dataSet.min,
-					max: dataSet.max,
-					stops: dataSet.colorMap
-				},
-				title: { text: dataSet.name },
-				legend: { title: { text: dataSet.variable } }
-			});
-		}
+		};
 	});
 
-	$effect(() => {
-		chart.update({
-			mapView: {
-				projection: {
-					name: controller.projection,
-					projectedBounds: 'world',
-					rotation: [180, 0, 0]
-				}
-			}
-		});
-	});
+	// $effect(() => {
+	// 	chart.update({
+	// 		mapView: {
+	// 			projection: {
+	// 				name: controller.projection,
+	// 				projectedBounds: 'world',
+	// 				rotation: [180, 0, 0]
+	// 			}
+	// 		}
+	// 	});
+	// });
 
 	// Sync point/region series visibility with time series mode in controller.
 	$effect(() => {
 		// @ts-ignore
 		chart.series[3].update({
-			visible: controller.timeSeriesMode === 'point'
+			visible: !showArea
 		});
 		// @ts-ignore
 		chart.series[4].update({
-			visible: controller.timeSeriesMode != 'point'
+			visible: showArea
 		});
 	});
 
@@ -195,26 +169,72 @@
 	 * The map does not automatically sync with the controller point to avoid invalid point inputs.
 	 * I could look into using effect and checking for an invalid point.
 	 */
-	export function updatePoint(): void {
-		// @ts-ignore
+	$effect(() => {
+		//@ts-ignore
 		chart.series[3].update({
-			data: [
-				{ lat: controller.point.lat, lon: controller.point.lon }
-			]
+			data: [{ lat: point.lat, lon: point.lon }]
 		});
-	}
+	});
 
 	/**
 	 * Tells the map to move the visible region to the controllers current focused area.
 	 * The map does not automatically sync with the controller area to avoid invalid point areas.
 	 * I could look into using effect and checking for an invalid area.
 	 */
-	export function updateRegion(): void {
+	$effect(() => {
 		// @ts-ignore
 		chart.series[4].update({
-			mapData:Highcharts.geojson(Data.createGeoJsonRegion(controller.area.n,controller.area.s,controller.area.start,controller.area.stop))
+			mapData: Highcharts.geojson(Data.createGeoJsonRegion(area.n, area.s, area.start, area.stop))
 		});
-	}
+	});
+
+	$effect(() => {
+		fetch(trendURL).then((response) => {
+			response.json().then((data) => {
+				const mapData = data as MapData;
+				let size = 1;
+				if (mapData.lats.length < 17000) {
+					size = 2;
+				}
+				//@ts-ignore
+				chart.series[0].update({
+					data: Data.createGeoPoints(mapData.lats, mapData.lons, mapData.values),
+					colsize: size,
+					rowsize: size
+				});
+				if (!overrideColorBarLimit) {
+					chart.update({
+						colorAxis: {
+							min: mapData.min,
+							max: mapData.max
+						}
+					});
+				}
+				chart.update({
+					colorAxis: {
+						stops: mapData.colorMap
+					},
+					title: { text: mapData.name },
+					legend: { title: { text: mapData.variable } }
+				});
+			});
+		});
+	});
+	$effect(() => {
+		if (overrideColorBarLimit) {
+			chart.update({
+				colorAxis: {
+					min: -colorBarLimit,
+					max: colorBarLimit
+				}
+			});
+		}
+	});
 </script>
-<svelte:window on:resize={()=>{chart.reflow(); chart.redraw()}} />
-<div class="{className}" bind:this={map}></div>
+
+<svelte:window
+	on:resize={() => {
+		chart.reflow();
+	}}
+/>
+<div class={className} bind:this={map}></div>

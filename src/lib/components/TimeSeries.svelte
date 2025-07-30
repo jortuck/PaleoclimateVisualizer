@@ -47,9 +47,7 @@
 				},
 				labels: {
 					useHTML: true
-				},
-				max: 2000,
-				min: 1995
+				}
 			},
 			plotOptions: {
 				series: {
