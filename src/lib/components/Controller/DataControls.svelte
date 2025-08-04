@@ -295,6 +295,20 @@
 			bind:value={controller.colorBarLimit}
 		/>
 	</label>
+	<div class="w-full flex space-x-4">
+		<p>{controller.colorBarLimit}</p>
+		<input
+			type="range"
+			min="0.5"
+			max="10"
+			value={controller.colorBarLimit}
+			onchange={(e) => {
+				controller.colorBarLimit = Number(e.target.value);
+			}}
+			class="range w-full"
+			step="0.5"
+		/>
+	</div>
 {/if}
 
 <!-- svelte-ignore css_unused_selector -->
