@@ -197,11 +197,6 @@
 					size = 2;
 				}
 				//@ts-ignore
-				chart.series[0].update({
-					data: Data.createGeoPoints(mapData.lats, mapData.lons, mapData.values),
-					colsize: size,
-					rowsize: size
-				});
 				if (!overrideColorBarLimit) {
 					chart.update({
 						colorAxis: {
@@ -210,6 +205,11 @@
 						}
 					});
 				}
+				chart.series[0].update({
+					data: Data.createGeoPoints(mapData.lats, mapData.lons, mapData.values),
+					colsize: size,
+					rowsize: size
+				});
 				chart.update({
 					colorAxis: {
 						stops: mapData.colorMap
