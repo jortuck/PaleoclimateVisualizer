@@ -41,6 +41,7 @@
 			credits: {
 				text: "Gemma O'Connor"
 			},
+
 			plotOptions: {
 				map: {
 					enableMouseTracking: false
@@ -58,7 +59,7 @@
 					}
 				}
 			},
-			title: { useHTML: true },
+			title: { useHTML: true, text: 'Chart Loading' },
 			colors: ['#058DC7'],
 			series: [
 				{

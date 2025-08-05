@@ -29,7 +29,8 @@
 				text: "Gemma O'Connor"
 			},
 			title: {
-				useHTML: true
+				useHTML: true,
+				text: 'Chart Loading'
 			},
 			yAxis: {
 				title: {
@@ -40,7 +41,6 @@
 					useHTML: true
 				}
 			},
-
 			xAxis: {
 				accessibility: {
 					rangeDescription: 'Range: 1900 to 2005'

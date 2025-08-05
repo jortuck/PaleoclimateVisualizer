@@ -85,7 +85,7 @@
 
 <label class="form-control w-full">
 	<div class="label">
-		<span class="label-text">Select a Climate Model Prior</span>
+		<span class="label-text">Select a Climate Reconstruction</span>
 	</div>
 	<select bind:value={controller.currentDataset}>
 		{#each controller.datasets.filter( (data) => Object.keys(data.variables).includes(controller.currentVariable.id) ) as dataset}
@@ -94,7 +94,7 @@
 			>
 		{/each}
 		{#if controller.datasets.filter((data) => !Object.keys(data.variables).includes(controller.currentVariable.id)).length > 0}
-			<option disabled>--- Unsupported Models ---</option>
+			<option disabled>--- Unsupported Reconstructions ---</option>
 			{#each controller.datasets.filter((data) => !Object.keys(data.variables).includes(controller.currentVariable.id)) as dataset}
 				<option disabled={!controller.currentVariable.datasets.includes(dataset.id)} value={dataset}
 					>{dataset.name}</option
