@@ -4,9 +4,10 @@
 	import { controller } from '$lib/ControllerState.svelte';
 	import type { AvailableDataResponse } from '$lib/Data';
 	import { PUBLIC_API_HOST } from '$env/static/public';
-	import { DataController } from '$lib/DataController.svelte';
+	import { DataController, UI } from '$lib/DataController.svelte';
 	import TimeSeries from '$lib/components/TimeSeries.svelte';
 	import { onMount } from 'svelte';
+	let dataController: DataController | null = $state(null);
 
 	async function getAvailable() {
 		let request = await fetch(PUBLIC_API_HOST + '/variables');
@@ -16,9 +17,9 @@
 
 	async function setDataController() {
 		dataController = await getAvailable();
+		return dataController;
 	}
 
-	let dataController: DataController | null = $state(null);
 	onMount(async () => {
 		dataController = await getAvailable();
 	});
@@ -49,42 +50,47 @@
 			<span class="loading loading-spinner loading-lg"></span>
 		</div>
 	{:then value}
+		{#if UI.loading}
+			<div
+				class="h-full w-full z-50 bg-base-300 absolute top-0 left-0 opacity-80 flex items-center justify-center flex-col space-y-5"
+			>
+				<h2 class="text-2xl font-bold text-base-content">Loading</h2>
+			</div>
+		{/if}
 		<div class="grid grid-cols-12 grow">
-
 			<aside class="p-5 bg-base-200 hidden lg:block lg:col-span-4 xl:col-span-3">
-				<Controller controller={dataController} />
+				<Controller controller={value} />
 			</aside>
 			<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
 				<Map
-					overrideColorBarLimit={dataController.overrideColorBar}
-					colorBarLimit={dataController.colorBarLimit}
-					bind:point={dataController.timeSeriesPoint}
-					showArea={dataController.timeSeriesMode !== 'point'}
-					area={dataController.area}
-					trendURL={dataController.trendUrl}
+					overrideColorBarLimit={value.overrideColorBar}
+					colorBarLimit={value.colorBarLimit}
+					bind:point={value.timeSeriesPoint}
+					showArea={value.timeSeriesMode !== 'point'}
+					area={value.area}
+					trendURL={value.trendUrl}
 					class="row-span-6 lg:row-span-7"
 				/>
 
 				<TimeSeries
-					unit={dataController.currentVariable.annualUnit}
-					startYear={dataController.startYear}
-					endYear={dataController.endYear}
-					timeSeriesUrl={dataController.timeSeriesUrl}
+					unit={value.currentVariable.annualUnit}
+					startYear={value.startYear}
+					endYear={value.endYear}
+					timeSeriesUrl={value.timeSeriesUrl}
 					class="row-span-6 lg:row-span-5"
 				/>
 			</div>
 		</div>
-
 	{:catch error}
 		<div class="p-10 space-y-8">
 			<div role="alert" class="alert alert-error alert-outline w-full text-lg">
 				<p>
 					<span>
 						The API that this web application relies on cannot be reached. Please visit the <a
-						target="_blank"
-						class="underline"
-						href="https://status.jortuck.com/status/pv">status page</a
-					> for updates.
+							target="_blank"
+							class="underline"
+							href="https://status.jortuck.com/status/pv">status page</a
+						> for updates.
 					</span>
 					<br />
 					<span>Error Message: {error}</span>
@@ -116,10 +122,10 @@
 				<p>
 					<span>
 						The API that this web application relies on cannot be reached. Please visit the <a
-						target="_blank"
-						class="underline"
-						href="https://status.jortuck.com/status/pv">status page</a
-					> for updates.
+							target="_blank"
+							class="underline"
+							href="https://status.jortuck.com/status/pv">status page</a
+						> for updates.
 					</span>
 					<br />
 					<span>Error Message: {error}</span>
@@ -130,22 +136,22 @@
 </svelte:boundary>
 
 <style lang="postcss">
-    @reference "$lib/app.css";
-    :global(
+	@reference "$lib/app.css";
+	:global(
 		.highcharts-title,
 		.highcharts-axis-labels > span,
 		.highcharts-axis-title,
 		.highcharts-legend-item > span
 	) {
-        @apply !text-base-content lg:text-left text-center;
-    }
+		@apply !text-base-content lg:text-left text-center;
+	}
 
-    :global(.highcharts-container) {
-        width: 100% !important;
-        height: 100% !important;
-    }
+	:global(.highcharts-container) {
+		width: 100% !important;
+		height: 100% !important;
+	}
 
-    :global(.highcharts-label.highcharts-legend-title > span) {
-        @apply dark:!text-white;
-    }
+	:global(.highcharts-label.highcharts-legend-title > span) {
+		@apply dark:!text-white;
+	}
 </style>

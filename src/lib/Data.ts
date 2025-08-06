@@ -113,8 +113,7 @@ export type TimeSeriesData = {
 	values: Highcharts.SeriesOptionsType[];
 };
 export type MapData = {
-	min: number;
-	max: number;
+	bound: number;
 	name: string;
 	variable: string;
 	colorMap: [number, string][];

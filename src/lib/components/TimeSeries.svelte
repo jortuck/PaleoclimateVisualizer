@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import * as Highcharts from 'highcharts';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import type { TimeSeriesData } from '$lib/Data';
+	import { UI } from '$lib/DataController.svelte';
 
 	let timeseries: any = $state(null);
 	let {

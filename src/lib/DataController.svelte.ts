@@ -6,6 +6,17 @@ import type {
 } from '$lib/Data';
 import { PUBLIC_API_HOST } from '$env/static/public';
 
+class UIController {
+	loading: number = $state(0);
+
+	setLoading() {
+		this.loading++;
+	}
+	stopLoading() {
+		this.loading--;
+	}
+}
+export const UI = new UIController();
 export class DataController {
 	variables: VariableMetadata[];
 	datasets: Dataset[];

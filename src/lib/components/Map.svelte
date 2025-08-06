@@ -5,8 +5,9 @@
 	import antarctica from '@highcharts/map-collection/custom/antarctica.topo.json';
 	import continents from '@highcharts/map-collection/custom/world-continents.topo.json';
 	import 'highcharts/modules/geoheatmap';
-	import { onMount } from 'svelte';
-
+	import { onMount, untrack } from 'svelte';
+	import { UI } from '$lib/DataController.svelte';
+	let defaultColorBarLimit: number = $state(1);
 	let {
 		trendURL,
 		class: className,
@@ -190,6 +191,7 @@
 	});
 
 	$effect(() => {
+		untrack(() => UI.loading++);
 		fetch(trendURL).then((response) => {
 			response.json().then((data) => {
 				const mapData = data as MapData;
@@ -198,14 +200,21 @@
 					size = 2;
 				}
 				//@ts-ignore
+				let limit = untrack(() => {
+					defaultColorBarLimit = mapData.bound;
+					return defaultColorBarLimit;
+				});
 				if (!overrideColorBarLimit) {
-					chart.update({
-						colorAxis: {
-							min: mapData.min,
-							max: mapData.max
-						}
-					});
+					chart.update(
+						{
+							colorAxis: {
+								tickPositions: [-limit, -limit / 2, 0, limit / 2, limit]
+							}
+						},
+						false
+					);
 				}
+
 				chart.series[0].update(
 					{
 						data: Data.createGeoPoints(mapData.lats, mapData.lons, mapData.values),
@@ -224,9 +233,8 @@
 					},
 					false
 				);
-				console.time('geoPoints');
-				chart.redraw();
-				console.timeEnd('geoPoints');
+				chart.redraw(false);
+				untrack(() => UI.loading--);
 			});
 		});
 	});
@@ -234,8 +242,14 @@
 		if (overrideColorBarLimit) {
 			chart.update({
 				colorAxis: {
-					min: -colorBarLimit,
-					max: colorBarLimit
+					tickPositions: [-colorBarLimit, -colorBarLimit / 2, 0, colorBarLimit / 2, colorBarLimit]
+				}
+			});
+		} else {
+			let limit = untrack(() => defaultColorBarLimit);
+			chart.update({
+				colorAxis: {
+					tickPositions: [-limit, -limit / 2, 0, limit / 2, limit]
 				}
 			});
 		}
