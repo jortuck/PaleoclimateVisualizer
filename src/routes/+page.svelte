@@ -19,10 +19,6 @@
 		dataController = await getAvailable();
 		return dataController;
 	}
-
-	onMount(async () => {
-		dataController = await getAvailable();
-	});
 </script>
 
 <svelte:head>
@@ -63,6 +59,7 @@
 			</aside>
 			<div class="col-span-full lg:col-span-8 xl:col-span-9 grid grid-rows-12">
 				<Map
+					timeSeriesMode={value.timeSeriesMode}
 					overrideColorBarLimit={value.overrideColorBar}
 					colorBarLimit={value.colorBarLimit}
 					bind:point={value.timeSeriesPoint}

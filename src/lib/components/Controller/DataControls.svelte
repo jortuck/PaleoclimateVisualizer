@@ -81,6 +81,8 @@
 			controller.startYear = controller.currentDataset.timeStart;
 		}
 	});
+
+	$effect(() => {});
 </script>
 
 <label class="form-control w-full">

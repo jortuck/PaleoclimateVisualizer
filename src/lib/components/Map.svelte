@@ -10,6 +10,7 @@
 	let defaultColorBarLimit: number = $state(1);
 	let {
 		trendURL,
+		timeSeriesMode,
 		class: className,
 		showArea,
 		area,
@@ -18,6 +19,7 @@
 		point = $bindable()
 	}: {
 		trendURL: string;
+		timeSeriesMode: 'point' | 'area' | 'asl' | 'nino' | 'cww';
 		class: string;
 		showArea: boolean;
 		colorBarLimit: number;
@@ -70,12 +72,14 @@
 					zIndex: 0,
 					events: {
 						click: (e: any) => {
-							let lon = Math.round(e.lon);
-							if (lon < -180) {
-								lon = lon + 360;
-							}
-							if (point.lat != Math.round(e.lat) || point.lon != lon) {
-								point = { lat: Math.round(e.lat), lon: lon };
+							if (timeSeriesMode === 'point') {
+								let lon = Math.round(e.lon);
+								if (lon < -180) {
+									lon = lon + 360;
+								}
+								if (point.lat != Math.round(e.lat) || point.lon != lon) {
+									point = { lat: Math.round(e.lat), lon: lon };
+								}
 							}
 						}
 					}
