@@ -79,7 +79,8 @@
 						series: data.values
 					},
 					true,
-					true
+					true,
+					false
 				);
 				chart.setTitle({ text: data.name });
 			});
@@ -88,12 +89,17 @@
 	$effect(() => {
 		// when the time series loads initially, it already does the full range, no need to refetch data
 		// if we can only make the range smaller
-		chart.update({
-			xAxis: {
-				max: endYear,
-				min: startYear
-			}
-		});
+		chart.update(
+			{
+				xAxis: {
+					max: endYear,
+					min: startYear
+				}
+			},
+			true,
+			false,
+			false
+		);
 	});
 	$effect(() => {
 		chart.update({ yAxis: { title: { text: unit } } });

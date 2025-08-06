@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { MouseEventHandler } from 'svelte/elements';
 	import ViewControls from '$lib/components/Controller/ViewControls.svelte';
 	import DataControls from '$lib/components/Controller/DataControls.svelte';
 	import type { DataController } from '$lib/DataController.svelte';

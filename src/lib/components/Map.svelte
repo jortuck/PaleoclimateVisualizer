@@ -206,18 +206,27 @@
 						}
 					});
 				}
-				chart.series[0].update({
-					data: Data.createGeoPoints(mapData.lats, mapData.lons, mapData.values),
-					colsize: size,
-					rowsize: size
-				});
-				chart.update({
-					colorAxis: {
-						stops: mapData.colorMap
+				chart.series[0].update(
+					{
+						data: Data.createGeoPoints(mapData.lats, mapData.lons, mapData.values),
+						colsize: size,
+						rowsize: size
 					},
-					title: { text: mapData.name },
-					legend: { title: { text: mapData.variable } }
-				});
+					false
+				);
+				chart.update(
+					{
+						colorAxis: {
+							stops: mapData.colorMap
+						},
+						title: { text: mapData.name },
+						legend: { title: { text: mapData.variable } }
+					},
+					false
+				);
+				console.time('geoPoints');
+				chart.redraw();
+				console.timeEnd('geoPoints');
 			});
 		});
 	});
