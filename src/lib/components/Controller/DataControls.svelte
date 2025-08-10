@@ -82,7 +82,13 @@
 		}
 	});
 
-	$effect(() => {});
+	$effect(() => {
+		// Update the local 'point' state whenever the controller's point changes,
+		// but only if the user isn't actively changing it in the input field.
+		if (!pointChanged) {
+			point = { ...controller.timeSeriesPoint };
+		}
+	});
 </script>
 
 <label class="form-control w-full">
