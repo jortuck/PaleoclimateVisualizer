@@ -304,6 +304,7 @@
 		/>
 	</label>
 {/if}
+<p class="text-neutral-400">Anomalies calculated relative to the 1979-2005 period.</p>
 
 <!-- svelte-ignore css_unused_selector -->
 <style lang="postcss">
