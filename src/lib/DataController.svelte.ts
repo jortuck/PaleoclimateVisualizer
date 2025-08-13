@@ -27,6 +27,7 @@ export class DataController {
 	startYear: number;
 	endYear: number;
 	year: number;
+	projection: 'EqualEarth' | 'Orthographic' = $state('EqualEarth');
 	overrideColorBar: boolean = $state(false);
 	colorBarLimit: number = $state(1);
 	trendMode: 'trend' | 'annual' = $state('trend');

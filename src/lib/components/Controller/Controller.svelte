@@ -45,7 +45,7 @@
 	</div>
 	<div class="flex flex-col space-y-3">
 		{#if activeTab === 'view'}
-			<ViewControls />
+			<ViewControls {controller} />
 		{:else if activeTab === 'data'}
 			<DataControls {controller} />
 		{:else if activeTab === 'download'}

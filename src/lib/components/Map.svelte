@@ -11,6 +11,7 @@
 	let {
 		trendURL,
 		timeSeriesMode,
+		projection,
 		class: className,
 		showArea,
 		area,
@@ -20,6 +21,7 @@
 	}: {
 		trendURL: string;
 		timeSeriesMode: 'point' | 'area' | 'asl' | 'nino' | 'cww';
+		projection: 'EqualEarth' | 'Orthographic';
 		class: string;
 		showArea: boolean;
 		colorBarLimit: number;
@@ -193,7 +195,17 @@
 			mapData: Highcharts.geojson(Data.createGeoJsonRegion(area.n, area.s, area.start, area.stop))
 		});
 	});
-
+	$effect(() => {
+		chart.update({
+			mapView: {
+				projection: {
+					name: projection,
+					projectedBounds: 'world',
+					rotation: [180, 0, 0]
+				}
+			}
+		});
+	});
 	$effect(() => {
 		untrack(() => UI.loading++);
 		fetch(trendURL).then((response) => {
