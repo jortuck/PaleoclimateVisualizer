@@ -47,6 +47,7 @@ export class DataController {
 		const initialVariable = $state(
 			response.variables.filter((v) => v.id === Object.keys(initialDataset.variables)[0])[0]
 		);
+		// this may not work with any type of SSR enabled
 		this.projection = $state(
 			(localStorage.getItem('projection') as typeof this.projection) ?? 'EqualEarth'
 		);
