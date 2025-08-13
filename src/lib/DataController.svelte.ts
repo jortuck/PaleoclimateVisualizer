@@ -26,8 +26,10 @@ export class DataController {
 	trendUrl: string;
 	startYear: number;
 	endYear: number;
+	year: number;
 	overrideColorBar: boolean = $state(false);
 	colorBarLimit: number = $state(1);
+	trendMode: 'trend' | 'annual' = $state('trend');
 	timeSeriesMode: 'point' | 'area' | 'asl' | 'nino' | 'cww' = $state('point');
 	timeSeriesPoint: { lat: number; lon: number } = $state({ lat: 0, lon: -150 });
 	area: { n: number; s: number; start: number; stop: number } = $state({
@@ -48,6 +50,7 @@ export class DataController {
 		this.currentDataset = $state(initialDataset);
 		this.currentVariable = $state(initialVariable);
 		this.startYear = $state(initialDataset.timeStart);
+		this.year = $state(initialDataset.timeStart);
 		this.endYear = $state(initialDataset.timeEnd);
 		this.timeSeriesUrl = $derived.by(() => {
 			if (this.timeSeriesMode === 'point') {
@@ -55,8 +58,12 @@ export class DataController {
 			}
 			return `${PUBLIC_API_HOST}/variables/${this.currentVariable.id}/timeseries-area?n=${this.area.n}&s=${this.area.s}&start=${this.area.start}&stop=${this.area.stop}`;
 		});
-		this.trendUrl = $derived(
-			`${PUBLIC_API_HOST}/variables/${this.currentVariable.id}/trend/${this.currentDataset.id}?startYear=${this.startYear}&endYear=${this.endYear}`
-		);
+		this.trendUrl = $derived.by(() => {
+			if (this.trendMode === 'annual') {
+				return `${PUBLIC_API_HOST}/variables/${this.currentVariable.id}/trend/${this.currentDataset.id}?startYear=${this.year}&endYear=${this.year}`;
+			} else {
+				return `${PUBLIC_API_HOST}/variables/${this.currentVariable.id}/trend/${this.currentDataset.id}?startYear=${this.startYear}&endYear=${this.endYear}`;
+			}
+		});
 	}
 }

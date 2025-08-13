@@ -34,6 +34,11 @@
 
 	let area: { n: number; s: number; start: number; stop: number } = $state({ ...controller.area });
 	let point: { lat: number; lon: number } = $state({ ...controller.timeSeriesPoint });
+	let year: number = $state(controller.year.valueOf());
+
+	function updateYear() {
+		controller.year = year.valueOf();
+	}
 
 	let invalidPoint: boolean = $derived(
 		!pointSchema.safeParse({ lat: point.lat, lon: point.lon }).success
@@ -79,6 +84,13 @@
 	$effect(() => {
 		if (controller.startYear < controller.currentDataset.timeStart) {
 			controller.startYear = controller.currentDataset.timeStart;
+		}
+		if (controller.year > controller.currentDataset.timeEnd) {
+			controller.year = controller.currentDataset.timeEnd;
+			year = controller.currentDataset.timeEnd;
+		} else if (controller.year < controller.currentDataset.timeStart) {
+			controller.year = controller.currentDataset.timeStart;
+			year = controller.currentDataset.timeStart;
 		}
 	});
 
@@ -134,6 +146,29 @@
 		{/if}
 	</select>
 </label>
+<label class="form-control w-full">
+	<div class="label">
+		<span class="label-text">Map Mode</span>
+	</div>
+	<select bind:value={controller.trendMode}>
+		<option value="trend">Trends</option>
+		<option value="annual">Annual Data</option>
+	</select>
+</label>
+{#if controller.trendMode === 'annual'}
+	{year}
+
+	<div class="form-control w-full">
+		<input
+			bind:value={year}
+			type="range"
+			min={controller.currentDataset.timeStart}
+			max={controller.currentDataset.timeEnd}
+			class="range w-full"
+			onchange={updateYear}
+		/>
+	</div>
+{/if}
 <div class="form-control">
 	<div class="label">
 		<span class="label-text">Time Range</span>
@@ -150,7 +185,6 @@
 				<option>{year}</option>
 			{/each}
 		</select>
-		<!--		<button class="btn btn-sm md:btn-md btn-primary">Update</button>-->
 	</div>
 </div>
 <label class="form-control w-full">
