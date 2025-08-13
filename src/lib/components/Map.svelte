@@ -148,18 +148,6 @@
 		};
 	});
 
-	// $effect(() => {
-	// 	chart.update({
-	// 		mapView: {
-	// 			projection: {
-	// 				name: controller.projection,
-	// 				projectedBounds: 'world',
-	// 				rotation: [180, 0, 0]
-	// 			}
-	// 		}
-	// 	});
-	// });
-
 	// Sync point/region series visibility with time series mode in controller.
 	$effect(() => {
 		// @ts-ignore

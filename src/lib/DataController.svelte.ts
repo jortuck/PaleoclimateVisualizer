@@ -27,7 +27,7 @@ export class DataController {
 	startYear: number;
 	endYear: number;
 	year: number;
-	projection: 'EqualEarth' | 'Orthographic' = $state('EqualEarth');
+	projection: 'EqualEarth' | 'Orthographic';
 	overrideColorBar: boolean = $state(false);
 	colorBarLimit: number = $state(1);
 	trendMode: 'trend' | 'annual' = $state('trend');
@@ -47,7 +47,9 @@ export class DataController {
 		const initialVariable = $state(
 			response.variables.filter((v) => v.id === Object.keys(initialDataset.variables)[0])[0]
 		);
-
+		this.projection = $state(
+			(localStorage.getItem('projection') as typeof this.projection) ?? 'EqualEarth'
+		);
 		this.currentDataset = $state(initialDataset);
 		this.currentVariable = $state(initialVariable);
 		this.startYear = $state(initialDataset.timeStart);
