@@ -7,6 +7,18 @@
 	import 'highcharts/modules/geoheatmap';
 	import { onMount, untrack } from 'svelte';
 	import { UI } from '$lib/DataController.svelte';
+
+	const typeColors = {
+		Bivalve: '#1f77b4',
+		'Corals and Sclerosponges': '#ff7f0e',
+		Other: '#2ca02c'
+	};
+	const data = [
+		{ id: 'PAGES...', lat: 43.6561, lon: -69.8017, type: 'Bivalve' },
+		{ id: '09japa...', lat: 27.105833, lon: 142.192222, type: 'Corals and Sclerosponges' },
+		{ id: '08puer...', lat: 17.93457, lon: -67.00123, type: 'Corals and Sclerosponges' }
+	];
+
 	let defaultColorBarLimit: number = $state(1);
 	let {
 		trendURL,
@@ -52,7 +64,11 @@
 					enableMouseTracking: false
 				},
 				mappoint: {
-					enableMouseTracking: false
+					enableMouseTracking: false,
+
+					dataLabels: {
+						enabled: false
+					}
 				},
 				series: {
 					nullInteraction: false,
@@ -65,7 +81,6 @@
 				}
 			},
 			title: { useHTML: true, text: 'Chart Loading' },
-			colors: ['#058DC7'],
 			series: [
 				{
 					type: 'geoheatmap',
@@ -97,24 +112,51 @@
 					type: 'map',
 					zIndex: 2,
 					borderColor: '#000',
-					borderWidth: 1
+					borderWidth: 1,
+					visible: true
 				},
 				{
 					type: 'mappoint',
-					dataLabels: {
-						crop: true,
-						format: '',
-						inside: true,
-						y: -14,
-						style: {
-							color: 'contrast',
-							textOutline: 'none'
-						},
-						shape: 'mapmarker',
-						borderColor: 'black',
-						borderWidth: 1,
-						backgroundColor: 'auto'
+					zIndex: 3,
+					marker: {
+						lineWidth: 1,
+						lineColor: '#000',
+						symbol: 'mapmarker',
+						radius: 7
 					}
+				},
+				{
+					type: 'mappoint',
+					visible: false,
+					cluster: { enabled: false },
+					keys: ['id', 'lat', 'lon', 'type'],
+					marker: {
+						symbol: 'circle',
+						radius: 8
+					},
+					zIndex: 3,
+					showArea: true,
+					data: [
+						{
+							id: 'PAGES2kv2_Ocean2kHR-AtlanticMaineWanamaker2008_Ocn_148:d18O',
+							lat: 43.6561,
+							lon: -69.8017,
+							color: 'cyan',
+							type: 'Bivalve'
+						},
+						{
+							id: '09japa01b:ext',
+							lat: 27.105833,
+							lon: 142.192222,
+							type: 'Corals and Sclerosponges'
+						},
+						{
+							id: '08puer01a:ext',
+							lat: 17.93457,
+							lon: -67.00123,
+							type: 'Corals and Sclerosponges'
+						}
+					]
 				},
 				{
 					type: 'map',
@@ -155,7 +197,7 @@
 			visible: !showArea
 		});
 		// @ts-ignore
-		chart.series[4].update({
+		chart.series[5].update({
 			visible: showArea
 		});
 	});
@@ -179,7 +221,7 @@
 	 */
 	$effect(() => {
 		// @ts-ignore
-		chart.series[4].update({
+		chart.series[5].update({
 			mapData: Highcharts.geojson(Data.createGeoJsonRegion(area.n, area.s, area.start, area.stop))
 		});
 	});
