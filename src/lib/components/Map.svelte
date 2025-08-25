@@ -7,17 +7,8 @@
 	import 'highcharts/modules/geoheatmap';
 	import { onMount, untrack } from 'svelte';
 	import { UI } from '$lib/DataController.svelte';
-
-	const typeColors = {
-		Bivalve: '#1f77b4',
-		'Corals and Sclerosponges': '#ff7f0e',
-		Other: '#2ca02c'
-	};
-	const data = [
-		{ id: 'PAGES...', lat: 43.6561, lon: -69.8017, type: 'Bivalve' },
-		{ id: '09japa...', lat: 27.105833, lon: 142.192222, type: 'Corals and Sclerosponges' },
-		{ id: '08puer...', lat: 17.93457, lon: -67.00123, type: 'Corals and Sclerosponges' }
-	];
+	import proxies from '$lib/proxies.json';
+	import { controller } from '$lib/ControllerState.svelte';
 
 	let defaultColorBarLimit: number = $state(1);
 	let {
@@ -29,6 +20,7 @@
 		area,
 		colorBarLimit,
 		overrideColorBarLimit,
+		showProxies,
 		point = $bindable()
 	}: {
 		trendURL: string;
@@ -40,6 +32,7 @@
 		overrideColorBarLimit: boolean;
 		area: { n: number; s: number; start: number; stop: number };
 		point: { lat: number; lon: number };
+		showProxies: 'No' | 'Yes';
 	} = $props();
 	let map: HTMLElement | null = null;
 	let chart: Highcharts.MapChart;
@@ -132,31 +125,11 @@
 					keys: ['id', 'lat', 'lon', 'type'],
 					marker: {
 						symbol: 'circle',
-						radius: 8
+						radius: 3
 					},
 					zIndex: 3,
 					showArea: true,
-					data: [
-						{
-							id: 'PAGES2kv2_Ocean2kHR-AtlanticMaineWanamaker2008_Ocn_148:d18O',
-							lat: 43.6561,
-							lon: -69.8017,
-							color: 'cyan',
-							type: 'Bivalve'
-						},
-						{
-							id: '09japa01b:ext',
-							lat: 27.105833,
-							lon: 142.192222,
-							type: 'Corals and Sclerosponges'
-						},
-						{
-							id: '08puer01a:ext',
-							lat: 17.93457,
-							lon: -67.00123,
-							type: 'Corals and Sclerosponges'
-						}
-					]
+					data: proxies
 				},
 				{
 					type: 'map',
@@ -201,7 +174,12 @@
 			visible: showArea
 		});
 	});
-
+	$effect(() => {
+		// @ts-ignore
+		chart.series[4].update({
+			visible: showProxies === 'Yes'
+		});
+	});
 	/**
 	 * Tells the map to move the visible point to the controllers current point.
 	 * The map does not automatically sync with the controller point to avoid invalid point inputs.
@@ -308,3 +286,4 @@
 	}}
 />
 <div class={className} bind:this={map}></div>
+{#if showProxies === 'Yes'}{/if}

@@ -28,6 +28,7 @@ export class DataController {
 	endYear: number;
 	year: number;
 	projection: 'EqualEarth' | 'Orthographic';
+	showProxies: 'No' | 'Yes';
 	overrideColorBar: boolean = $state(false);
 	colorBarLimit: number = $state(1);
 	trendMode: 'trend' | 'annual' = $state('trend');
@@ -51,6 +52,10 @@ export class DataController {
 		this.projection = $state(
 			(localStorage.getItem('projection') as typeof this.projection) ?? 'EqualEarth'
 		);
+		this.showProxies = $state(
+			(localStorage.getItem('showProxies') as typeof this.showProxies) ?? 'No'
+		);
+
 		this.currentDataset = $state(initialDataset);
 		this.currentVariable = $state(initialVariable);
 		this.startYear = $state(initialDataset.timeStart);

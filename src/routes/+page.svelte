@@ -67,6 +67,7 @@
 					showArea={value.timeSeriesMode !== 'point'}
 					area={value.area}
 					trendURL={value.trendUrl}
+					showProxies={value.showProxies}
 					class="row-span-6 lg:row-span-7"
 				/>
 
