@@ -8,7 +8,6 @@
 	import { onMount, untrack } from 'svelte';
 	import { UI } from '$lib/DataController.svelte';
 	import proxies from '$lib/proxies.json';
-	import { controller } from '$lib/ControllerState.svelte';
 
 	let defaultColorBarLimit: number = $state(1);
 	let {

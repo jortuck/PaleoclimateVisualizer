@@ -1,12 +1,10 @@
 <script lang="ts">
 	import Controller from '$lib/components/Controller/Controller.svelte';
 	import Map from '$lib/components/Map.svelte';
-	import { controller } from '$lib/ControllerState.svelte';
 	import type { AvailableDataResponse } from '$lib/Data';
 	import { PUBLIC_API_HOST } from '$env/static/public';
 	import { DataController, UI } from '$lib/DataController.svelte';
 	import TimeSeries from '$lib/components/TimeSeries.svelte';
-	import { onMount } from 'svelte';
 	let dataController: DataController | null = $state(null);
 
 	async function getAvailable() {
