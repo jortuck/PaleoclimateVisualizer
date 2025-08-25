@@ -8,6 +8,7 @@ import { PUBLIC_API_HOST } from '$env/static/public';
 
 class UIController {
 	loading: number = $state(0);
+	modal: HTMLDialogElement | null = $state(null);
 
 	setLoading() {
 		this.loading++;
