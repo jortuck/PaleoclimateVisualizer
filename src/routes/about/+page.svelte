@@ -61,7 +61,6 @@
 		Source Code</a>
 	</p>
 </section>
-
 <style>
     /* Add margin to the sides of the page */
     .page {
